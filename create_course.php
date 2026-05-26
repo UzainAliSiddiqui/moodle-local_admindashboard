@@ -1,0 +1,156 @@
+<?php
+require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/lib.php');
+
+admindash_setup_page('/local/admindashboard/create_course.php', 'Create New Course', 'admintools.courses.create');
+admindash_render_header('admintools.courses.create');
+
+$tabs = admindash_get_manage_courses_suite_tabs();
+$totalcategories = (int)$DB->count_records('course_categories');
+$totalcohorts = (int)$DB->count_records('cohort');
+
+$formatrows = $DB->get_records_sql(
+	"SELECT COALESCE(NULLIF(c.format, ''), 'topics') AS formatname, COUNT(1) AS coursecount
+	   FROM {course} c
+	  WHERE c.id > 1
+   GROUP BY COALESCE(NULLIF(c.format, ''), 'topics')
+   ORDER BY coursecount DESC, formatname ASC",
+	[],
+	0,
+	6
+);
+
+$categoryrows = $DB->get_records_sql(
+	"SELECT cc.id, cc.name, COUNT(c.id) AS coursecount
+	   FROM {course_categories} cc
+  LEFT JOIN {course} c ON c.category = cc.id AND c.id > 1
+   GROUP BY cc.id, cc.name, cc.path
+   ORDER BY coursecount DESC, cc.path ASC",
+	[],
+	0,
+	6
+);
+
+$templatecandidates = $DB->get_records_sql(
+	"SELECT c.id, c.fullname, COALESCE(cc.name, 'Uncategorised') AS categoryname,
+			COALESCE(c.format, 'topics') AS formatname,
+			COALESCE(modstats.modulecount, 0) AS modulecount
+	   FROM {course} c
+  LEFT JOIN {course_categories} cc ON cc.id = c.category
+  LEFT JOIN (
+			SELECT cm.course, COUNT(1) AS modulecount
+			  FROM {course_modules} cm
+			  JOIN {modules} m ON m.id = cm.module AND m.name <> 'label'
+			 WHERE cm.deletioninprogress = 0
+		  GROUP BY cm.course
+	   ) modstats ON modstats.course = c.id
+	  WHERE c.id > 1
+		AND c.visible = 1
+		AND COALESCE(modstats.modulecount, 0) >= 5
+   ORDER BY modulecount DESC, c.timemodified DESC, c.fullname ASC",
+	[],
+	0,
+	6
+);
+
+$requiredsignals = [
+	'Course category and audience',
+	'Visibility and naming standards',
+	'Schedule window and ownership',
+	'Completion model and assessment path',
+];
+
+admindash_render_workspace_header(
+	'Admin Tools / Manage Courses',
+	'Create New Course',
+	'Preflight workspace for planning new courses before handing off into Moodle core creation screens.',
+	'courses',
+	'admintools.courses.create',
+	$tabs,
+	[
+		['label' => 'Open core course admin', 'url' => new moodle_url('/course/management.php'), 'primary' => true],
+		['label' => 'Course list', 'url' => new moodle_url('/local/admindashboard/course_list.php'), 'primary' => false],
+		['label' => 'Course templates', 'url' => new moodle_url('/local/admindashboard/course_templates.php'), 'primary' => false],
+	],
+	['Preflight ready', 'Template aware', 'Category guided']
+);
+?>
+
+<div class="admindash-kpis">
+	<div class="admindash-card admindash-module-stat">
+		<div class="admindash-module-stat__label">Categories</div>
+		<div class="admindash-module-stat__value"><?php echo $totalcategories; ?></div>
+		<div class="admindash-module-stat__meta">Available course categories you can route new courses into.</div>
+	</div>
+	<div class="admindash-card admindash-module-stat">
+		<div class="admindash-module-stat__label">Formats</div>
+		<div class="admindash-module-stat__value"><?php echo count($formatrows); ?></div>
+		<div class="admindash-module-stat__meta">Most common course formats currently in use across the platform.</div>
+	</div>
+	<div class="admindash-card admindash-module-stat">
+		<div class="admindash-module-stat__label">Cohorts</div>
+		<div class="admindash-module-stat__value"><?php echo $totalcohorts; ?></div>
+		<div class="admindash-module-stat__meta">Audience groups available for enrolment and rollout planning.</div>
+	</div>
+	<div class="admindash-card admindash-module-stat">
+		<div class="admindash-module-stat__label">Template Candidates</div>
+		<div class="admindash-module-stat__value"><?php echo count($templatecandidates); ?></div>
+		<div class="admindash-module-stat__meta">Existing structured courses that can guide repeatable builds.</div>
+	</div>
+</div>
+
+<div class="admindash-widget-grid mt-3">
+	<div class="admindash-card admindash-admin-panel">
+		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+			<h5 class="mb-0">Top Categories</h5>
+			<span class="admindash-admin-note">Where most builds live</span>
+		</div>
+		<ul class="admindash-admin-list">
+			<?php foreach ($categoryrows as $row): ?>
+				<li>
+					<span class="admindash-admin-list__label"><?php echo s($row->name); ?></span>
+					<span class="admindash-admin-list__value"><?php echo (int)$row->coursecount; ?> courses</span>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+
+	<div class="admindash-admin-stack">
+		<div class="admindash-card admindash-admin-panel">
+			<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+				<h5 class="mb-0">Popular Formats</h5>
+				<span class="admindash-admin-note">Current platform defaults</span>
+			</div>
+			<ul class="admindash-admin-list is-tight">
+				<?php foreach ($formatrows as $row): ?>
+					<li>
+						<span class="admindash-admin-list__label"><?php echo s($row->formatname); ?></span>
+						<span class="admindash-admin-list__value"><?php echo (int)$row->coursecount; ?> courses</span>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+
+		<div class="admindash-card admindash-admin-panel mt-3">
+			<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+				<h5 class="mb-0">Reusable Course Candidates</h5>
+				<span class="admindash-admin-note">Structured existing builds</span>
+			</div>
+			<?php if (!empty($templatecandidates)): ?>
+				<ul class="admindash-admin-list is-tight">
+					<?php foreach ($templatecandidates as $row): ?>
+						<li>
+							<span class="admindash-admin-list__label"><?php echo s($row->fullname); ?></span>
+							<span class="admindash-admin-list__value"><?php echo s($row->formatname); ?> · <?php echo (int)$row->modulecount; ?> modules</span>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			<?php else: ?>
+				<p class="admindash-admin-note mb-0">No strong template candidates were found yet.</p>
+			<?php endif; ?>
+		</div>
+	</div>
+</div>
+
+<?php
+admindash_render_footer();

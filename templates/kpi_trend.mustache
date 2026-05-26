@@ -1,0 +1,19 @@
+{{!
+    Context shape:
+    {
+        "supported": true,
+        "arrow": "↑",
+        "display_value": "12%",
+        "comparison_label": "vs previous module",
+        "css_class": "is-up"
+    }
+}}
+{{#supported}}
+<div class="admindash-kpi-trend-slot">
+    <div class="admindash-kpi-trend {{css_class}}" title="{{comparison_label}}">
+        <span class="admindash-kpi-trend__arrow" aria-hidden="true">{{arrow}}</span>
+        <span class="admindash-kpi-trend__value">{{display_value}}</span>
+        <span class="admindash-kpi-trend__meta">{{comparison_label}}</span>
+    </div>
+</div>
+{{/supported}}
