@@ -707,8 +707,22 @@ function local_admindashboard_setup_page(string $path, string $title, string $ac
     // Use a minimal layout so the custom dashboard can occupy the full window.
     $PAGE->set_pagelayout('popup');
     $PAGE->add_body_class('admindash-fullscreen');
-    $PAGE->set_title($title);
-    $PAGE->set_heading($title);
+    $pagestring = 'page_' . str_replace(['.', '-'], '_', $active);
+    $resolvedtitle = get_string_manager()->string_exists($pagestring, 'local_admindashboard')
+        ? get_string($pagestring, 'local_admindashboard')
+        : $title;
+    $PAGE->set_title($resolvedtitle);
+    $PAGE->set_heading($resolvedtitle);
+    $PAGE->requires->strings_for_js([
+        'theme_day_mode',
+        'theme_dark_mode',
+        'sticky_schedule_show',
+        'sticky_schedule_hide',
+        'table_search_placeholder',
+        'table_export_excel',
+        'table_export_pdf',
+        'table_report_title',
+    ], 'local_admindashboard');
 
     // Sidebar submenu toggle + theme toggle + simple report table helpers.
     $PAGE->requires->js_init_code(<<<'JS'
@@ -733,7 +747,9 @@ function local_admindashboard_setup_page(string $path, string $title, string $ac
         if (!btn) return;
         const theme = getCurrentTheme();
         const isDark = theme === 'dark';
-        btn.textContent = isDark ? 'Day mode' : 'Dark mode';
+        btn.textContent = isDark
+            ? M.util.get_string('theme_day_mode', 'local_admindashboard')
+            : M.util.get_string('theme_dark_mode', 'local_admindashboard');
         btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
     }
 
@@ -900,8 +916,8 @@ function local_admindashboard_setup_page(string $path, string $title, string $ac
         }
         shell.classList.toggle('is-collapsed', collapsed);
         btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
-        const expand = btn.getAttribute('data-ad-expand') || 'Show';
-        const collapse = btn.getAttribute('data-ad-collapse') || 'Hide';
+        const expand = btn.getAttribute('data-ad-expand') || M.util.get_string('sticky_schedule_show', 'local_admindashboard');
+        const collapse = btn.getAttribute('data-ad-collapse') || M.util.get_string('sticky_schedule_hide', 'local_admindashboard');
         btn.setAttribute('aria-label', collapsed ? expand : collapse);
     }
 
@@ -958,18 +974,18 @@ function local_admindashboard_setup_page(string $path, string $title, string $ac
         const search = document.createElement('input');
         search.type = 'search';
         search.className = 'form-control';
-        search.placeholder = 'Search…';
+        search.placeholder = M.util.get_string('table_search_placeholder', 'local_admindashboard');
         search.style.maxWidth = '280px';
 
         const btnExcel = document.createElement('button');
         btnExcel.type = 'button';
         btnExcel.className = 'btn btn-outline-primary';
-        btnExcel.textContent = 'Export Excel';
+        btnExcel.textContent = M.util.get_string('table_export_excel', 'local_admindashboard');
 
         const btnPdf = document.createElement('button');
         btnPdf.type = 'button';
         btnPdf.className = 'btn btn-outline-primary';
-        btnPdf.textContent = 'Export PDF';
+        btnPdf.textContent = M.util.get_string('table_export_pdf', 'local_admindashboard');
 
         toolbar.appendChild(search);
         toolbar.appendChild(btnExcel);
@@ -994,7 +1010,8 @@ function local_admindashboard_setup_page(string $path, string $title, string $ac
             const win = window.open('', '_blank');
             if (!win) return;
             win.document.open();
-            win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Report</title>`);
+            const reportTitle = M.util.get_string('table_report_title', 'local_admindashboard');
+            win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${reportTitle}</title>`);
             win.document.write('<style>body{font-family:Arial, sans-serif;margin:16px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:8px}th{background:#f5f5f5}</style>');
             win.document.write('</head><body>');
             win.document.write(table.outerHTML);
@@ -1118,114 +1135,114 @@ function local_admindashboard_get_nav_icon_svg(string $icon): string {
 function local_admindashboard_get_nav_items(): array {
     return [
         [
-            'heading' => 'Admin Tools',
+            'heading' => get_string('nav_heading_admintools', 'local_admindashboard'),
             'items' => [
                 [
                     'key' => 'admintools.users',
-                    'label' => 'Manage Users',
+                    'label' => get_string('nav_admintools_users', 'local_admindashboard'),
                     'icon' => 'users',
                     'children' => [
-                        ['key' => 'admintools.users.list', 'label' => 'Users List', 'url' => new moodle_url('/local/admindashboard/manage_users.php')],
-                        ['key' => 'admintools.users.add', 'label' => 'Add User', 'url' => new moodle_url('/local/admindashboard/add_user.php')],
-                        ['key' => 'admintools.users.roles', 'label' => 'Define Roles', 'url' => new moodle_url('/local/admindashboard/define_roles.php')],
+                        ['key' => 'admintools.users.list', 'label' => get_string('nav_admintools_users_list', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/manage_users.php')],
+                        ['key' => 'admintools.users.add', 'label' => get_string('nav_admintools_users_add', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/add_user.php')],
+                        ['key' => 'admintools.users.roles', 'label' => get_string('nav_admintools_users_roles', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/define_roles.php')],
                     ],
                 ],
                 [
                     'key' => 'admintools.courses',
-                    'label' => 'Manage Courses',
+                    'label' => get_string('nav_admintools_courses', 'local_admindashboard'),
                     'icon' => 'courses',
                     'children' => [
-                        ['key' => 'admintools.courses.list', 'label' => 'Course List', 'url' => new moodle_url('/local/admindashboard/course_list.php')],
-                        ['key' => 'admintools.courses.create', 'label' => 'Create New Course', 'url' => new moodle_url('/local/admindashboard/create_course.php')],
-                        ['key' => 'admintools.courses.templates', 'label' => 'Course Templates', 'url' => new moodle_url('/local/admindashboard/course_templates.php')],
+                        ['key' => 'admintools.courses.list', 'label' => get_string('nav_admintools_courses_list', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/course_list.php')],
+                        ['key' => 'admintools.courses.create', 'label' => get_string('nav_admintools_courses_create', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/create_course.php')],
+                        ['key' => 'admintools.courses.templates', 'label' => get_string('nav_admintools_courses_templates', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/course_templates.php')],
                     ],
                 ],
                 [
                     'key' => 'admintools.groups',
-                    'label' => 'Group & Department Setup',
+                    'label' => get_string('nav_admintools_groups', 'local_admindashboard'),
                     'icon' => 'department',
                     'url' => new moodle_url('/local/admindashboard/group_department_setup.php'),
                 ],
             ],
         ],
         [
-            'heading' => 'Reports & Analytics',
+            'heading' => get_string('nav_heading_reportsanalytics', 'local_admindashboard'),
             'items' => [
                 [
                     'key' => 'courseanalytics',
-                    'label' => 'Course Analytics',
+                    'label' => get_string('nav_courseanalytics', 'local_admindashboard'),
                     'icon' => 'analytics',
                     'children' => [
-                        ['key' => 'courseanalytics.overview', 'label' => 'Course Analytics', 'url' => new moodle_url('/local/admindashboard/course_analytics.php')],
-                        ['key' => 'courseanalytics.modules', 'label' => 'Modules Report', 'url' => new moodle_url('/local/admindashboard/course_analytics_modules.php')],
-                        ['key' => 'courseanalytics.sentiment', 'label' => 'Sentiment Analyzer', 'url' => new moodle_url('/local/admindashboard/sentiment_analyzer.php')],
+                        ['key' => 'courseanalytics.overview', 'label' => get_string('nav_courseanalytics_overview', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/course_analytics.php')],
+                        ['key' => 'courseanalytics.modules', 'label' => get_string('nav_courseanalytics_modules', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/course_analytics_modules.php')],
+                        ['key' => 'courseanalytics.sentiment', 'label' => get_string('nav_courseanalytics_sentiment', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/sentiment_analyzer.php')],
                     ],
                 ],
                 [
                     'key' => 'reports',
-                    'label' => 'Reports',
+                    'label' => get_string('nav_reports', 'local_admindashboard'),
                     'icon' => 'report',
                     'children' => [
-                        ['key' => 'reports.passfail', 'label' => 'Pass/Fail Report', 'url' => new moodle_url('/local/admindashboard/passfail_report.php')],
-                        ['key' => 'reports.ticks', 'label' => 'Progress Ticks Report', 'url' => new moodle_url('/local/admindashboard/progress_ticks_report.php')],
-                        ['key' => 'reports.departmentcompletion', 'label' => 'Department Completion Report', 'url' => new moodle_url('/local/admindashboard/department_reports.php')],
-                        ['key' => 'reports.departmentengagement', 'label' => 'Department Engagement Report', 'url' => new moodle_url('/local/admindashboard/department_reports_engagement.php')],
-                        ['key' => 'reports.userprogress', 'label' => 'User Progress Report', 'url' => new moodle_url('/local/admindashboard/user_progress.php')],
-                        ['key' => 'reports.useractivity', 'label' => 'Recent Activity Report', 'url' => new moodle_url('/local/admindashboard/user_progress_activity.php')],
+                        ['key' => 'reports.passfail', 'label' => get_string('nav_reports_passfail', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/passfail_report.php')],
+                        ['key' => 'reports.ticks', 'label' => get_string('nav_reports_ticks', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/progress_ticks_report.php')],
+                        ['key' => 'reports.departmentcompletion', 'label' => get_string('nav_reports_departmentcompletion', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/department_reports.php')],
+                        ['key' => 'reports.departmentengagement', 'label' => get_string('nav_reports_departmentengagement', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/department_reports_engagement.php')],
+                        ['key' => 'reports.userprogress', 'label' => get_string('nav_reports_userprogress', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/user_progress.php')],
+                        ['key' => 'reports.useractivity', 'label' => get_string('nav_reports_useractivity', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/user_progress_activity.php')],
                     ],
                 ],
                 [
                     'key' => 'compliance',
-                    'label' => 'Compliance and Expiry Tracking',
+                    'label' => get_string('nav_compliance', 'local_admindashboard'),
                     'icon' => 'compliance',
                     'children' => [
-                        ['key' => 'compliance.expiry', 'label' => 'License Expiry', 'url' => new moodle_url('/local/admindashboard/license_expiry.php')],
-                        ['key' => 'compliance.mandatory', 'label' => 'Mandatory Training', 'url' => new moodle_url('/local/admindashboard/mandatory_training.php')],
-                        ['key' => 'compliance.dashboard', 'label' => 'Compliance Dashboard', 'url' => new moodle_url('/local/admindashboard/compliance_dashboard.php')],
+                        ['key' => 'compliance.expiry', 'label' => get_string('nav_compliance_expiry', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/license_expiry.php')],
+                        ['key' => 'compliance.mandatory', 'label' => get_string('nav_compliance_mandatory', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/mandatory_training.php')],
+                        ['key' => 'compliance.dashboard', 'label' => get_string('nav_compliance_dashboard', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/compliance_dashboard.php')],
                     ],
                 ],
                 [
                     'key' => 'skills',
-                    'label' => 'Skill Gap & Certifications',
+                    'label' => get_string('nav_skills', 'local_admindashboard'),
                     'icon' => 'certification',
                     'children' => [
-                        ['key' => 'skills.gap', 'label' => 'Skill Gap Matrix', 'url' => new moodle_url('/local/admindashboard/skill_gap_matrix.php')],
-                        ['key' => 'skills.certificates', 'label' => 'Certificate Status', 'url' => new moodle_url('/local/admindashboard/certificate_status.php')],
-                        ['key' => 'skills.renewals', 'label' => 'Renewal Readiness', 'url' => new moodle_url('/local/admindashboard/renewal_readiness.php')],
+                        ['key' => 'skills.gap', 'label' => get_string('nav_skills_gap', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/skill_gap_matrix.php')],
+                        ['key' => 'skills.certificates', 'label' => get_string('nav_skills_certificates', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/certificate_status.php')],
+                        ['key' => 'skills.renewals', 'label' => get_string('nav_skills_renewals', 'local_admindashboard'), 'url' => new moodle_url('/local/admindashboard/renewal_readiness.php')],
                     ],
                 ],
                 [
                     'key' => 'exportcenter',
-                    'label' => 'Export Center',
+                    'label' => get_string('nav_exportcenter', 'local_admindashboard'),
                     'icon' => 'export',
                     'url' => new moodle_url('/local/admindashboard/export_center.php'),
                 ],
             ],
         ],
         [
-            'heading' => 'Communication',
+            'heading' => get_string('nav_heading_communication', 'local_admindashboard'),
             'items' => [
-                ['key' => 'communication.announcements', 'label' => 'Announcements', 'icon' => 'announcement', 'url' => new moodle_url('/local/admindashboard/announcements.php')],
-                ['key' => 'communication.discussions', 'label' => 'Forums & Discussions', 'icon' => 'discussion', 'url' => new moodle_url('/local/admindashboard/forums_discussions.php')],
-                ['key' => 'communication.messaging', 'label' => 'Direct Messaging', 'icon' => 'message', 'url' => new moodle_url('/local/admindashboard/direct_messaging.php')],
+                ['key' => 'communication.announcements', 'label' => get_string('nav_communication_announcements', 'local_admindashboard'), 'icon' => 'announcement', 'url' => new moodle_url('/local/admindashboard/announcements.php')],
+                ['key' => 'communication.discussions', 'label' => get_string('nav_communication_discussions', 'local_admindashboard'), 'icon' => 'discussion', 'url' => new moodle_url('/local/admindashboard/forums_discussions.php')],
+                ['key' => 'communication.messaging', 'label' => get_string('nav_communication_messaging', 'local_admindashboard'), 'icon' => 'message', 'url' => new moodle_url('/local/admindashboard/direct_messaging.php')],
             ],
         ],
         [
-            'heading' => 'Platform Settings',
+            'heading' => get_string('nav_heading_platformsettings', 'local_admindashboard'),
             'items' => [
-                ['key' => 'platform.integrations', 'label' => 'Integrations', 'icon' => 'integration', 'url' => new moodle_url('/local/admindashboard/integrations.php')],
-                ['key' => 'platform.config', 'label' => 'System Config', 'icon' => 'config', 'url' => new moodle_url('/local/admindashboard/system_config.php')],
-                ['key' => 'platform.branding', 'label' => 'Platform Branding', 'icon' => 'branding', 'url' => new moodle_url('/local/admindashboard/platform_branding.php')],
-                ['key' => 'platform.schedule_notes', 'label' => 'Course schedule notes', 'icon' => 'sticky', 'url' => new moodle_url('/local/admindashboard/course_schedule_notes.php'), 'require_edit_notes' => true],
+                ['key' => 'platform.integrations', 'label' => get_string('nav_platform_integrations', 'local_admindashboard'), 'icon' => 'integration', 'url' => new moodle_url('/local/admindashboard/integrations.php')],
+                ['key' => 'platform.config', 'label' => get_string('nav_platform_config', 'local_admindashboard'), 'icon' => 'config', 'url' => new moodle_url('/local/admindashboard/system_config.php')],
+                ['key' => 'platform.branding', 'label' => get_string('nav_platform_branding', 'local_admindashboard'), 'icon' => 'branding', 'url' => new moodle_url('/local/admindashboard/platform_branding.php')],
+                ['key' => 'platform.schedule_notes', 'label' => get_string('nav_platform_schedule_notes', 'local_admindashboard'), 'icon' => 'sticky', 'url' => new moodle_url('/local/admindashboard/course_schedule_notes.php'), 'require_edit_notes' => true],
             ],
         ],
         [
-            'heading' => 'Support & Account',
+            'heading' => get_string('nav_heading_supportaccount', 'local_admindashboard'),
             'items' => [
-                ['key' => 'support.tickets', 'label' => 'Support Tickets', 'icon' => 'support', 'url' => new moodle_url('/local/admindashboard/support_tickets.php')],
-                ['key' => 'support.help', 'label' => 'Help Center', 'icon' => 'help', 'url' => new moodle_url('/local/admindashboard/help_center.php')],
-                ['key' => 'support.profile', 'label' => 'My Profile', 'icon' => 'profile', 'url' => new moodle_url('/local/admindashboard/my_profile.php')],
-                ['key' => 'support.settings', 'label' => 'Settings', 'icon' => 'settings', 'url' => new moodle_url('/local/admindashboard/account_settings.php')],
+                ['key' => 'support.tickets', 'label' => get_string('nav_support_tickets', 'local_admindashboard'), 'icon' => 'support', 'url' => new moodle_url('/local/admindashboard/support_tickets.php')],
+                ['key' => 'support.help', 'label' => get_string('nav_support_help', 'local_admindashboard'), 'icon' => 'help', 'url' => new moodle_url('/local/admindashboard/help_center.php')],
+                ['key' => 'support.profile', 'label' => get_string('nav_support_profile', 'local_admindashboard'), 'icon' => 'profile', 'url' => new moodle_url('/local/admindashboard/my_profile.php')],
+                ['key' => 'support.settings', 'label' => get_string('nav_support_settings', 'local_admindashboard'), 'icon' => 'settings', 'url' => new moodle_url('/local/admindashboard/account_settings.php')],
             ],
         ],
     ];

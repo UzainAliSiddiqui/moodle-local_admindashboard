@@ -1,5 +1,12 @@
 # Admin dashboard changes
 
+## 0.1.18 - 2026-05-28
+
+- Hardened the legacy JSON API so requests require a Moodle session, sesskey, and the dashboard view capability.
+- Removed the legacy password/token login flow from the plugin JSON endpoint.
+- Moved shared navigation, page title, theme toggle, schedule toggle, and report table controls to Moodle language strings.
+- Parameterized the PDF filename SQL filter used by engagement analytics.
+
 ## 0.1.17 - 2026-05-28
 
 - Fixed XMLDB syntax in `db/install.xml` so fresh Moodle installs can create plugin tables.

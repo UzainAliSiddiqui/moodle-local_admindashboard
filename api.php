@@ -15,20 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lightweight JSON API for the local_admindashboard mobile app.
+ * Legacy JSON API for local_admindashboard.
  *
- * This endpoint intentionally avoids Moodle's external function execution layer,
- * but it still validates standard Moodle web service tokens and uses Moodle's
- * session APIs so access checks behave consistently.
+ * The endpoint is retained for backwards compatibility with older dashboard
+ * clients, but all actions now require a normal Moodle session, sesskey and
+ * the dashboard view capability. New browser UI calls should use registered
+ * external services or data.php.
  *
  * @package    local_admindashboard
  * @copyright  2026
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define('NO_MOODLE_COOKIES', true);
+define('AJAX_SCRIPT', true);
 define('NO_DEBUG_DISPLAY', true);
-define('WS_SERVER', true);
 
 $canonicalurl = getenv('MOODLE_URL') ?: '';
 $incominghost = $_SERVER['HTTP_HOST'] ?? '';
@@ -67,8 +67,10 @@ if ($isloopbackrequest) {
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/local/admindashboard/lib.php');
 require_once($CFG->dirroot . '/local/admindashboard/metricslib.php');
-require_once($CFG->dirroot . '/webservice/lib.php');
-require_once($CFG->libdir . '/enrollib.php');
+
+require_login();
+$PAGE->set_context(context_system::instance());
+local_admindashboard_require_view_access();
 
 /**
  * Send a JSON response and terminate the script.
@@ -116,318 +118,6 @@ function local_admindashboard_api_error(int $httpstatus, string $message, ?int $
         'message' => $message,
         'code' => $code ?? $httpstatus,
     ]);
-}
-
-/**
- * Read the Authorization header in a SAPI-safe way.
- *
- * @return string
- */
-function local_admindashboard_api_get_authorization_header(): string {
-    if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
-        return trim((string)$_SERVER['HTTP_AUTHORIZATION']);
-    }
-
-    if (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
-        return trim((string)$_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
-    }
-
-    if (function_exists('apache_request_headers')) {
-        $headers = apache_request_headers();
-        foreach ($headers as $name => $value) {
-            if (strtolower($name) === 'authorization') {
-                return trim((string)$value);
-            }
-        }
-    }
-
-    return '';
-}
-
-/**
- * Extract the token from POST data or a Bearer authorization header.
- *
- * @return string
- */
-function local_admindashboard_api_get_request_token(): string {
-    $token = optional_param('wstoken', '', PARAM_ALPHANUM);
-    if ($token !== '') {
-        return $token;
-    }
-
-    $authorization = local_admindashboard_api_get_authorization_header();
-    if ($authorization !== '' && preg_match('/^Bearer\s+([A-Za-z0-9]+)$/i', $authorization, $matches)) {
-        return clean_param($matches[1], PARAM_ALPHANUM);
-    }
-
-    return '';
-}
-
-/**
- * Allowed Moodle role shortnames for mobile login.
- *
- * @return string[]
- */
-function local_admindashboard_api_get_allowed_login_roles(): array {
-    return ['manager', 'management', 'coursecreator', 'editingteacher', 'teacher'];
-}
-
-/**
- * Resolve the highest-priority allowed role for a user.
- *
- * @param int $userid
- * @return null|stdClass
- */
-function local_admindashboard_api_get_login_role(int $userid): ?stdClass {
-    global $DB;
-
-    $allowedroles = local_admindashboard_api_get_allowed_login_roles();
-    list($rolesql, $roleparams) = $DB->get_in_or_equal($allowedroles, SQL_PARAMS_NAMED, 'loginrole');
-
-    $sql = "SELECT r.id, r.shortname, r.name
-              FROM {role_assignments} ra
-              JOIN {role} r ON r.id = ra.roleid
-             WHERE ra.userid = :userid
-               AND r.shortname {$rolesql}
-          ORDER BY CASE r.shortname
-                     WHEN 'manager' THEN 1
-                     WHEN 'management' THEN 2
-                     WHEN 'coursecreator' THEN 3
-                     WHEN 'editingteacher' THEN 4
-                     WHEN 'teacher' THEN 5
-                     ELSE 99
-                   END,
-                   ra.id ASC";
-
-    return $DB->get_record_sql($sql, ['userid' => $userid] + $roleparams, IGNORE_MISSING);
-}
-
-/**
- * Build the role label shown in the mobile app.
- *
- * @param stdClass $user
- * @return string
- */
-function local_admindashboard_api_get_login_role_label(stdClass $user): string {
-    if (is_siteadmin($user)) {
-        return 'Administrator';
-    }
-
-    $role = local_admindashboard_api_get_login_role((int)$user->id);
-    if ($role && !empty($role->name)) {
-        return trim((string)$role->name);
-    }
-
-    return 'Staff';
-}
-
-/**
- * Retrieve an existing valid Moodle web service token for the user, or create a new one.
- *
- * @param stdClass $user Authenticated Moodle user record.
- * @return string Real wstoken, or empty string when web services are disabled.
- */
-function local_admindashboard_api_get_or_create_wstoken(stdClass $user): string {
-    global $CFG, $DB;
-
-    if (empty($CFG->enablewebservices)) {
-        return '';
-    }
-
-    // Prefer the standard Moodle mobile service; fall back to any enabled service.
-    $service = $DB->get_record('external_services', ['shortname' => 'moodle_mobile_app', 'enabled' => 1]);
-    if (!$service) {
-        $service = $DB->get_record('external_services', ['enabled' => 1], '*', IGNORE_MULTIPLE);
-    }
-
-    if (!$service) {
-        return '';
-    }
-
-    // Return existing valid permanent token if one already exists for this user.
-    $existing = $DB->get_record_select(
-        'external_tokens',
-        'userid = :userid AND externalserviceid = :serviceid AND tokentype = 0 AND (validuntil = 0 OR validuntil > :now)',
-        ['userid' => (int)$user->id, 'serviceid' => (int)$service->id, 'now' => time()],
-        'token',
-        IGNORE_MULTIPLE
-    );
-
-    if ($existing && !empty($existing->token)) {
-        return (string)$existing->token;
-    }
-
-    // Create a new permanent, never-expiring token for this user.
-    $systemcontext = context_system::instance();
-    $tokenrecord = new stdClass();
-    $tokenrecord->token = md5(uniqid((string)$user->id . microtime(), true));
-    $tokenrecord->userid = (int)$user->id;
-    $tokenrecord->externalserviceid = (int)$service->id;
-    $tokenrecord->contextid = (int)$systemcontext->id;
-    $tokenrecord->tokentype = 0; // EXTERNAL_TOKEN_PERMANENT
-    $tokenrecord->creatorid = (int)$user->id;
-    $tokenrecord->validuntil = 0;
-    $tokenrecord->iprestriction = '';
-    $tokenrecord->sid = '';
-    $tokenrecord->lastaccess = time();
-    $tokenrecord->timecreated = time();
-    $DB->insert_record('external_tokens', $tokenrecord);
-
-    return (string)$tokenrecord->token;
-}
-
-/**
- * Validate Moodle credentials for the mobile app and return a lightweight app session.
- *
- * @param string $username
- * @param string $password
- * @return array<string,mixed>
- */
-function local_admindashboard_api_build_login_response(string $username, string $password): array {
-    $username = trim($username);
-
-    if ($username === '' || $password === '') {
-        local_admindashboard_api_error(400, 'Username and password are required.', 400);
-    }
-
-    $user = authenticate_user_login($username, $password);
-    if (!$user) {
-        local_admindashboard_api_error(401, 'Invalid username or password.', 401);
-    }
-
-    if (!is_siteadmin($user) && !local_admindashboard_api_get_login_role((int)$user->id)) {
-        local_admindashboard_api_error(403, 'Only administrators, management, teachers, and course creators can sign in to this app.', 403);
-    }
-
-    $fullname = trim(fullname($user));
-    if ($fullname === '') {
-        $fullname = trim((string)$user->firstname . ' ' . (string)$user->lastname);
-    }
-
-    $wstoken = local_admindashboard_api_get_or_create_wstoken($user);
-
-    return [
-        'accessToken' => bin2hex(random_bytes(24)),
-        'wstoken' => $wstoken !== '' ? $wstoken : null,
-        'expiresAt' => date(DATE_ATOM, time() + (60 * 60 * 24 * 30)),
-        'user' => [
-            'id' => (string)$user->id,
-            'name' => $fullname !== '' ? $fullname : (string)$user->username,
-            'email' => (string)($user->email ?? ''),
-            'role' => local_admindashboard_api_get_login_role_label($user),
-            'avatarUrl' => '',
-        ],
-    ];
-}
-
-/**
- * Validate a Moodle web service token and bootstrap the user for this request.
- *
- * @param string $tokenvalue
- * @return array{user: stdClass, token: stdClass, service: stdClass}
- */
-function local_admindashboard_api_authenticate_token(string $tokenvalue): array {
-    global $CFG, $DB;
-
-    if (!$CFG->enablewebservices) {
-        local_admindashboard_api_error(503, 'Web services are disabled on this site.', 503);
-    }
-
-    $token = $DB->get_record('external_tokens', ['token' => $tokenvalue]);
-    if (!$token) {
-        local_admindashboard_api_error(401, 'Missing, invalid, or expired token.', 401);
-    }
-
-    if (!empty($token->validuntil) && $token->validuntil < time()) {
-        $DB->delete_records('external_tokens', ['token' => $token->token]);
-        local_admindashboard_api_error(401, 'Missing, invalid, or expired token.', 401);
-    }
-
-    if (!empty($token->iprestriction) && !address_in_subnet(getremoteaddr(), $token->iprestriction)) {
-        local_admindashboard_api_error(401, 'This token is not valid from the current IP address.', 401);
-    }
-
-    if (!empty($token->sid) && !\core\session\manager::session_exists($token->sid)) {
-        $DB->delete_records('external_tokens', ['sid' => $token->sid]);
-        local_admindashboard_api_error(401, 'Missing, invalid, or expired token.', 401);
-    }
-
-    $user = $DB->get_record('user', ['id' => $token->userid, 'deleted' => 0]);
-    if (!$user) {
-        local_admindashboard_api_error(401, 'Missing, invalid, or expired token.', 401);
-    }
-
-    $service = $DB->get_record('external_services', ['id' => $token->externalserviceid, 'enabled' => 1]);
-    if (!$service) {
-        local_admindashboard_api_error(401, 'The token is linked to a disabled web service.', 401);
-    }
-
-    enrol_check_plugins($user, false);
-
-    // Rebuild the user context for this request without creating a browser session.
-    \core\session\manager::set_user($user);
-    set_login_session_preferences();
-
-    $systemcontext = context_system::instance();
-    $hasmaintenanceaccess = has_capability('moodle/site:maintenanceaccess', $systemcontext, $user);
-    if (!empty($CFG->maintenance_enabled) && !$hasmaintenanceaccess) {
-        local_admindashboard_api_error(503, 'This site is in maintenance mode.', 503);
-    }
-
-    if (!empty($service->requiredcapability) && !has_capability($service->requiredcapability, $systemcontext, $user)) {
-        local_admindashboard_api_error(403, 'The token user lacks the required web service capability.', 403);
-    }
-
-    if (!empty($service->restrictedusers)) {
-        $alloweduser = $DB->get_record('external_services_users', [
-            'externalserviceid' => $service->id,
-            'userid' => $user->id,
-        ]);
-
-        if (!$alloweduser) {
-            local_admindashboard_api_error(403, 'The token user is not authorised for this web service.', 403);
-        }
-
-        if (!empty($alloweduser->validuntil) && $alloweduser->validuntil < time()) {
-            local_admindashboard_api_error(403, 'The token user access to this web service has expired.', 403);
-        }
-
-        if (!empty($alloweduser->iprestriction) && !address_in_subnet(getremoteaddr(), $alloweduser->iprestriction)) {
-            local_admindashboard_api_error(403, 'The token user is not allowed from the current IP address.', 403);
-        }
-    }
-
-    if (empty($user->confirmed)) {
-        local_admindashboard_api_error(403, 'The token user account is not confirmed.', 403);
-    }
-
-    if (!empty($user->suspended)) {
-        local_admindashboard_api_error(403, 'The token user account is suspended.', 403);
-    }
-
-    if ($user->auth === 'nologin') {
-        local_admindashboard_api_error(403, 'The token user account is not permitted to log in.', 403);
-    }
-
-    $authplugin = get_auth_plugin($user->auth);
-    if (!empty($authplugin->config->expiration) && (int)$authplugin->config->expiration === 1) {
-        $days2expire = $authplugin->password_expire($user->username);
-        if ((int)$days2expire < 0) {
-            local_admindashboard_api_error(403, 'The token user password has expired.', 403);
-        }
-    }
-
-    try {
-        webservice::update_token_lastaccess($token);
-    } catch (Throwable $exception) {
-        // Ignore token last-access write failures for this stateless mobile API.
-    }
-
-    return [
-        'user' => $user,
-        'token' => $token,
-        'service' => $service,
-    ];
 }
 
 /**
@@ -917,26 +607,15 @@ try {
         local_admindashboard_api_error(405, 'Method not allowed. Use POST only.', 405);
     }
 
+    require_sesskey();
+
     $action = optional_param('action', '', PARAM_ALPHAEXT);
     if ($action === '') {
         local_admindashboard_api_error(400, 'The action parameter is required.', 400);
     }
 
     if ($action === 'login') {
-        $username = optional_param('username', '', PARAM_USERNAME);
-        $password = optional_param('password', '', PARAM_TEXT);
-        local_admindashboard_api_success(local_admindashboard_api_build_login_response($username, $password));
-    }
-
-    $tokenvalue = local_admindashboard_api_get_request_token();
-    if ($tokenvalue === '') {
-        local_admindashboard_api_error(401, 'A valid web service token is required.', 401);
-    }
-
-    local_admindashboard_api_authenticate_token($tokenvalue);
-
-    if (!local_admindashboard_user_can_view()) {
-        local_admindashboard_api_error(403, 'You do not have permission to access this dashboard API.', 403);
+        local_admindashboard_api_error(410, 'Password login through this legacy endpoint is disabled. Use Moodle authentication or registered external services.', 410);
     }
 
     switch ($action) {

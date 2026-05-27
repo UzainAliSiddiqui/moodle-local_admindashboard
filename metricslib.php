@@ -5926,6 +5926,7 @@ function local_admindashboard_get_metrics(int $courseid, string $department, int
             $pvcoursefilter .= ' AND ctx.instanceid = :pv_cmid';
             $pvparams['pv_cmid'] = $moduleid;
         }
+        $pvparams['pv_pdfextension'] = '%.pdf';
 
                 $pvsql = "SELECT FROM_UNIXTIME(l.timecreated, '%Y-%m-%d') AS day,
                                                  COUNT(1) AS views
@@ -5947,7 +5948,7 @@ function local_admindashboard_get_metrics(int $courseid, string $department, int
                                                         AND f.component = 'mod_resource'
                                                         AND f.filearea = 'content'
                                                         AND f.filename <> '.'
-                                                        AND (f.mimetype = 'application/pdf' OR LOWER(f.filename) LIKE '%.pdf')
+                                                        AND (f.mimetype = 'application/pdf' OR LOWER(f.filename) LIKE :pv_pdfextension)
                                          )
                                 GROUP BY day
                                 ORDER BY day ASC";
