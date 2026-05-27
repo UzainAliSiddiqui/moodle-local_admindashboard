@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.15 - 2026-05-27
+
+- Calculated Course Completion height from Live Feed content height instead of stretched grid height.
+
 ## 0.1.14 - 2026-05-27
 
 - Synced the Course Completion card height to the rendered Live Feed height without stretching Live Feed.

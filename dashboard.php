@@ -297,8 +297,8 @@ $sesskey = sesskey();
             <canvas id="barChart" height="120"></canvas>
             <div id="barEmptyMsg" class="text-muted small" style="display:none;margin-top:6px">No data yet for the selected filters.</div>
         </div>
-        <div class="admindash-widget-grid">
-            <div class="admindash-card p-2 bg-white admindash-widget-card">
+        <div class="admindash-widget-grid" style="align-items:start">
+            <div id="liveFeedCard" class="admindash-card p-2 bg-white admindash-widget-card" style="min-height:0;height:auto;max-height:none">
                 <div class="admindash-widget-card__header">
                     <div>
                         <h5 class="mb-1">Live Feed</h5>
@@ -309,14 +309,14 @@ $sesskey = sesskey();
                     <div class="admindash-widget-empty">Loading live feed…</div>
                 </div>
             </div>
-            <div class="admindash-card p-2 bg-white admindash-widget-card">
+            <div id="courseCompletionCard" class="admindash-card p-2 bg-white admindash-widget-card" style="min-height:0;overflow:hidden">
                 <div class="admindash-widget-card__header">
                     <div>
                         <h5 class="mb-1">Course Completion</h5>
                         <div class="text-muted small" id="courseProgressMeta">All courses sorted by status. Running courses appear first.</div>
                     </div>
                 </div>
-                <div id="courseProgressWrap" class="admindash-courseprogress">
+                <div id="courseProgressWrap" class="admindash-courseprogress" style="min-height:0;overflow-y:scroll">
                     <div class="admindash-widget-empty">Loading course completion…</div>
                 </div>
             </div>
@@ -2619,6 +2619,8 @@ function setupLiveFeedRefresh() {
             loadLiveFeed();
         }
     });
+
+    window.addEventListener('resize', syncCourseCompletionHeight);
 }
 
 function renderActivityFeed(rows, hasCourse) {
@@ -2666,27 +2668,61 @@ function syncCourseCompletionHeight() {
             return;
         }
 
-        const feedCard = feedWrap.closest('.admindash-widget-card');
-        const progressCard = progressWrap.closest('.admindash-widget-card');
+        const feedCard = document.getElementById('liveFeedCard') || feedWrap.closest('.admindash-widget-card');
+        const progressCard = document.getElementById('courseCompletionCard') || progressWrap.closest('.admindash-widget-card');
         const grid = feedWrap.closest('.admindash-widget-grid');
         if (!feedCard || !progressCard || !grid) {
             return;
         }
 
-        progressCard.style.height = '';
-        progressCard.style.minHeight = '';
-        progressCard.style.maxHeight = '';
-        progressWrap.style.maxHeight = '';
+        feedCard.style.setProperty('height', 'auto', 'important');
+        feedCard.style.setProperty('min-height', '0', 'important');
+        feedCard.style.setProperty('max-height', 'none', 'important');
+        feedCard.style.setProperty('align-self', 'start', 'important');
+        grid.style.setProperty('align-items', 'start', 'important');
 
         const columns = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length;
         if (columns < 2) {
+            progressCard.style.removeProperty('height');
+            progressCard.style.removeProperty('min-height');
+            progressCard.style.removeProperty('max-height');
+            progressWrap.style.removeProperty('max-height');
             return;
         }
 
-        const targetHeight = Math.max(260, Math.ceil(feedCard.offsetHeight));
-        progressCard.style.height = targetHeight + 'px';
-        progressCard.style.minHeight = targetHeight + 'px';
-        progressCard.style.maxHeight = targetHeight + 'px';
+        const feedHeader = feedCard.querySelector('.admindash-widget-card__header');
+        const progressHeader = progressCard.querySelector('.admindash-widget-card__header');
+        const feedCardStyle = getComputedStyle(feedCard);
+        const feedHeaderStyle = feedHeader ? getComputedStyle(feedHeader) : null;
+        const progressCardStyle = getComputedStyle(progressCard);
+        const progressHeaderStyle = progressHeader ? getComputedStyle(progressHeader) : null;
+
+        const feedChrome = Number.parseFloat(feedCardStyle.paddingTop || 0)
+            + Number.parseFloat(feedCardStyle.paddingBottom || 0)
+            + Number.parseFloat(feedCardStyle.borderTopWidth || 0)
+            + Number.parseFloat(feedCardStyle.borderBottomWidth || 0);
+        const feedHeaderHeight = feedHeader
+            ? feedHeader.offsetHeight + Number.parseFloat((feedHeaderStyle && feedHeaderStyle.marginBottom) || 0)
+            : 0;
+        const targetHeight = Math.max(240, Math.ceil(feedChrome + feedHeaderHeight + feedWrap.scrollHeight));
+
+        const progressChrome = Number.parseFloat(progressCardStyle.paddingTop || 0)
+            + Number.parseFloat(progressCardStyle.paddingBottom || 0)
+            + Number.parseFloat(progressCardStyle.borderTopWidth || 0)
+            + Number.parseFloat(progressCardStyle.borderBottomWidth || 0);
+        const progressHeaderHeight = progressHeader
+            ? progressHeader.offsetHeight + Number.parseFloat((progressHeaderStyle && progressHeaderStyle.marginBottom) || 0)
+            : 0;
+        const progressBodyHeight = Math.max(120, Math.floor(targetHeight - progressChrome - progressHeaderHeight));
+
+        progressCard.style.setProperty('height', targetHeight + 'px', 'important');
+        progressCard.style.setProperty('min-height', targetHeight + 'px', 'important');
+        progressCard.style.setProperty('max-height', targetHeight + 'px', 'important');
+        progressCard.style.setProperty('overflow', 'hidden', 'important');
+        progressCard.style.setProperty('align-self', 'start', 'important');
+        progressWrap.style.setProperty('height', progressBodyHeight + 'px', 'important');
+        progressWrap.style.setProperty('max-height', progressBodyHeight + 'px', 'important');
+        progressWrap.style.setProperty('overflow-y', 'scroll', 'important');
     });
 }
 
