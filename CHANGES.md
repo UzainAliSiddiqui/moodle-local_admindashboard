@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.11 - 2026-05-27
+
+- Excluded completed learner-course records from At-Risk Network Wide and course-specific at-risk lists.
+
 ## 0.1.10 - 2026-05-27
 
 - Renamed overview labels from Unique Learners to Total Learners and Active Courses to Total Courses.

@@ -2089,7 +2089,9 @@ function local_admindashboard_calculate_at_risk_rows_for_course(int $courseid): 
                   FROM {user} u
                   JOIN {user_enrolments} ue ON ue.userid = u.id AND ue.status = 0
                   JOIN {enrol} e ON e.id = ue.enrolid AND e.status = 0 AND e.courseid = :courseid
+             LEFT JOIN {course_completions} cc ON cc.userid = u.id AND cc.course = e.courseid
                  WHERE {$userwhere}
+                   AND (cc.timecompleted IS NULL OR cc.timecompleted = 0)
               ORDER BY u.lastname ASC, u.firstname ASC";
     $users = $DB->get_records_sql($usersql, ['courseid' => $courseid] + $userparams);
     if (empty($users)) {
@@ -2159,9 +2161,11 @@ function local_admindashboard_calculate_at_risk_rows_for_course(int $courseid): 
                              FROM {user} u
                              JOIN {user_enrolments} ue ON ue.userid = u.id AND ue.status = 0
                              JOIN {enrol} e ON e.id = ue.enrolid AND e.status = 0 AND e.courseid = :courseid
+                        LEFT JOIN {course_completions} cc ON cc.userid = u.id AND cc.course = e.courseid
                              JOIN {grade_grades} gg ON gg.userid = u.id AND gg.finalgrade IS NOT NULL
                              JOIN {grade_items} gi ON gi.id = gg.itemid AND gi.grademax > 0
                             WHERE {$userwhere}
+                              AND (cc.timecompleted IS NULL OR cc.timecompleted = 0)
                               AND gi.id {$giinsql}
                          GROUP BY u.id";
             $pretestrows = $DB->get_records_sql($pretestsql, $pretestparams);
@@ -2173,9 +2177,11 @@ function local_admindashboard_calculate_at_risk_rows_for_course(int $courseid): 
                                FROM {user} u
                                JOIN {user_enrolments} ue ON ue.userid = u.id AND ue.status = 0
                                JOIN {enrol} e ON e.id = ue.enrolid AND e.status = 0 AND e.courseid = :courseid
+                          LEFT JOIN {course_completions} cc ON cc.userid = u.id AND cc.course = e.courseid
                                JOIN {grade_grades} gg ON gg.userid = u.id AND gg.finalgrade IS NOT NULL
                                JOIN {grade_items} gi ON gi.id = gg.itemid AND gi.grademax > 0
                               WHERE {$userwhere}
+                                AND (cc.timecompleted IS NULL OR cc.timecompleted = 0)
                                 AND gi.id {$giinsql}";
             $courseavgvalue = $DB->get_field_sql($courseavgsql, $pretestparams);
             if ($courseavgvalue !== false && $courseavgvalue !== null) {
@@ -2196,6 +2202,9 @@ function local_admindashboard_calculate_at_risk_rows_for_course(int $courseid): 
         $dayssincelogin = ($lastaccess > 0) ? (int)floor(max(0, $now - $lastaccess) / DAYSECS) : 9999;
         $donecount = (int)($completioncounts[$userid] ?? 0);
         $completionpct = ($totaltrackable > 0) ? round((100 * $donecount) / $totaltrackable, 1) : 0.0;
+        if ($completionpct >= 100.0) {
+            continue;
+        }
         $timeleft = ($deadlineat > 0) ? ($deadlineat - $now) : null;
 
         $loginrisk = ($lastaccess <= 0) || ($dayssincelogin >= 7);
@@ -2363,10 +2372,13 @@ function local_admindashboard_get_at_risk_participants(int $courseid, string $de
     $params = [
         'risknowts_start' => $nowts,
         'risknowts_end' => $nowts,
+        'riskcompletepct' => 100,
     ];
     $where = 'c.id > 1 AND c.visible = 1
           AND (c.startdate = 0 OR c.startdate <= :risknowts_start)
-          AND (c.enddate = 0 OR c.enddate >= :risknowts_end)';
+          AND (c.enddate = 0 OR c.enddate >= :risknowts_end)
+          AND ar.completionpct < :riskcompletepct
+          AND (cc.timecompleted IS NULL OR cc.timecompleted = 0)';
     if ($courseid > 0) {
         $where .= ' AND ar.courseid = :courseid';
         $params['courseid'] = $courseid;
@@ -2396,6 +2408,7 @@ function local_admindashboard_get_at_risk_participants(int $courseid, string $de
               FROM {local_admindashboard_atrisk} ar
               JOIN {course} c ON c.id = ar.courseid
               JOIN {user} u ON u.id = ar.userid
+         LEFT JOIN {course_completions} cc ON cc.userid = ar.userid AND cc.course = ar.courseid
              WHERE {$where}
           ORDER BY ar.pacingrisk DESC,
                    ar.riskscore DESC,
