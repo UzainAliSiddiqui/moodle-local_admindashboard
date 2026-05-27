@@ -705,6 +705,21 @@ function renderKpiPieChart(data, isQuiz, hasCourse) {
         }
     };
 
+    const kpiPieLegendOptions = {
+        position: 'left',
+        align: 'center',
+        labels: {
+            boxWidth: 10,
+            padding: 10,
+            usePointStyle: true,
+            pointStyle: 'circle',
+            font: {
+                size: 11,
+                weight: '700'
+            }
+        }
+    };
+
     kpiPieChartInstance = new Chart(canvas.getContext('2d'), {
         type: 'pie',
         plugins: [piePercentLabelsPlugin],
@@ -722,18 +737,7 @@ function renderKpiPieChart(data, isQuiz, hasCourse) {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        boxWidth: 14,
-                        usePointStyle: true,
-                        pointStyle: 'circle',
-                        font: {
-                            size: 12,
-                            weight: '700'
-                        }
-                    }
-                },
+                legend: kpiPieLegendOptions,
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -782,18 +786,7 @@ function renderKpiPieChart(data, isQuiz, hasCourse) {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: 14,
-                            usePointStyle: true,
-                            pointStyle: 'circle',
-                            font: {
-                                size: 12,
-                                weight: '700'
-                            }
-                        }
-                    },
+                    legend: kpiPieLegendOptions,
                     tooltip: {
                         callbacks: {
                             label: function(context) {
@@ -848,18 +841,7 @@ function renderKpiPieChart(data, isQuiz, hasCourse) {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: 14,
-                            usePointStyle: true,
-                            pointStyle: 'circle',
-                            font: {
-                                size: 12,
-                                weight: '700'
-                            }
-                        }
-                    },
+                    legend: kpiPieLegendOptions,
                     tooltip: {
                         callbacks: {
                             label: function(context) {
