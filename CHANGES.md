@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.9 - 2026-05-27
+
+- Forced the KPI Distribution chart container to keep all three pie charts in a single row.
+
 ## 0.1.8 - 2026-05-27
 
 - Moved KPI Distribution pie chart legends to the left side of each chart.

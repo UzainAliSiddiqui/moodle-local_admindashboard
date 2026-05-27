@@ -212,21 +212,21 @@ $sesskey = sesskey();
             <div class="text-muted small">Breakdown of current KPI values for selected filters.</div>
         </div>
     </div>
-    <div class="admindash-kpi-pie-card__charts">
-        <div class="admindash-kpi-pie-card__chart-panel">
+    <div class="admindash-kpi-pie-card__charts" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:10px;align-items:stretch;width:100%">
+        <div class="admindash-kpi-pie-card__chart-panel" style="min-width:0;overflow:hidden">
             <div class="admindash-kpi-pie-card__chart-title">All KPI Mix</div>
             <div class="admindash-kpi-pie-card__canvas-wrap">
                 <canvas id="kpiPieChart" height="140"></canvas>
             </div>
         </div>
-        <div class="admindash-kpi-pie-card__chart-panel">
+        <div class="admindash-kpi-pie-card__chart-panel" style="min-width:0;overflow:hidden">
             <div class="admindash-kpi-pie-card__chart-title">Passed vs Failed</div>
             <div class="admindash-kpi-pie-card__canvas-wrap">
                 <canvas id="kpiPassFailPieChart" height="140"></canvas>
             </div>
             <div id="kpiPassFailPieEmptyMsg" class="text-muted small" style="display:none;margin-top:6px">No pass/fail data yet for the selected filters.</div>
         </div>
-        <div class="admindash-kpi-pie-card__chart-panel">
+        <div class="admindash-kpi-pie-card__chart-panel" style="min-width:0;overflow:hidden">
             <div class="admindash-kpi-pie-card__chart-title">Enrollment Status</div>
             <div class="admindash-kpi-pie-card__canvas-wrap">
                 <canvas id="kpiEnrollmentStatusPieChart" height="140"></canvas>
