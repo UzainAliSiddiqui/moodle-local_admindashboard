@@ -474,6 +474,7 @@ let atRiskState = { rows: [], courseRunning: false, loading: false };
 let feedbackInsightsState = { loading: false, lastCourseId: 0, requestId: 0 };
 let kpiModalUsers = [];
 let kpiModalMetricKey = '';
+let courseCompletionHeightFrame = 0;
 
 /** Show Course / Enrolment column: all enrolments on platform; per-course detail for learner KPIs. */
 function kpiModalShowsCourseEnrolColumn() {
@@ -2629,6 +2630,7 @@ function renderActivityFeed(rows, hasCourse) {
     const items = Array.isArray(rows) ? rows : [];
     if (!items.length) {
         wrap.innerHTML = '<div class="admindash-widget-empty">No live activity found for the selected filters.</div>';
+        syncCourseCompletionHeight();
         return;
     }
 
@@ -2647,6 +2649,45 @@ function renderActivityFeed(rows, hasCourse) {
             + '</div>'
             + '</div>';
     }).join('');
+    syncCourseCompletionHeight();
+}
+
+function syncCourseCompletionHeight() {
+    if (courseCompletionHeightFrame) {
+        window.cancelAnimationFrame(courseCompletionHeightFrame);
+    }
+
+    courseCompletionHeightFrame = window.requestAnimationFrame(function() {
+        courseCompletionHeightFrame = 0;
+
+        const feedWrap = document.getElementById('activityFeedWrap');
+        const progressWrap = document.getElementById('courseProgressWrap');
+        if (!feedWrap || !progressWrap) {
+            return;
+        }
+
+        const feedCard = feedWrap.closest('.admindash-widget-card');
+        const progressCard = progressWrap.closest('.admindash-widget-card');
+        const grid = feedWrap.closest('.admindash-widget-grid');
+        if (!feedCard || !progressCard || !grid) {
+            return;
+        }
+
+        progressCard.style.height = '';
+        progressCard.style.minHeight = '';
+        progressCard.style.maxHeight = '';
+        progressWrap.style.maxHeight = '';
+
+        const columns = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length;
+        if (columns < 2) {
+            return;
+        }
+
+        const targetHeight = Math.max(260, Math.ceil(feedCard.offsetHeight));
+        progressCard.style.height = targetHeight + 'px';
+        progressCard.style.minHeight = targetHeight + 'px';
+        progressCard.style.maxHeight = targetHeight + 'px';
+    });
 }
 
 function renderCourseProgress(rows, hasCourse) {
@@ -2665,6 +2706,7 @@ function renderCourseProgress(rows, hasCourse) {
         wrap.innerHTML = '<div class="admindash-widget-empty">'
             + (hasCourse ? 'No course completion data found for the selected filters.' : 'No course schedule data found.')
             + '</div>';
+        syncCourseCompletionHeight();
         return;
     }
 
@@ -2713,6 +2755,7 @@ function renderCourseProgress(rows, hasCourse) {
             + '<div class="admindash-courseprogress__track"><div class="admindash-courseprogress__fill" style="width:' + percent + '%"></div></div>'
             + '</div>';
     }).join('');
+    syncCourseCompletionHeight();
 }
 
 function renderAtRisk(rows, hasCourse, courseRunning) {

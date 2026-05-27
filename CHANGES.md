@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.14 - 2026-05-27
+
+- Synced the Course Completion card height to the rendered Live Feed height without stretching Live Feed.
+
 ## 0.1.13 - 2026-05-27
 
 - Matched Course Completion card height to Live Feed and kept the course list scrollable.

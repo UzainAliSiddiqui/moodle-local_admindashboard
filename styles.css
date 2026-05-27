@@ -280,9 +280,9 @@ body.admindash-page.admindash-theme-dark .admindash-module-hero:after{background
 .admindash-segmented__button:hover{color:var(--ad-text)}
 .admindash-segmented__button.is-active{background:linear-gradient(135deg,#0f1b3a 0%,#2563eb 100%);color:#fff;box-shadow:0 8px 18px rgba(37,99,235,.28)}
 .admindash-segmented__button:focus-visible{outline:none;box-shadow:var(--ad-focus)}
-.admindash-widget-card{padding:18px !important;display:flex;flex-direction:column;min-height:420px;height:420px;max-height:420px}
+.admindash-widget-card{padding:18px !important;display:flex;flex-direction:column;min-height:0;height:auto;max-height:none}
 .admindash-widget-card__header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
-.admindash-widget-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;align-items:stretch}
+.admindash-widget-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;align-items:start}
 .admindash-widget-empty{display:flex;align-items:center;justify-content:center;min-height:180px;padding:18px;border:1px dashed rgba(148,163,184,.35);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.72) 0%,rgba(243,246,251,.96) 100%);color:var(--ad-muted);font-size:13px;text-align:center}
 .admindash-livefeed{display:flex;flex-direction:column;gap:12px;min-height:0}
 .admindash-livefeed__item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid rgba(148,163,184,.18);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(247,250,255,.96) 100%);box-shadow:0 10px 24px rgba(15,23,42,.04)}
@@ -313,7 +313,7 @@ body.admindash-page.admindash-theme-dark .admindash-module-hero:after{background
 .admindash-courseprogress__track{height:8px;border-radius:999px;background:rgba(148,163,184,.18);overflow:hidden}
 .admindash-courseprogress__fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#0f766e 0%,#2563eb 100%)}
 .admindash-courseprogress__item--completed .admindash-courseprogress__fill{background:#94a3b8}
-@media(max-width:700px){.admindash-widget-card{height:380px;min-height:380px;max-height:380px}.admindash-courseprogress__head{flex-direction:column}.admindash-courseprogress__side{align-items:flex-start;flex-direction:row}.admindash-courseprogress__meta{white-space:normal}}
+@media(max-width:700px){.admindash-courseprogress__head{flex-direction:column}.admindash-courseprogress__side{align-items:flex-start;flex-direction:row}.admindash-courseprogress__meta{white-space:normal}}
 .admindash-timer{margin-bottom:16px;padding:0;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.2fr) auto minmax(190px,.65fr);align-items:stretch;background:linear-gradient(135deg,#0f1b3a 0%,#1a3155 42%,#0d5f57 100%);border:none;box-shadow:0 8px 32px rgba(15,27,58,.35),inset 0 1px 0 rgba(255,255,255,.07);position:relative;border-radius:14px}.admindash-timer::after{content:'';position:absolute;right:-70px;top:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.045) 0%,transparent 68%);pointer-events:none}
 .admindash-timer__copy{padding:22px 26px;min-width:0;display:flex;flex-direction:column;justify-content:center}
 .admindash-timer__eyebrow{font-size:10px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;display:flex;align-items:center;gap:8px}
@@ -543,6 +543,7 @@ body.admindash-page.admindash-theme-dark #atRiskReminderStatus{color:#cbd5e1 !im
 
 .admindash-charts .admindash-card h5{font-weight:900;color:var(--ad-text)}
 .admindash-charts .admindash-card{border:1px solid var(--ad-border);box-shadow:var(--ad-shadow-soft);min-height:360px;display:flex;flex-direction:column}
+.admindash-charts .admindash-widget-card{min-height:0;height:auto;max-height:none}
 .admindash-charts .admindash-card.p-2{padding:18px !important}
 .admindash-charts .admindash-card > .d-flex:first-child,
 .admindash-charts .admindash-card > .admindash-widget-card__header,
@@ -615,7 +616,8 @@ body.admindash-page.admindash-theme-dark #atRiskReminderStatus{color:#cbd5e1 !im
 @media(max-width:900px){.admindash-overview-leaders__top{grid-template-columns:1fr}}
 @media(max-width:700px){.admindash-overview-leaders__header .admindash-segmented{width:100%}.admindash-overview-leaders__toolbar{grid-template-columns:1fr}.admindash-overview-leaders__summary{min-height:auto}.admindash-leader-row{grid-template-columns:30px minmax(0,1fr);align-items:start}.admindash-leader-row__score{grid-column:2;justify-self:start}.admindash-multiselect__menu{position:fixed;left:18px;right:18px;top:auto;max-height:58vh}}
 .admindash-charts #activityFeedWrap,
-.admindash-charts #courseProgressWrap{flex:1 1 auto;min-height:0;overflow:auto}
+.admindash-charts #courseProgressWrap{flex:1 1 auto;min-height:0}
+.admindash-charts #activityFeedWrap{overflow:visible}
 .admindash-charts #courseProgressWrap{overflow-y:scroll}
 .admindash-chart-card{justify-content:flex-start}
 .admindash-chart-card--content canvas{height:300px !important;max-height:none}
