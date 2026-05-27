@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.17 - 2026-05-28
+
+- Fixed XMLDB syntax in `db/install.xml` so fresh Moodle installs can create plugin tables.
+
 ## 0.1.16 - 2026-05-27
 
 - Prevented Course Completion rows from shrinking inside the scrollable container.
