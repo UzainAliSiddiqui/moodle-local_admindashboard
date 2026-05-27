@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.4 - 2026-05-27
+
+- Fixed the KPI users external service class to use Moodle's `core_external` API namespace.
+
 ## 0.1.3 - 2026-05-27
 
 - Restored department readiness bars to show raw completion/pass percentages instead of coverage-adjusted scores.
