@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 define('AJAX_SCRIPT', true);
 define('NO_DEBUG_DISPLAY', true);
 
@@ -9,7 +23,7 @@ require_once($CFG->libdir . '/filelib.php');
 
 require_login();
 require_sesskey();
-admindash_require_view_access();
+local_admindashboard_require_view_access();
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -34,7 +48,7 @@ if ($apikey === '') {
     exit;
 }
 
-function admindash_ai_normalize_text(string $value): string {
+function local_admindashboard_ai_normalize_text(string $value): string {
     $value = function_exists('mb_strtolower') ? mb_strtolower($value, 'UTF-8') : strtolower($value);
     $value = preg_replace('/\b(quiz|module|course|department)\b/i', '', $value);
     $value = preg_replace('/[^\pL\pN\s]+/u', ' ', (string)$value);
@@ -42,7 +56,7 @@ function admindash_ai_normalize_text(string $value): string {
     return trim((string)$value);
 }
 
-function admindash_ai_extract_json_object(string $text): array {
+function local_admindashboard_ai_extract_json_object(string $text): array {
     $text = trim($text);
     if ($text === '') {
         return [];
@@ -64,7 +78,7 @@ function admindash_ai_extract_json_object(string $text): array {
     return is_array($decoded) ? $decoded : [];
 }
 
-function admindash_ai_post_to_groq(string $endpoint, string $apikey, string $model, array $messages): array {
+function local_admindashboard_ai_post_to_groq(string $endpoint, string $apikey, string $model, array $messages): array {
     $curl = new curl();
     $payload = json_encode([
         'model' => $model,
@@ -88,7 +102,7 @@ function admindash_ai_post_to_groq(string $endpoint, string $apikey, string $mod
     return $decoded;
 }
 
-function admindash_ai_find_named_match(?string $requested, array $items, string $labelkey = 'label', string $idkey = 'id'): ?array {
+function local_admindashboard_ai_find_named_match(?string $requested, array $items, string $labelkey = 'label', string $idkey = 'id'): ?array {
     if ($requested === null) {
         return null;
     }
@@ -101,16 +115,16 @@ function admindash_ai_find_named_match(?string $requested, array $items, string 
         return ['id' => 0, 'label' => 'All'];
     }
 
-    $normalizedrequest = admindash_ai_normalize_text($requested);
+    $normalizedrequest = local_admindashboard_ai_normalize_text($requested);
     foreach ($items as $item) {
         $label = (string)($item[$labelkey] ?? '');
-        if ($label !== '' && admindash_ai_normalize_text($label) === $normalizedrequest) {
+        if ($label !== '' && local_admindashboard_ai_normalize_text($label) === $normalizedrequest) {
             return ['id' => (int)($item[$idkey] ?? 0), 'label' => $label];
         }
     }
     foreach ($items as $item) {
         $label = (string)($item[$labelkey] ?? '');
-        $normalizedlabel = admindash_ai_normalize_text($label);
+        $normalizedlabel = local_admindashboard_ai_normalize_text($label);
         if ($label !== '' && ($normalizedrequest !== '') && (str_contains($normalizedlabel, $normalizedrequest) || str_contains($normalizedrequest, $normalizedlabel))) {
             return ['id' => (int)($item[$idkey] ?? 0), 'label' => $label];
         }
@@ -120,8 +134,8 @@ function admindash_ai_find_named_match(?string $requested, array $items, string 
 }
 
 try {
-    $allmeta = admindash_get_meta(0);
-    $currentmeta = admindash_get_meta($currentcourseid);
+    $allmeta = local_admindashboard_get_meta(0);
+    $currentmeta = local_admindashboard_get_meta($currentcourseid);
 
     $courses = array_map(static function(array $course): array {
         return ['id' => (int)$course['id'], 'label' => (string)$course['fullname']];
@@ -164,13 +178,13 @@ try {
         ],
     ];
 
-    $intentresponse = admindash_ai_post_to_groq($endpoint, $apikey, $model, $messages);
+    $intentresponse = local_admindashboard_ai_post_to_groq($endpoint, $apikey, $model, $messages);
     $intentcontent = (string)($intentresponse['choices'][0]['message']['content'] ?? '');
-    $intent = admindash_ai_extract_json_object($intentcontent);
+    $intent = local_admindashboard_ai_extract_json_object($intentcontent);
 
     $resolvedcourseid = $currentcourseid;
     $resolvedcourselabel = $currentcourselabel;
-    $coursematch = admindash_ai_find_named_match($intent['course_name'] ?? '__current__', $courses);
+    $coursematch = local_admindashboard_ai_find_named_match($intent['course_name'] ?? '__current__', $courses);
     if (($intent['course_name'] ?? '') === '__all__') {
         $resolvedcourseid = 0;
         $resolvedcourselabel = 'All Courses';
@@ -180,7 +194,7 @@ try {
     }
 
     $resolveddepartment = $currentdepartment;
-    $departmentmatch = admindash_ai_find_named_match($intent['department_name'] ?? '__current__', $departments, 'label', 'id');
+    $departmentmatch = local_admindashboard_ai_find_named_match($intent['department_name'] ?? '__current__', $departments, 'label', 'id');
     if (($intent['department_name'] ?? '') === '__all__') {
         $resolveddepartment = '';
     } else if ($departmentmatch) {
@@ -190,7 +204,7 @@ try {
     $resolvedmoduleid = $currentmoduleid;
     $resolvedmodulelabel = 'All Modules';
     if ($resolvedcourseid > 0) {
-        $resolvedmeta = admindash_get_meta($resolvedcourseid);
+        $resolvedmeta = local_admindashboard_get_meta($resolvedcourseid);
         $modules = [];
         foreach (($resolvedmeta['modules'] ?? []) as $module) {
             $modules[] = ['id' => (int)$module->id, 'label' => (string)$module->name];
@@ -202,7 +216,7 @@ try {
             $resolvedmoduleid = 0;
             $resolvedmodulelabel = 'All Modules';
         } else {
-            $modulematch = admindash_ai_find_named_match($intent['module_name'] ?? '__current__', $modules);
+            $modulematch = local_admindashboard_ai_find_named_match($intent['module_name'] ?? '__current__', $modules);
             if ($modulematch) {
                 $resolvedmoduleid = (int)$modulematch['id'];
                 $resolvedmodulelabel = (string)$modulematch['label'];
@@ -213,7 +227,7 @@ try {
         $resolvedmodulelabel = 'All Modules';
     }
 
-    $metrics = admindash_get_metrics($resolvedcourseid, $resolveddepartment, $resolvedmoduleid);
+    $metrics = local_admindashboard_get_metrics($resolvedcourseid, $resolveddepartment, $resolvedmoduleid);
     $metric = (string)($intent['metric'] ?? 'completion_rate');
     $chartrequest = (string)($intent['chart'] ?? 'none');
     $notes = is_array($intent['notes'] ?? null) ? array_values(array_filter(array_map('strval', $intent['notes']))) : [];

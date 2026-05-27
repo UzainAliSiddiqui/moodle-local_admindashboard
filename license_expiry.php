@@ -1,19 +1,33 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 
-admindash_setup_page('/local/admindashboard/license_expiry.php', 'License Expiry', 'compliance.expiry');
-admindash_render_header('compliance.expiry');
+local_admindashboard_setup_page('/local/admindashboard/license_expiry.php', 'License Expiry', 'compliance.expiry');
+local_admindashboard_render_header('compliance.expiry');
 
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $department = trim(optional_param('department', '', PARAM_TEXT));
 $status = trim(optional_param('status', 'all', PARAM_ALPHA));
 $q = trim(optional_param('q', '', PARAM_TEXT));
 
-$meta = admindash_get_meta($courseid);
-$tabs = admindash_get_compliance_suite_tabs();
-$certunion = admindash_get_certificate_issue_union_sql();
+$meta = local_admindashboard_get_meta($courseid);
+$tabs = local_admindashboard_get_compliance_suite_tabs();
+$certunion = local_admindashboard_get_certificate_issue_union_sql();
 
 $statusoptions = [
 	'all' => 'All windows',
@@ -27,7 +41,7 @@ if (!array_key_exists($status, $statusoptions)) {
 	$status = 'all';
 }
 
-[$userwhere, $userparams] = admindash_build_user_filter($department);
+[$userwhere, $userparams] = local_admindashboard_build_user_filter($department);
 
 $rows = [];
 $summary = [
@@ -126,7 +140,7 @@ $statusbadge = static function(string $label, string $class): string {
 	return '<span class="admindash-admin-badge ' . $class . '">' . s($label) . '</span>';
 };
 
-admindash_render_workspace_header(
+local_admindashboard_render_workspace_header(
 	'Reports & Analytics',
 	'License Expiry',
 	'Certificate-age expiry proxy for identifying expired, due-soon, and watch-window records even when formal expiry dates are not stored directly.',
@@ -252,4 +266,4 @@ admindash_render_workspace_header(
 </div>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

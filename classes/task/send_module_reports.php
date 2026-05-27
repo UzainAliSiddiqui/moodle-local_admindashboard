@@ -1,5 +1,18 @@
 <?php
-
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 namespace local_admindashboard\task;
 
 use core_user;
@@ -368,7 +381,7 @@ class send_module_reports extends \core\task\scheduled_task {
         $quizname = format_string($pickedcm->name, true, ['context' => $pickedcm->context]);
         $modulename = $this->get_module_label($course, $sectionnum);
 
-        [$userwhere, $userparams] = admindash_build_user_filter('');
+        [$userwhere, $userparams] = \local_admindashboard_build_user_filter('');
 
         $params = $userparams;
         $params['courseid_enrol'] = $courseid;

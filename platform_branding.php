@@ -1,11 +1,25 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
-admindash_setup_page('/local/admindashboard/platform_branding.php', 'Platform Branding', 'platform.branding');
-admindash_render_header('platform.branding');
+local_admindashboard_setup_page('/local/admindashboard/platform_branding.php', 'Platform Branding', 'platform.branding');
+local_admindashboard_render_header('platform.branding');
 
-$tabs = admindash_get_platform_settings_suite_tabs();
+$tabs = local_admindashboard_get_platform_settings_suite_tabs();
 
 $sitename = trim((string)$SITE->fullname);
 $siteshortname = trim((string)$SITE->shortname);
@@ -106,7 +120,7 @@ $quickdestinations = [
 	['label' => 'Create course', 'meta' => 'Carry branding standards into new course shells and templates.', 'url' => new moodle_url('/local/admindashboard/create_course.php')],
 ];
 
-admindash_render_workspace_header(
+local_admindashboard_render_workspace_header(
 	'Platform Settings',
 	'Platform Branding',
 	'Brand and UX control room for site identity, logos, theme language, navigation copy, and mobile presentation across the admin experience.',
@@ -241,4 +255,4 @@ admindash_render_workspace_header(
 </div>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

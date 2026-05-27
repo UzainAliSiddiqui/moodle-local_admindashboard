@@ -1,17 +1,31 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 
-admindash_setup_page('/local/admindashboard/compliance_dashboard.php', 'Compliance Dashboard', 'compliance.dashboard');
-admindash_render_header('compliance.dashboard');
+local_admindashboard_setup_page('/local/admindashboard/compliance_dashboard.php', 'Compliance Dashboard', 'compliance.dashboard');
+local_admindashboard_render_header('compliance.dashboard');
 
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $department = trim(optional_param('department', '', PARAM_TEXT));
 
-$meta = admindash_get_meta($courseid);
-$tabs = admindash_get_compliance_suite_tabs();
-$certunion = admindash_get_certificate_issue_union_sql();
+$meta = local_admindashboard_get_meta($courseid);
+$tabs = local_admindashboard_get_compliance_suite_tabs();
+$certunion = local_admindashboard_get_certificate_issue_union_sql();
 
 $courseoptions = $meta['courses'] ?? [];
 $resolvedcourseid = $courseid;
@@ -19,7 +33,7 @@ if ($resolvedcourseid <= 0 && !empty($courseoptions)) {
 	$resolvedcourseid = (int)($courseoptions[0]['id'] ?? 0);
 }
 
-[$userwhere, $userparams] = admindash_build_user_filter($department);
+[$userwhere, $userparams] = local_admindashboard_build_user_filter($department);
 
 $courseconditions = [
 	'c.id > 1',
@@ -144,14 +158,14 @@ if ($certunion['available']) {
 	);
 }
 
-$atriskrows = $resolvedcourseid > 0 ? admindash_get_at_risk_participants($resolvedcourseid, '', 8) : [];
+$atriskrows = $resolvedcourseid > 0 ? local_admindashboard_get_at_risk_participants($resolvedcourseid, '', 8) : [];
 $atriskcount = is_array($atriskrows) ? count($atriskrows) : 0;
 
 $statusbadge = static function(string $label, string $class): string {
 	return '<span class="admindash-admin-badge ' . $class . '">' . s($label) . '</span>';
 };
 
-admindash_render_workspace_header(
+local_admindashboard_render_workspace_header(
 	'Reports & Analytics',
 	'Compliance Dashboard',
 	'Executive compliance control room combining completion-enabled learning tracks, overdue learner volume, certificate-age risk, and active outreach signals.',
@@ -312,4 +326,4 @@ admindash_render_workspace_header(
 <?php endif; ?>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

@@ -1,10 +1,24 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 
-admindash_setup_page('/local/admindashboard/course_analytics.php', 'Course Analytics', 'courseanalytics.overview');
-admindash_render_header('courseanalytics.overview');
+local_admindashboard_setup_page('/local/admindashboard/course_analytics.php', 'Course Analytics', 'courseanalytics.overview');
+local_admindashboard_render_header('courseanalytics.overview');
 ?>
 
 <h2 class="mb-3">Course Analytics</h2>
@@ -13,8 +27,8 @@ admindash_render_header('courseanalytics.overview');
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $department = trim(optional_param('department', '', PARAM_TEXT));
 
-$meta = admindash_get_meta($courseid);
-$metrics = admindash_get_metrics($courseid, $department);
+$meta = local_admindashboard_get_meta($courseid);
+$metrics = local_admindashboard_get_metrics($courseid, $department);
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
@@ -156,4 +170,4 @@ $metrics = admindash_get_metrics($courseid, $department);
 </div>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

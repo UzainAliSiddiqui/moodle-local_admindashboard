@@ -1,19 +1,33 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
 global $OUTPUT;
 
-$canedit = admindash_user_can_edit_course_schedule_notes();
+$canedit = local_admindashboard_user_can_edit_course_schedule_notes();
 
-admindash_setup_page(
+local_admindashboard_setup_page(
     '/local/admindashboard/course_schedule_notes.php',
-    admindash_get_string_schedule_notes('courseschedulenotes_pagetitle'),
+    local_admindashboard_get_string_schedule_notes('courseschedulenotes_pagetitle'),
     'platform.schedule_notes'
 );
-admindash_render_header('platform.schedule_notes');
+local_admindashboard_render_header('platform.schedule_notes');
 
-$tabs = admindash_get_platform_settings_suite_tabs();
+$tabs = local_admindashboard_get_platform_settings_suite_tabs();
 
 if ($canedit && data_submitted() && confirm_sesskey()) {
     $cadencecount = optional_param('cadence_row_count', 3, PARAM_INT);
@@ -33,10 +47,10 @@ if ($canedit && data_submitted() && confirm_sesskey()) {
             'courses' => $courses,
         ];
     }
-    admindash_save_course_schedule_cadence_config($cadencewindows);
+    local_admindashboard_save_course_schedule_cadence_config($cadencewindows);
 
     $rowcount = optional_param('sticky_row_count', 3, PARAM_INT);
-    $rowcount = max(1, min(admindash_course_schedule_sticky_notes_max(), $rowcount));
+    $rowcount = max(1, min(local_admindashboard_course_schedule_sticky_notes_max(), $rowcount));
     $notes = [];
     for ($i = 0; $i < $rowcount; $i++) {
         $notes[] = [
@@ -45,7 +59,7 @@ if ($canedit && data_submitted() && confirm_sesskey()) {
             'variant' => optional_param('note_' . $i . '_variant', 'lemon', PARAM_ALPHANUMEXT),
         ];
     }
-    admindash_save_course_schedule_sticky_notes($notes);
+    local_admindashboard_save_course_schedule_sticky_notes($notes);
     redirect(
         new moodle_url('/local/admindashboard/course_schedule_notes.php'),
         get_string('changessaved'),
@@ -54,16 +68,16 @@ if ($canedit && data_submitted() && confirm_sesskey()) {
     );
 }
 
-admindash_render_workspace_header(
+local_admindashboard_render_workspace_header(
     'Platform Settings',
-    admindash_get_string_schedule_notes('courseschedulenotes_pagetitle'),
-    admindash_get_string_schedule_notes('courseschedulenotes_intro', admindash_course_schedule_sticky_notes_max()),
+    local_admindashboard_get_string_schedule_notes('courseschedulenotes_pagetitle'),
+    local_admindashboard_get_string_schedule_notes('courseschedulenotes_intro', local_admindashboard_course_schedule_sticky_notes_max()),
     'sticky',
     'platform.schedule_notes',
     $tabs,
     [
         [
-            'label' => admindash_get_string_schedule_notes('courseschedulenotes_backdash'),
+            'label' => local_admindashboard_get_string_schedule_notes('courseschedulenotes_backdash'),
             'url' => new moodle_url('/local/admindashboard/dashboard.php'),
             'primary' => false,
         ],
@@ -72,23 +86,23 @@ admindash_render_workspace_header(
 );
 
 if (!$canedit) {
-    echo $OUTPUT->notification(admindash_get_string_schedule_notes('courseschedulenotes_nocap'), 'notifymessage');
-    echo admindash_render_course_schedule_sticky_board(false);
-    admindash_render_footer();
+    echo $OUTPUT->notification(local_admindashboard_get_string_schedule_notes('courseschedulenotes_nocap'), 'notifymessage');
+    echo local_admindashboard_render_course_schedule_sticky_board(false);
+    local_admindashboard_render_footer();
     return;
 }
 
-$notes = admindash_get_course_schedule_sticky_notes();
+$notes = local_admindashboard_get_course_schedule_sticky_notes();
 $formaction = (new moodle_url('/local/admindashboard/course_schedule_notes.php'))->out(false);
 
 echo html_writer::start_div('admindash-card admindash-schedule-editor');
-echo html_writer::tag('h3', admindash_get_string_schedule_notes('courseschedulenotes_formtitle'), ['class' => 'mb-2']);
+echo html_writer::tag('h3', local_admindashboard_get_string_schedule_notes('courseschedulenotes_formtitle'), ['class' => 'mb-2']);
 echo html_writer::div(
-    admindash_get_string_schedule_notes('courseschedulenotes_formhelp', admindash_course_schedule_sticky_notes_max()),
+    local_admindashboard_get_string_schedule_notes('courseschedulenotes_formhelp', local_admindashboard_course_schedule_sticky_notes_max()),
     'text-muted small mb-3'
 );
 
-$maxnotes = admindash_course_schedule_sticky_notes_max();
+$maxnotes = local_admindashboard_course_schedule_sticky_notes_max();
 $notecount = count($notes);
 $shownrows = min($maxnotes, max(3, $notecount + 1));
 $formrows = [];
@@ -101,7 +115,7 @@ while (count($formrows) < $shownrows) {
 
 if ($notecount >= $maxnotes) {
     echo $OUTPUT->notification(
-        admindash_get_string_schedule_notes('courseschedulenotes_maxreached', $maxnotes),
+        local_admindashboard_get_string_schedule_notes('courseschedulenotes_maxreached', $maxnotes),
         'notifymessage'
     );
 }
@@ -118,9 +132,9 @@ echo html_writer::empty_tag('input', [
     'value' => (string)$shownrows,
 ]);
 
-$cadencewindows = admindash_get_course_schedule_cadence_config();
+$cadencewindows = local_admindashboard_get_course_schedule_cadence_config();
 $cadencerows = $cadencewindows;
-while (count($cadencerows) < count(admindash_default_course_schedule_cadence_config()) + 1) {
+while (count($cadencerows) < count(local_admindashboard_default_course_schedule_cadence_config()) + 1) {
     $cadencerows[] = [
         'key' => 'cadence_' . count($cadencerows),
         'title' => '',
@@ -208,21 +222,21 @@ foreach ($cadencerows as $i => $window) {
     echo html_writer::end_div();
 }
 
-echo html_writer::tag('h4', admindash_get_string_schedule_notes('courseschedulenotes_formtitle'), ['class' => 'mt-4 mb-2']);
+echo html_writer::tag('h4', local_admindashboard_get_string_schedule_notes('courseschedulenotes_formtitle'), ['class' => 'mt-4 mb-2']);
 
 $variants = [
-    'lemon' => admindash_get_string_schedule_notes('courseschedulenotes_variant_lemon'),
-    'mint' => admindash_get_string_schedule_notes('courseschedulenotes_variant_mint'),
-    'lavender' => admindash_get_string_schedule_notes('courseschedulenotes_variant_lavender'),
-    'peach' => admindash_get_string_schedule_notes('courseschedulenotes_variant_peach'),
+    'lemon' => local_admindashboard_get_string_schedule_notes('courseschedulenotes_variant_lemon'),
+    'mint' => local_admindashboard_get_string_schedule_notes('courseschedulenotes_variant_mint'),
+    'lavender' => local_admindashboard_get_string_schedule_notes('courseschedulenotes_variant_lavender'),
+    'peach' => local_admindashboard_get_string_schedule_notes('courseschedulenotes_variant_peach'),
 ];
 
 foreach ($formrows as $i => $note) {
     echo html_writer::start_div('admindash-schedule-form__card');
-    echo html_writer::tag('h4', admindash_get_string_schedule_notes('courseschedulenotes_notelabel', $i + 1), ['class' => 'admindash-schedule-form__card-title']);
+    echo html_writer::tag('h4', local_admindashboard_get_string_schedule_notes('courseschedulenotes_notelabel', $i + 1), ['class' => 'admindash-schedule-form__card-title']);
 
     echo html_writer::start_div('mb-2');
-    echo html_writer::tag('label', admindash_get_string_schedule_notes('courseschedulenotes_field_title'), ['for' => 'note_' . $i . '_title', 'class' => 'form-label']);
+    echo html_writer::tag('label', local_admindashboard_get_string_schedule_notes('courseschedulenotes_field_title'), ['for' => 'note_' . $i . '_title', 'class' => 'form-label']);
     echo html_writer::empty_tag('input', [
         'type' => 'text',
         'name' => 'note_' . $i . '_title',
@@ -234,12 +248,12 @@ foreach ($formrows as $i => $note) {
     echo html_writer::end_div();
 
     echo html_writer::start_div('mb-2');
-    echo html_writer::tag('label', admindash_get_string_schedule_notes('courseschedulenotes_field_body'), ['for' => 'note_' . $i . '_body', 'class' => 'form-label']);
+    echo html_writer::tag('label', local_admindashboard_get_string_schedule_notes('courseschedulenotes_field_body'), ['for' => 'note_' . $i . '_body', 'class' => 'form-label']);
     echo '<textarea name="note_' . $i . '_body" id="note_' . $i . '_body" class="form-control" rows="5" spellcheck="true">' . s($note['body']) . '</textarea>';
     echo html_writer::end_div();
 
     echo html_writer::start_div('mb-0');
-    echo html_writer::tag('label', admindash_get_string_schedule_notes('courseschedulenotes_field_variant'), ['for' => 'note_' . $i . '_variant', 'class' => 'form-label']);
+    echo html_writer::tag('label', local_admindashboard_get_string_schedule_notes('courseschedulenotes_field_variant'), ['for' => 'note_' . $i . '_variant', 'class' => 'form-label']);
     echo html_writer::start_tag('select', [
         'name' => 'note_' . $i . '_variant',
         'id' => 'note_' . $i . '_variant',
@@ -267,9 +281,9 @@ echo html_writer::end_tag('form');
 echo html_writer::end_div();
 
 echo html_writer::div(
-    html_writer::tag('h3', admindash_get_string_schedule_notes('courseschedulenotes_preview'), ['class' => 'mt-4 mb-2'])
-    . admindash_render_course_schedule_sticky_board(false),
+    html_writer::tag('h3', local_admindashboard_get_string_schedule_notes('courseschedulenotes_preview'), ['class' => 'mt-4 mb-2'])
+    . local_admindashboard_render_course_schedule_sticky_board(false),
     'admindash-schedule-preview-wrap mt-2'
 );
 
-admindash_render_footer();
+local_admindashboard_render_footer();

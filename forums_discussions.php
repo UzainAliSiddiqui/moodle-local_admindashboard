@@ -1,16 +1,30 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
-admindash_setup_page('/local/admindashboard/forums_discussions.php', 'Forums & Discussions', 'communication.discussions');
-admindash_render_header('communication.discussions');
+local_admindashboard_setup_page('/local/admindashboard/forums_discussions.php', 'Forums & Discussions', 'communication.discussions');
+local_admindashboard_render_header('communication.discussions');
 
 $categoryid = optional_param('categoryid', 0, PARAM_INT);
 $forumtype = trim(optional_param('forumtype', 'all', PARAM_ALPHANUMEXT));
 $health = trim(optional_param('health', 'all', PARAM_ALPHA));
 $q = trim(optional_param('q', '', PARAM_TEXT));
 
-$tabs = admindash_get_communication_suite_tabs();
+$tabs = local_admindashboard_get_communication_suite_tabs();
 $now = time();
 $activecutoff = $now - (7 * DAYSECS);
 $stalecutoff = $now - (14 * DAYSECS);
@@ -247,7 +261,7 @@ $lanes = [
 	['title' => 'Locked', 'count' => (int)($summary->lockedcount ?? 0), 'note' => 'Threads that have already crossed their lock date.', 'class' => ((int)($summary->lockedcount ?? 0) > 0) ? 'is-info' : 'is-success'],
 ];
 
-admindash_render_workspace_header(
+local_admindashboard_render_workspace_header(
 	'Communication',
 	'Forums & Discussions',
 	'Discussion-health workspace for collaborative forums, response backlog, stale threads, and the course spaces that need moderator attention first.',
@@ -457,4 +471,4 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 </div>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

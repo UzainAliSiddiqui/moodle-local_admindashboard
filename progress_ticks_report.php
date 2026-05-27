@@ -1,18 +1,32 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 require_once($CFG->libdir . '/completionlib.php');
 
-admindash_setup_page('/local/admindashboard/progress_ticks_report.php', 'Progress Ticks Report', 'reports.ticks');
-admindash_render_header('reports.ticks');
+local_admindashboard_setup_page('/local/admindashboard/progress_ticks_report.php', 'Progress Ticks Report', 'reports.ticks');
+local_admindashboard_render_header('reports.ticks');
 
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $department = trim(optional_param('department', '', PARAM_TEXT));
 $sectionnum = optional_param('section', 0, PARAM_INT); // course_sections.section (module number)
 $userid = optional_param('userid', 0, PARAM_INT); // user.id (participant)
 
-$meta = admindash_get_meta($courseid);
+$meta = local_admindashboard_get_meta($courseid);
 ?>
 
 <h2 class="mb-3">Progress Ticks Report</h2>
@@ -118,7 +132,7 @@ $meta = admindash_get_meta($courseid);
 <?php
 if ($courseid <= 0) {
     echo html_writer::div('Select a course to view progress ticks.', 'alert alert-info mt-3');
-    admindash_render_footer();
+    local_admindashboard_render_footer();
     exit;
 }
 
@@ -128,7 +142,7 @@ $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 $completion = new completion_info($course);
 if (!$completion->is_enabled()) {
     echo html_writer::div('Completion tracking is disabled for this course. Enable completion to use this report.', 'alert alert-warning mt-3');
-    admindash_render_footer();
+    local_admindashboard_render_footer();
     exit;
 }
 
@@ -182,7 +196,7 @@ usort($activities, static function(array $a, array $b): int {
 
 if (empty($activities)) {
     echo html_writer::div('No completion-tracked activities found for the selected module(s).', 'alert alert-warning mt-3');
-    admindash_render_footer();
+    local_admindashboard_render_footer();
     exit;
 }
 
@@ -235,7 +249,7 @@ if ($clinicfieldid > 0) {
     $params['clinicfieldid'] = $clinicfieldid;
 }
 
-[$userwhere, $userparams] = admindash_build_user_filter($department);
+[$userwhere, $userparams] = local_admindashboard_build_user_filter($department);
 
 // Get progress using Moodle's built-in completion API (same source as the official report/progress).
 $coursecontext = context_course::instance($courseid);
@@ -254,7 +268,7 @@ if ($userid > 0) {
     $userid = (int)$userid;
     if (empty($progressusers[$userid])) {
         echo html_writer::div('Selected participant was not found for the current filters.', 'alert alert-warning mt-3');
-        admindash_render_footer();
+        local_admindashboard_render_footer();
         exit;
     }
     $progressusers = [$userid => $progressusers[$userid]];
@@ -262,7 +276,7 @@ if ($userid > 0) {
 
 if (empty($progressusers)) {
     echo html_writer::div('No users found for the selected filters.', 'alert alert-warning mt-3');
-    admindash_render_footer();
+    local_admindashboard_render_footer();
     exit;
 }
 
@@ -395,4 +409,4 @@ echo '</tbody>';
 echo '</table>';
 echo html_writer::end_div();
 
-admindash_render_footer();
+local_admindashboard_render_footer();

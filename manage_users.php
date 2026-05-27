@@ -1,10 +1,24 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 
-admindash_setup_page('/local/admindashboard/manage_users.php', 'Manage Users', 'admintools.users.list');
-admindash_render_header('admintools.users.list');
+local_admindashboard_setup_page('/local/admindashboard/manage_users.php', 'Manage Users', 'admintools.users.list');
+local_admindashboard_render_header('admintools.users.list');
 
 $department = trim(optional_param('department', '', PARAM_TEXT));
 $roleid = max(0, optional_param('roleid', 0, PARAM_INT));
@@ -13,7 +27,7 @@ $q = trim(optional_param('q', '', PARAM_TEXT));
 $page = max(0, optional_param('page', 0, PARAM_INT));
 $perpage = 20;
 
-$meta = admindash_get_meta();
+$meta = local_admindashboard_get_meta();
 $statusoptions = [
 	'all' => 'All accounts',
 	'active' => 'Enabled only',
@@ -162,11 +176,11 @@ $baseurl = new moodle_url('/local/admindashboard/manage_users.php', [
 	'status' => $status,
 	'q' => $q,
 ]);
-$tabs = admindash_get_manage_users_suite_tabs();
+$tabs = local_admindashboard_get_manage_users_suite_tabs();
 ?>
 
 <?php
-admindash_render_workspace_header(
+local_admindashboard_render_workspace_header(
 	'Admin Tools / Manage Users',
 	'Manage Users',
 	'Control room for account visibility, onboarding hygiene, and quick intervention across departments, roles, and account states.',
@@ -340,4 +354,4 @@ admindash_render_workspace_header(
 </div>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

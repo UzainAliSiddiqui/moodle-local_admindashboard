@@ -1,17 +1,31 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 
-admindash_setup_page('/local/admindashboard/skill_gap_matrix.php', 'Skill Gap Matrix', 'skills.gap');
-admindash_render_header('skills.gap');
+local_admindashboard_setup_page('/local/admindashboard/skill_gap_matrix.php', 'Skill Gap Matrix', 'skills.gap');
+local_admindashboard_render_header('skills.gap');
 
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $department = trim(optional_param('department', '', PARAM_TEXT));
-$meta = admindash_get_meta($courseid);
-$tabs = admindash_get_skill_certifications_suite_tabs();
+$meta = local_admindashboard_get_meta($courseid);
+$tabs = local_admindashboard_get_skill_certifications_suite_tabs();
 
-[$userwhere, $userparams] = admindash_build_user_filter($department);
+[$userwhere, $userparams] = local_admindashboard_build_user_filter($department);
 $courseconditions = ['c.id > 1', 'c.visible = 1'];
 $courseparams = $userparams;
 if ($courseid > 0) {
@@ -20,7 +34,7 @@ if ($courseid > 0) {
 }
 $coursewhere = implode(' AND ', $courseconditions);
 
-$certunion = admindash_get_certificate_issue_union_sql();
+$certunion = local_admindashboard_get_certificate_issue_union_sql();
 $certcoursejoin = '';
 $certuserjoin = '';
 $certcoursecountexpr = '0';
@@ -172,7 +186,7 @@ foreach ($skillproxyrows as $row) {
 }
 $overallgap = max(0, $totallearners - $totalcoverage);
 
-admindash_render_workspace_header(
+local_admindashboard_render_workspace_header(
 	'Reports & Analytics / Skill Gap & Certifications',
 	'Skill Gap Matrix',
 	'Competency-informed view of where learner capability is covered, certified, or still lagging behind the required training footprint.',
@@ -337,4 +351,4 @@ admindash_render_workspace_header(
 </div>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

@@ -1,10 +1,24 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 
-admindash_setup_page('/local/admindashboard/user_progress.php', 'User Progress Report', 'reports.userprogress');
-admindash_render_header('reports.userprogress');
+local_admindashboard_setup_page('/local/admindashboard/user_progress.php', 'User Progress Report', 'reports.userprogress');
+local_admindashboard_render_header('reports.userprogress');
 
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $department = trim(optional_param('department', '', PARAM_TEXT));
@@ -12,7 +26,7 @@ $q = trim(optional_param('q', '', PARAM_TEXT));
 $page = max(0, optional_param('page', 0, PARAM_INT));
 $perpage = 25;
 
-$meta = admindash_get_meta($courseid);
+$meta = local_admindashboard_get_meta($courseid);
 ?>
 
 <h2 class="mb-3">User Progress Report</h2>
@@ -47,7 +61,7 @@ $meta = admindash_get_meta($courseid);
 </form>
 
 <?php
-[$userwhere, $params] = admindash_build_user_filter($department);
+[$userwhere, $params] = local_admindashboard_build_user_filter($department);
 
 // Server-side search (works across pagination). Moodle SQL does not allow reusing the same named placeholder.
 if ($q !== '') {
@@ -234,4 +248,4 @@ $baseurl = new moodle_url('/local/admindashboard/user_progress.php', [
 ]);
 echo $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
 
-admindash_render_footer();
+local_admindashboard_render_footer();

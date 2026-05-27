@@ -1,17 +1,31 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 
-admindash_setup_page('/local/admindashboard/support_tickets.php', 'Support Tickets', 'support.tickets');
-admindash_render_header('support.tickets');
+local_admindashboard_setup_page('/local/admindashboard/support_tickets.php', 'Support Tickets', 'support.tickets');
+local_admindashboard_render_header('support.tickets');
 
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $issuetype = trim(optional_param('issuetype', 'all', PARAM_ALPHA));
 $q = trim(optional_param('q', '', PARAM_TEXT));
 
-$meta = admindash_get_meta($courseid);
-$tabs = admindash_get_support_account_suite_tabs();
+$meta = local_admindashboard_get_meta($courseid);
+$tabs = local_admindashboard_get_support_account_suite_tabs();
 $supportname = trim((string)get_config('moodle', 'supportname'));
 $supportemail = trim((string)get_config('moodle', 'supportemail'));
 $noreplyaddress = trim((string)get_config('moodle', 'noreplyaddress'));
@@ -52,7 +66,7 @@ $summary = $DB->get_record_sql(
 	]
 );
 
-$atriskrows = $resolvedcourseid > 0 ? admindash_get_at_risk_participants($resolvedcourseid, '', 8) : [];
+$atriskrows = $resolvedcourseid > 0 ? local_admindashboard_get_at_risk_participants($resolvedcourseid, '', 8) : [];
 $atriskcount = is_array($atriskrows) ? count($atriskrows) : 0;
 
 $queuecards = [
@@ -125,7 +139,7 @@ $userrows = $DB->get_records_sql(
 	20
 );
 
-admindash_render_workspace_header(
+local_admindashboard_render_workspace_header(
 	'Support & Account',
 	'Support Tickets',
 	'Operational support queue built from Moodle account blockers, profile data gaps, and learner-risk signals so teams can act before issues pile up.',
@@ -255,4 +269,4 @@ admindash_render_workspace_header(
 </div>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

@@ -45,7 +45,7 @@ class refresh_at_risk_cache extends \core\task\scheduled_task {
         global $CFG;
 
         require_once($CFG->dirroot . '/local/admindashboard/metricslib.php');
-        admindash_refresh_at_risk_cache(0);
+        \local_admindashboard_refresh_at_risk_cache(0);
         set_config('atrisk_net_refresh_ts', time(), 'local_admindashboard');
     }
 }

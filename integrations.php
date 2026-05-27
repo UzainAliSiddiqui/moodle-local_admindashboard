@@ -1,12 +1,26 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once($CFG->libdir . '/xmldb/xmldb_table.php');
 
-admindash_setup_page('/local/admindashboard/integrations.php', 'Integrations', 'platform.integrations');
-admindash_render_header('platform.integrations');
+local_admindashboard_setup_page('/local/admindashboard/integrations.php', 'Integrations', 'platform.integrations');
+local_admindashboard_render_header('platform.integrations');
 
-$tabs = admindash_get_platform_settings_suite_tabs();
+$tabs = local_admindashboard_get_platform_settings_suite_tabs();
 $pluginmanager = \core_plugin_manager::instance();
 $dbmanager = $DB->get_manager();
 
@@ -191,7 +205,7 @@ $quickdestinations = [
 	['label' => 'Web service search', 'meta' => 'Jump to token, service, and API-related configuration.', 'url' => new moodle_url('/admin/search.php', ['query' => 'web service'])],
 ];
 
-admindash_render_workspace_header(
+local_admindashboard_render_workspace_header(
 	'Platform Settings',
 	'Integrations',
 	'Operational registry for identity, messaging, repositories, mobile services, and external API touchpoints around the LMS.',
@@ -340,4 +354,4 @@ admindash_render_workspace_header(
 </div>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

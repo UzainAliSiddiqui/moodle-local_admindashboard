@@ -1,10 +1,24 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 
-admindash_setup_page('/local/admindashboard/passfail_report.php', 'Pass/Fail Report', 'reports.passfail');
-admindash_render_header('reports.passfail');
+local_admindashboard_setup_page('/local/admindashboard/passfail_report.php', 'Pass/Fail Report', 'reports.passfail');
+local_admindashboard_render_header('reports.passfail');
 
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $department = trim(optional_param('department', '', PARAM_TEXT));
@@ -14,7 +28,7 @@ $q = trim(optional_param('q', '', PARAM_TEXT));
 $page = max(0, optional_param('page', 0, PARAM_INT));
 $perpage = 25;
 
-$meta = admindash_get_meta($courseid);
+$meta = local_admindashboard_get_meta($courseid);
 ?>
 
 <h2 class="mb-3">Pass/Fail Report</h2>
@@ -216,7 +230,7 @@ $meta = admindash_get_meta($courseid);
 <?php
 if ($courseid <= 0) {
     echo html_writer::div('Select a course to view pass/fail.', 'alert alert-info mt-3');
-    admindash_render_footer();
+    local_admindashboard_render_footer();
     exit;
 }
 
@@ -224,7 +238,7 @@ if (!in_array($statusfilter, ['', 'passed', 'failed', 'notattempted'], true)) {
     $statusfilter = '';
 }
 
-[$userwhere, $userparams] = admindash_build_user_filter($department);
+[$userwhere, $userparams] = local_admindashboard_build_user_filter($department);
 
 // Server-side search.
 $searchsql = '';
@@ -253,7 +267,7 @@ if ($moduleid > 0) {
 
     if (!$cm || (int)$cm->course !== (int)$courseid || $cm->modname !== 'quiz') {
         echo html_writer::div('Selected module is not a quiz in this course.', 'alert alert-warning mt-3');
-        admindash_render_footer();
+        local_admindashboard_render_footer();
         exit;
     }
 
@@ -273,14 +287,14 @@ if ($moduleid > 0) {
 
     if ($gradeitemid <= 0 || $gradepass <= 0) {
         echo html_writer::div('Selected quiz has no pass mark configured (gradepass). Set a pass grade for this quiz and try again.', 'alert alert-warning mt-3');
-        admindash_render_footer();
+        local_admindashboard_render_footer();
         exit;
     }
 
     $qrec = $DB->get_record('quiz', ['id' => (int)$cm->instance], 'name', IGNORE_MISSING);
     $selectedlabel = $qrec ? ('Quiz: ' . format_string($qrec->name)) : 'Selected quiz';
 } else {
-    $assessment = admindash_pick_course_assessment_quiz($courseid, $userwhere, $userparams);
+    $assessment = local_admindashboard_pick_course_assessment_quiz($courseid, $userwhere, $userparams);
     if ($assessment && !empty($assessment->gradeitemid) && !empty($assessment->gradepass)) {
         $gradeitemid = (int)$assessment->gradeitemid;
         $gradepass = (float)$assessment->gradepass;
@@ -290,7 +304,7 @@ if ($moduleid > 0) {
 
 if ($gradeitemid <= 0) {
     echo html_writer::div('No suitable quiz with a configured pass mark (gradepass) was found for this course.', 'alert alert-warning mt-3');
-    admindash_render_footer();
+    local_admindashboard_render_footer();
     exit;
 }
 
@@ -484,4 +498,4 @@ $baseurl = new moodle_url('/local/admindashboard/passfail_report.php', [
 
 echo $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
 
-admindash_render_footer();
+local_admindashboard_render_footer();

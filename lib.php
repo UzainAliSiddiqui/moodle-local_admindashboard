@@ -1,9 +1,21 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 defined('MOODLE_INTERNAL') || die();
 
-function admindash_user_can_view(): bool {
-    global $CFG, $USER;
-
+function local_admindashboard_user_can_view(): bool {
     if (!isloggedin() || isguestuser()) {
         return false;
     }
@@ -15,15 +27,11 @@ function admindash_user_can_view(): bool {
         return true;
     }
 
-    // Capability may be assigned at system/category/course contexts depending on the user's role assignment.
-    // We treat the user as allowed if they have this capability anywhere (returning at least one category or course).
-    require_once($CFG->libdir . '/accesslib.php');
-    [$categories, $courses] = get_user_capability_contexts('local/admindashboard:view', true, $USER->id, true, '', '', '', '', 1);
-    return !empty($categories) || !empty($courses);
+    return has_capability('local/admindashboard:view', $ctx);
 }
 
-function admindash_require_view_access(): void {
-    if (!admindash_user_can_view()) {
+function local_admindashboard_require_view_access(): void {
+    if (!local_admindashboard_user_can_view()) {
         throw new required_capability_exception(context_system::instance(), 'local/admindashboard:view', 'nopermissions', '');
     }
 }
@@ -31,7 +39,7 @@ function admindash_require_view_access(): void {
 /**
  * Whether the user may edit course schedule sticky notes (dashboard board).
  */
-function admindash_user_can_edit_course_schedule_notes(): bool {
+function local_admindashboard_user_can_edit_course_schedule_notes(): bool {
     $ctx = context_system::instance();
     if (has_capability('moodle/site:config', $ctx)) {
         return true;
@@ -42,7 +50,7 @@ function admindash_user_can_edit_course_schedule_notes(): bool {
 /**
  * Maximum number of schedule sticky notes (editor + dashboard).
  */
-function admindash_course_schedule_sticky_notes_max(): int {
+function local_admindashboard_course_schedule_sticky_notes_max(): int {
     return 20;
 }
 
@@ -51,7 +59,7 @@ function admindash_course_schedule_sticky_notes_max(): int {
  *
  * @return array<string,string>
  */
-function admindash_schedule_notes_lang_fallback_map(): array {
+function local_admindashboard_schedule_notes_lang_fallback_map(): array {
     return [
         'courseschedulenotes_pagetitle' => 'Course schedule notes',
         'courseschedulenotes_intro' => 'Edit the sticky notes shown on the main admin dashboard (course cadence, intakes, and reminders). You can save up to {$a} notes.',
@@ -84,7 +92,7 @@ function admindash_schedule_notes_lang_fallback_map(): array {
  * @param string $template
  * @param null|string|int|float|array|object $a
  */
-function admindash_schedule_notes_lang_format(string $template, $a): string {
+function local_admindashboard_schedule_notes_lang_format(string $template, $a): string {
     if ($a === null) {
         return str_replace('{$a}', '', $template);
     }
@@ -109,13 +117,13 @@ function admindash_schedule_notes_lang_format(string $template, $a): string {
 /**
  * get_string for schedule-notes identifiers, with English fallback if the pack is missing on disk.
  */
-function admindash_get_string_schedule_notes(string $identifier, $a = null): string {
+function local_admindashboard_get_string_schedule_notes(string $identifier, $a = null): string {
     $resolved = get_string($identifier, 'local_admindashboard', $a);
     $trimmed = trim($resolved);
     if ($trimmed !== '' && str_starts_with($trimmed, '[[') && str_ends_with($trimmed, ']]')) {
-        $map = admindash_schedule_notes_lang_fallback_map();
+        $map = local_admindashboard_schedule_notes_lang_fallback_map();
         if (isset($map[$identifier])) {
-            return admindash_schedule_notes_lang_format($map[$identifier], $a);
+            return local_admindashboard_schedule_notes_lang_format($map[$identifier], $a);
         }
     }
     return $resolved;
@@ -126,7 +134,7 @@ function admindash_get_string_schedule_notes(string $identifier, $a = null): str
  *
  * @return array<int,array{title:string,body:string,variant:string}>
  */
-function admindash_default_course_schedule_sticky_notes(): array {
+function local_admindashboard_default_course_schedule_sticky_notes(): array {
     return [
         [
             'title' => 'Basic intakes (Feb–Apr · Aug–Oct)',
@@ -149,9 +157,9 @@ function admindash_default_course_schedule_sticky_notes(): array {
 /**
  * @return array<int,array{title:string,body:string,variant:string}>
  */
-function admindash_get_course_schedule_sticky_notes(): array {
+function local_admindashboard_get_course_schedule_sticky_notes(): array {
     $raw = get_config('local_admindashboard', 'course_schedule_sticky_json');
-    $defaults = admindash_default_course_schedule_sticky_notes();
+    $defaults = local_admindashboard_default_course_schedule_sticky_notes();
     if ($raw === false || $raw === null || trim((string)$raw) === '') {
         return $defaults;
     }
@@ -163,7 +171,7 @@ function admindash_get_course_schedule_sticky_notes(): array {
         return $defaults;
     }
     $allowedvariants = ['lemon' => true, 'mint' => true, 'lavender' => true, 'peach' => true];
-    $max = admindash_course_schedule_sticky_notes_max();
+    $max = local_admindashboard_course_schedule_sticky_notes_max();
     $out = [];
     foreach ($decoded as $row) {
         if (count($out) >= $max) {
@@ -182,7 +190,7 @@ function admindash_get_course_schedule_sticky_notes(): array {
             continue;
         }
         if ($title === '' && trim($body) !== '') {
-            $title = admindash_get_string_schedule_notes('courseschedulenotes_untitled');
+            $title = local_admindashboard_get_string_schedule_notes('courseschedulenotes_untitled');
         }
         $out[] = [
             'title' => $title,
@@ -198,9 +206,9 @@ function admindash_get_course_schedule_sticky_notes(): array {
  *
  * @param array<int,array{title:string,body:string,variant:string}> $notes
  */
-function admindash_save_course_schedule_sticky_notes(array $notes): void {
+function local_admindashboard_save_course_schedule_sticky_notes(array $notes): void {
     $allowedvariants = ['lemon' => true, 'mint' => true, 'lavender' => true, 'peach' => true];
-    $max = admindash_course_schedule_sticky_notes_max();
+    $max = local_admindashboard_course_schedule_sticky_notes_max();
     $clean = [];
     foreach ($notes as $row) {
         if (count($clean) >= $max) {
@@ -219,7 +227,7 @@ function admindash_save_course_schedule_sticky_notes(array $notes): void {
             continue;
         }
         if ($title === '' && trim($body) !== '') {
-            $title = admindash_get_string_schedule_notes('courseschedulenotes_untitled');
+            $title = local_admindashboard_get_string_schedule_notes('courseschedulenotes_untitled');
         }
         $clean[] = [
             'title' => $title,
@@ -228,7 +236,7 @@ function admindash_save_course_schedule_sticky_notes(array $notes): void {
         ];
     }
     if ($clean === []) {
-        $clean = admindash_default_course_schedule_sticky_notes();
+        $clean = local_admindashboard_default_course_schedule_sticky_notes();
     }
     $flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
     if (defined('JSON_INVALID_UTF8_SUBSTITUTE')) {
@@ -246,7 +254,7 @@ function admindash_save_course_schedule_sticky_notes(array $notes): void {
  *
  * @return array<int,array{key:string,title:string,range:string,startmonth:int,startday:int,endmonth:int,endday:int,courses:array<int,string>}>
  */
-function admindash_default_course_schedule_cadence_config(): array {
+function local_admindashboard_default_course_schedule_cadence_config(): array {
     return [
         [
             'key' => 'basic_first',
@@ -293,9 +301,9 @@ function admindash_default_course_schedule_cadence_config(): array {
 /**
  * @return array<int,array{key:string,title:string,range:string,startmonth:int,startday:int,endmonth:int,endday:int,courses:array<int,string>}>
  */
-function admindash_get_course_schedule_cadence_config(): array {
+function local_admindashboard_get_course_schedule_cadence_config(): array {
     $raw = get_config('local_admindashboard', 'course_schedule_cadence_json');
-    $defaults = admindash_default_course_schedule_cadence_config();
+    $defaults = local_admindashboard_default_course_schedule_cadence_config();
     if ($raw === false || $raw === null || trim((string)$raw) === '') {
         return $defaults;
     }
@@ -346,7 +354,7 @@ function admindash_get_course_schedule_cadence_config(): array {
 /**
  * @param array<int,array<string,mixed>> $windows
  */
-function admindash_save_course_schedule_cadence_config(array $windows): void {
+function local_admindashboard_save_course_schedule_cadence_config(array $windows): void {
     $clean = [];
     foreach ($windows as $idx => $row) {
         if (!is_array($row)) {
@@ -375,7 +383,7 @@ function admindash_save_course_schedule_cadence_config(array $windows): void {
         ];
     }
     if ($clean === []) {
-        $clean = admindash_default_course_schedule_cadence_config();
+        $clean = local_admindashboard_default_course_schedule_cadence_config();
     }
     set_config(
         'course_schedule_cadence_json',
@@ -389,12 +397,12 @@ function admindash_save_course_schedule_cadence_config(array $windows): void {
  *
  * @return array<int,array{key:string,title:string,range:string,start:int,end:int,courses:array<int,string>}>
  */
-function admindash_course_schedule_cadence_windows(?int $now = null): array {
+function local_admindashboard_course_schedule_cadence_windows(?int $now = null): array {
     $now = $now ?? time();
     $year = (int)date('Y', $now);
 
     $windows = [];
-    foreach (admindash_get_course_schedule_cadence_config() as $row) {
+    foreach (local_admindashboard_get_course_schedule_cadence_config() as $row) {
         $windows[] = [
             'key' => (string)$row['key'],
             'title' => (string)$row['title'],
@@ -414,7 +422,7 @@ function admindash_course_schedule_cadence_windows(?int $now = null): array {
  * @param array<int,array{key:string,title:string,range:string,start:int,end:int,courses:array<int,string>}> $windows
  * @return array{active:?array,next:?array,second:?array}
  */
-function admindash_course_schedule_cadence_state(array $windows, ?int $now = null): array {
+function local_admindashboard_course_schedule_cadence_state(array $windows, ?int $now = null): array {
     $now = $now ?? time();
     $year = (int)date('Y', $now);
     $active = null;
@@ -433,7 +441,7 @@ function admindash_course_schedule_cadence_state(array $windows, ?int $now = nul
     });
     $next = $future[0] ?? null;
     if ($next === null) {
-        $nextyearwindows = admindash_course_schedule_cadence_windows(mktime(0, 0, 0, 1, 1, $year + 1));
+        $nextyearwindows = local_admindashboard_course_schedule_cadence_windows(mktime(0, 0, 0, 1, 1, $year + 1));
         $next = $nextyearwindows[0] ?? null;
     }
 
@@ -445,7 +453,7 @@ function admindash_course_schedule_cadence_state(array $windows, ?int $now = nul
         }
     }
     if ($second !== null && (int)$second['end'] < $now) {
-        $nextyearwindows = admindash_course_schedule_cadence_windows(mktime(0, 0, 0, 1, 1, $year + 1));
+        $nextyearwindows = local_admindashboard_course_schedule_cadence_windows(mktime(0, 0, 0, 1, 1, $year + 1));
         foreach ($nextyearwindows as $window) {
             if ((string)$window['key'] === 'basic_second') {
                 $second = $window;
@@ -457,11 +465,11 @@ function admindash_course_schedule_cadence_state(array $windows, ?int $now = nul
     return ['active' => $active, 'next' => $next, 'second' => $second];
 }
 
-function admindash_course_schedule_days_between(int $from, int $to): int {
+function local_admindashboard_course_schedule_days_between(int $from, int $to): int {
     return $to > $from ? (int)ceil(($to - $from) / DAYSECS) : 0;
 }
 
-function admindash_course_schedule_progress_pct(array $window, ?int $now = null): int {
+function local_admindashboard_course_schedule_progress_pct(array $window, ?int $now = null): int {
     $now = $now ?? time();
     $start = (int)($window['start'] ?? 0);
     $end = (int)($window['end'] ?? 0);
@@ -477,13 +485,13 @@ function admindash_course_schedule_progress_pct(array $window, ?int $now = null)
     return max(0, min(100, (int)round((($now - $start) / ($end - $start)) * 100)));
 }
 
-function admindash_render_course_schedule_window_card(array $window, string $mode, ?int $now = null): string {
+function local_admindashboard_render_course_schedule_window_card(array $window, string $mode, ?int $now = null): string {
     $now = $now ?? time();
     $start = (int)($window['start'] ?? 0);
     $end = (int)($window['end'] ?? 0);
     $isactive = $mode === 'active';
     $iscompleted = $mode === 'completed';
-    $days = $isactive ? admindash_course_schedule_days_between($now, $end) : admindash_course_schedule_days_between($now, $start);
+    $days = $isactive ? local_admindashboard_course_schedule_days_between($now, $end) : local_admindashboard_course_schedule_days_between($now, $start);
     $statusmap = [
         'active' => 'Active now',
         'completed' => 'Completed',
@@ -492,7 +500,7 @@ function admindash_render_course_schedule_window_card(array $window, string $mod
     ];
     $status = $statusmap[$mode] ?? 'Upcoming';
     $metriclabel = $isactive ? 'days left' : ($iscompleted ? 'cycle closed' : 'days to start');
-    $progress = admindash_course_schedule_progress_pct($window, $now);
+    $progress = local_admindashboard_course_schedule_progress_pct($window, $now);
     $courses = '';
     foreach (($window['courses'] ?? []) as $course) {
         $courses .= html_writer::tag('li', s((string)$course));
@@ -527,9 +535,9 @@ function admindash_render_course_schedule_window_card(array $window, string $mod
 /**
  * Renders the cork-board sticky notes block for the main dashboard.
  */
-function admindash_render_course_schedule_sticky_board_legacy(bool $showeditlink = true): string {
-    $notes = admindash_get_course_schedule_sticky_notes();
-    $canedit = admindash_user_can_edit_course_schedule_notes();
+function local_admindashboard_render_course_schedule_sticky_board_legacy(bool $showeditlink = true): string {
+    $notes = local_admindashboard_get_course_schedule_sticky_notes();
+    $canedit = local_admindashboard_user_can_edit_course_schedule_notes();
     $editurl = new moodle_url('/local/admindashboard/course_schedule_notes.php');
 
     $cards = '';
@@ -560,12 +568,12 @@ function admindash_render_course_schedule_sticky_board_legacy(bool $showeditlink
     }
 
     $headinner = html_writer::div(
-        html_writer::tag('span', admindash_get_string_schedule_notes('courseschedulenotes_board_eyebrow'), ['class' => 'admindash-sticky-board__eyebrow'])
-        . html_writer::tag('h2', admindash_get_string_schedule_notes('courseschedulenotes_board_title'), ['class' => 'admindash-sticky-board__title'])
+        html_writer::tag('span', local_admindashboard_get_string_schedule_notes('courseschedulenotes_board_eyebrow'), ['class' => 'admindash-sticky-board__eyebrow'])
+        . html_writer::tag('h2', local_admindashboard_get_string_schedule_notes('courseschedulenotes_board_title'), ['class' => 'admindash-sticky-board__title'])
         . ($canedit && $showeditlink
             ? html_writer::link(
                 $editurl,
-                admindash_get_string_schedule_notes('courseschedulenotes_board_edit'),
+                local_admindashboard_get_string_schedule_notes('courseschedulenotes_board_edit'),
                 ['class' => 'admindash-sticky-board__edit btn btn-sm btn-outline-primary']
             )
             : ''),
@@ -577,9 +585,9 @@ function admindash_render_course_schedule_sticky_board_legacy(bool $showeditlink
         'class' => 'admindash-sticky-board__collapse',
         'aria-expanded' => 'true',
         'aria-controls' => 'admindash-sticky-board-panel',
-        'data-ad-expand' => admindash_get_string_schedule_notes('courseschedulenotes_board_toggle_show'),
-        'data-ad-collapse' => admindash_get_string_schedule_notes('courseschedulenotes_board_toggle_hide'),
-        'aria-label' => admindash_get_string_schedule_notes('courseschedulenotes_board_toggle_hide'),
+        'data-ad-expand' => local_admindashboard_get_string_schedule_notes('courseschedulenotes_board_toggle_show'),
+        'data-ad-collapse' => local_admindashboard_get_string_schedule_notes('courseschedulenotes_board_toggle_hide'),
+        'aria-label' => local_admindashboard_get_string_schedule_notes('courseschedulenotes_board_toggle_hide'),
     ];
     $togglebtn = html_writer::tag(
         'button',
@@ -603,10 +611,10 @@ function admindash_render_course_schedule_sticky_board_legacy(bool $showeditlink
 /**
  * Renders the dashboard course cadence block.
  */
-function admindash_render_course_schedule_sticky_board(bool $showeditlink = true): string {
+function local_admindashboard_render_course_schedule_sticky_board(bool $showeditlink = true): string {
     $now = time();
-    $windows = admindash_course_schedule_cadence_windows($now);
-    $state = admindash_course_schedule_cadence_state($windows, $now);
+    $windows = local_admindashboard_course_schedule_cadence_windows($now);
+    $state = local_admindashboard_course_schedule_cadence_state($windows, $now);
 
     $cards = '';
     $nextkey = $state['next'] !== null ? (string)$state['next']['key'] : '';
@@ -621,7 +629,7 @@ function admindash_render_course_schedule_sticky_board(bool $showeditlink = true
         } else if ((string)($window['key'] ?? '') === $nextkey) {
             $mode = 'next';
         }
-        $cards .= admindash_render_course_schedule_window_card($window, $mode, $now);
+        $cards .= local_admindashboard_render_course_schedule_window_card($window, $mode, $now);
     }
 
     $activecopy = $state['active'] !== null
@@ -638,7 +646,7 @@ function admindash_render_course_schedule_sticky_board(bool $showeditlink = true
     }
     $summary = html_writer::div($summarychips, 'admindash-cadence-board__chips');
 
-    $canedit = admindash_user_can_edit_course_schedule_notes();
+    $canedit = local_admindashboard_user_can_edit_course_schedule_notes();
     $editurl = new moodle_url('/local/admindashboard/course_schedule_notes.php');
     $editlink = ($canedit && $showeditlink)
         ? html_writer::link(
@@ -649,8 +657,8 @@ function admindash_render_course_schedule_sticky_board(bool $showeditlink = true
         : '';
 
     $headinner = html_writer::div(
-        html_writer::tag('span', admindash_get_string_schedule_notes('courseschedulenotes_board_eyebrow'), ['class' => 'admindash-sticky-board__eyebrow'])
-        . html_writer::tag('h2', admindash_get_string_schedule_notes('courseschedulenotes_board_title'), ['class' => 'admindash-sticky-board__title'])
+        html_writer::tag('span', local_admindashboard_get_string_schedule_notes('courseschedulenotes_board_eyebrow'), ['class' => 'admindash-sticky-board__eyebrow'])
+        . html_writer::tag('h2', local_admindashboard_get_string_schedule_notes('courseschedulenotes_board_title'), ['class' => 'admindash-sticky-board__title'])
         . html_writer::div('Annual training windows with live countdowns for active and upcoming cycles.', 'admindash-cadence-board__subtitle')
         . $summary
         . $editlink,
@@ -662,9 +670,9 @@ function admindash_render_course_schedule_sticky_board(bool $showeditlink = true
         'class' => 'admindash-sticky-board__collapse',
         'aria-expanded' => 'true',
         'aria-controls' => 'admindash-sticky-board-panel',
-        'data-ad-expand' => admindash_get_string_schedule_notes('courseschedulenotes_board_toggle_show'),
-        'data-ad-collapse' => admindash_get_string_schedule_notes('courseschedulenotes_board_toggle_hide'),
-        'aria-label' => admindash_get_string_schedule_notes('courseschedulenotes_board_toggle_hide'),
+        'data-ad-expand' => local_admindashboard_get_string_schedule_notes('courseschedulenotes_board_toggle_show'),
+        'data-ad-collapse' => local_admindashboard_get_string_schedule_notes('courseschedulenotes_board_toggle_hide'),
+        'aria-label' => local_admindashboard_get_string_schedule_notes('courseschedulenotes_board_toggle_hide'),
     ];
     $togglebtn = html_writer::tag(
         'button',
@@ -688,11 +696,11 @@ function admindash_render_course_schedule_sticky_board(bool $showeditlink = true
 /**
  * Common setup for admin dashboard pages.
  */
-function admindash_setup_page(string $path, string $title, string $active): void {
+function local_admindashboard_setup_page(string $path, string $title, string $active): void {
     global $PAGE;
 
     require_login();
-    admindash_require_view_access();
+    local_admindashboard_require_view_access();
 
     $PAGE->set_context(context_system::instance());
     $PAGE->set_url(new moodle_url($path));
@@ -701,13 +709,6 @@ function admindash_setup_page(string $path, string $title, string $active): void
     $PAGE->add_body_class('admindash-fullscreen');
     $PAGE->set_title($title);
     $PAGE->set_heading($title);
-
-    // Shared styling for all admin_dashboard pages.
-    $cssver = @filemtime(__DIR__ . '/styles.css');
-    if (empty($cssver)) {
-        $cssver = 1;
-    }
-    $PAGE->requires->css(new moodle_url('/local/admindashboard/styles.css', ['v' => $cssver]));
 
     // Sidebar submenu toggle + theme toggle + simple report table helpers.
     $PAGE->requires->js_init_code(<<<'JS'
@@ -1084,7 +1085,7 @@ JS
 
 }
 
-function admindash_get_nav_icon_svg(string $icon): string {
+function local_admindashboard_get_nav_icon_svg(string $icon): string {
     $icons = [
         'brand' => '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3l1.8 3.7L18 8.5l-3 2.9.7 4.1L12 13.7 8.3 15.5 9 11.4 6 8.5l4.2-.8L12 3z" fill="currentColor"/></svg>',
         'home' => '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1v-9.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
@@ -1114,7 +1115,7 @@ function admindash_get_nav_icon_svg(string $icon): string {
     return $icons[$icon] ?? $icons['report'];
 }
 
-function admindash_get_nav_items(): array {
+function local_admindashboard_get_nav_items(): array {
     return [
         [
             'heading' => 'Admin Tools',
@@ -1230,7 +1231,7 @@ function admindash_get_nav_items(): array {
     ];
 }
 
-function admindash_module_action(string $label, moodle_url $url, bool $primary = false): array {
+function local_admindashboard_module_action(string $label, moodle_url $url, bool $primary = false): array {
     return [
         'label' => $label,
         'url' => $url,
@@ -1238,7 +1239,7 @@ function admindash_module_action(string $label, moodle_url $url, bool $primary =
     ];
 }
 
-function admindash_module_page_definition(
+function local_admindashboard_module_page_definition(
     string $script,
     string $active,
     string $eyebrow,
@@ -1264,9 +1265,9 @@ function admindash_module_page_definition(
     ];
 }
 
-function admindash_get_module_page_definitions(): array {
+function local_admindashboard_get_module_page_definitions(): array {
     return [
-        'admintools.users.list' => admindash_module_page_definition(
+        'admintools.users.list' => local_admindashboard_module_page_definition(
             '/local/admindashboard/manage_users.php',
             'admintools.users.list',
             'Admin Tools',
@@ -1274,9 +1275,9 @@ function admindash_get_module_page_definitions(): array {
             'users',
             'Central workspace for account lifecycle, onboarding hygiene, and role review across the LMS.',
             [
-                admindash_module_action('Open core user admin', new moodle_url('/admin/user.php'), true),
-                admindash_module_action('Open Add User module', new moodle_url('/local/admindashboard/add_user.php')),
-                admindash_module_action('View user progress', new moodle_url('/local/admindashboard/user_progress.php')),
+                local_admindashboard_module_action('Open core user admin', new moodle_url('/admin/user.php'), true),
+                local_admindashboard_module_action('Open Add User module', new moodle_url('/local/admindashboard/add_user.php')),
+                local_admindashboard_module_action('View user progress', new moodle_url('/local/admindashboard/user_progress.php')),
             ],
             [
                 'Review user rosters by department, status, or role.',
@@ -1293,7 +1294,7 @@ function admindash_get_module_page_definitions(): array {
                 'Core Moodle account administration remains one click away while custom workflows are added.',
             ]
         ),
-        'admintools.users.add' => admindash_module_page_definition(
+        'admintools.users.add' => local_admindashboard_module_page_definition(
             '/local/admindashboard/add_user.php',
             'admintools.users.add',
             'Admin Tools',
@@ -1301,9 +1302,9 @@ function admindash_get_module_page_definitions(): array {
             'users',
             'Launchpad for single-user onboarding, role defaults, and department-aware provisioning.',
             [
-                admindash_module_action('Open core add-user form', new moodle_url('/user/editadvanced.php', ['id' => -1]), true),
-                admindash_module_action('Open Manage Users module', new moodle_url('/local/admindashboard/manage_users.php')),
-                admindash_module_action('Open Group setup', new moodle_url('/local/admindashboard/group_department_setup.php')),
+                local_admindashboard_module_action('Open core add-user form', new moodle_url('/user/editadvanced.php', ['id' => -1]), true),
+                local_admindashboard_module_action('Open Manage Users module', new moodle_url('/local/admindashboard/manage_users.php')),
+                local_admindashboard_module_action('Open Group setup', new moodle_url('/local/admindashboard/group_department_setup.php')),
             ],
             [
                 'Capture onboarding requirements before redirecting to final account creation.',
@@ -1319,7 +1320,7 @@ function admindash_get_module_page_definitions(): array {
                 'Best next step is a guided onboarding form that feeds Moodle core user creation.',
             ]
         ),
-        'admintools.users.roles' => admindash_module_page_definition(
+        'admintools.users.roles' => local_admindashboard_module_page_definition(
             '/local/admindashboard/define_roles.php',
             'admintools.users.roles',
             'Admin Tools',
@@ -1327,9 +1328,9 @@ function admindash_get_module_page_definitions(): array {
             'users',
             'Keep permission models understandable by pairing role governance with dashboard-facing guidance.',
             [
-                admindash_module_action('Open role manager', new moodle_url('/admin/roles/manage.php'), true),
-                admindash_module_action('Open Manage Users module', new moodle_url('/local/admindashboard/manage_users.php')),
-                admindash_module_action('Open System Config module', new moodle_url('/local/admindashboard/system_config.php')),
+                local_admindashboard_module_action('Open role manager', new moodle_url('/admin/roles/manage.php'), true),
+                local_admindashboard_module_action('Open Manage Users module', new moodle_url('/local/admindashboard/manage_users.php')),
+                local_admindashboard_module_action('Open System Config module', new moodle_url('/local/admindashboard/system_config.php')),
             ],
             [
                 'Track which operational roles are in use and where elevated access exists.',
@@ -1342,7 +1343,7 @@ function admindash_get_module_page_definitions(): array {
                 'Support change logs for custom role edits and exceptions.',
             ]
         ),
-        'admintools.courses.list' => admindash_module_page_definition(
+        'admintools.courses.list' => local_admindashboard_module_page_definition(
             '/local/admindashboard/course_list.php',
             'admintools.courses.list',
             'Admin Tools',
@@ -1350,9 +1351,9 @@ function admindash_get_module_page_definitions(): array {
             'courses',
             'Operational view for course catalog hygiene, ownership, and lifecycle status.',
             [
-                admindash_module_action('Open core course management', new moodle_url('/course/management.php'), true),
-                admindash_module_action('Open Course Analytics', new moodle_url('/local/admindashboard/course_analytics.php')),
-                admindash_module_action('Open Create Course module', new moodle_url('/local/admindashboard/create_course.php')),
+                local_admindashboard_module_action('Open core course management', new moodle_url('/course/management.php'), true),
+                local_admindashboard_module_action('Open Course Analytics', new moodle_url('/local/admindashboard/course_analytics.php')),
+                local_admindashboard_module_action('Open Create Course module', new moodle_url('/local/admindashboard/create_course.php')),
             ],
             [
                 'Surface course owner, status, enrolment volume, and compliance relevance.',
@@ -1365,7 +1366,7 @@ function admindash_get_module_page_definitions(): array {
                 'Add quick actions for reporting, templates, and course governance.',
             ]
         ),
-        'admintools.courses.create' => admindash_module_page_definition(
+        'admintools.courses.create' => local_admindashboard_module_page_definition(
             '/local/admindashboard/create_course.php',
             'admintools.courses.create',
             'Admin Tools',
@@ -1373,9 +1374,9 @@ function admindash_get_module_page_definitions(): array {
             'courses',
             'Structured starting point for course intake, approvals, and build standards.',
             [
-                admindash_module_action('Open core course management', new moodle_url('/course/management.php'), true),
-                admindash_module_action('Open Course Templates module', new moodle_url('/local/admindashboard/course_templates.php')),
-                admindash_module_action('Open Platform Branding module', new moodle_url('/local/admindashboard/platform_branding.php')),
+                local_admindashboard_module_action('Open core course management', new moodle_url('/course/management.php'), true),
+                local_admindashboard_module_action('Open Course Templates module', new moodle_url('/local/admindashboard/course_templates.php')),
+                local_admindashboard_module_action('Open Platform Branding module', new moodle_url('/local/admindashboard/platform_branding.php')),
             ],
             [
                 'Capture course intent, owner, audience, and compliance impact before build.',
@@ -1388,7 +1389,7 @@ function admindash_get_module_page_definitions(): array {
                 'Add template and branding presets to speed up course rollout.',
             ]
         ),
-        'admintools.courses.templates' => admindash_module_page_definition(
+        'admintools.courses.templates' => local_admindashboard_module_page_definition(
             '/local/admindashboard/course_templates.php',
             'admintools.courses.templates',
             'Admin Tools',
@@ -1396,9 +1397,9 @@ function admindash_get_module_page_definitions(): array {
             'courses',
             'Template control room for repeatable course structures, compliance packs, and content standards.',
             [
-                admindash_module_action('Open Modules Report', new moodle_url('/local/admindashboard/course_analytics_modules.php'), true),
-                admindash_module_action('Open Create Course module', new moodle_url('/local/admindashboard/create_course.php')),
-                admindash_module_action('Open Course List module', new moodle_url('/local/admindashboard/course_list.php')),
+                local_admindashboard_module_action('Open Modules Report', new moodle_url('/local/admindashboard/course_analytics_modules.php'), true),
+                local_admindashboard_module_action('Open Create Course module', new moodle_url('/local/admindashboard/create_course.php')),
+                local_admindashboard_module_action('Open Course List module', new moodle_url('/local/admindashboard/course_list.php')),
             ],
             [
                 'Define standard module stacks for onboarding, mandatory training, and certifications.',
@@ -1411,7 +1412,7 @@ function admindash_get_module_page_definitions(): array {
                 'Map template usage back into analytics so duplicates and drift are visible.',
             ]
         ),
-        'admintools.groups' => admindash_module_page_definition(
+        'admintools.groups' => local_admindashboard_module_page_definition(
             '/local/admindashboard/group_department_setup.php',
             'admintools.groups',
             'Admin Tools',
@@ -1419,9 +1420,9 @@ function admindash_get_module_page_definitions(): array {
             'department',
             'Base for managing departments, cohorts, and reporting segments used across the dashboard.',
             [
-                admindash_module_action('Open core profile fields', new moodle_url('/user/profile/index.php'), true),
-                admindash_module_action('Open Manage Users module', new moodle_url('/local/admindashboard/manage_users.php')),
-                admindash_module_action('Open Department reports', new moodle_url('/local/admindashboard/department_reports.php')),
+                local_admindashboard_module_action('Open core profile fields', new moodle_url('/user/profile/index.php'), true),
+                local_admindashboard_module_action('Open Manage Users module', new moodle_url('/local/admindashboard/manage_users.php')),
+                local_admindashboard_module_action('Open Department reports', new moodle_url('/local/admindashboard/department_reports.php')),
             ],
             [
                 'Define organizational structures used by compliance and analytics screens.',
@@ -1434,7 +1435,7 @@ function admindash_get_module_page_definitions(): array {
                 'Expose quick links into affected reports and user management flows.',
             ]
         ),
-        'compliance.expiry' => admindash_module_page_definition(
+        'compliance.expiry' => local_admindashboard_module_page_definition(
             '/local/admindashboard/license_expiry.php',
             'compliance.expiry',
             'Reports & Analytics',
@@ -1442,9 +1443,9 @@ function admindash_get_module_page_definitions(): array {
             'compliance',
             'Monitoring surface for expiring certifications, recency thresholds, and renewal queues.',
             [
-                admindash_module_action('Open Compliance Dashboard', new moodle_url('/local/admindashboard/compliance_dashboard.php'), true),
-                admindash_module_action('Open Renewal Readiness module', new moodle_url('/local/admindashboard/renewal_readiness.php')),
-                admindash_module_action('Open Export Center', new moodle_url('/local/admindashboard/export_center.php')),
+                local_admindashboard_module_action('Open Compliance Dashboard', new moodle_url('/local/admindashboard/compliance_dashboard.php'), true),
+                local_admindashboard_module_action('Open Renewal Readiness module', new moodle_url('/local/admindashboard/renewal_readiness.php')),
+                local_admindashboard_module_action('Open Export Center', new moodle_url('/local/admindashboard/export_center.php')),
             ],
             [
                 'Prioritize users and departments with the nearest renewal deadlines.',
@@ -1457,7 +1458,7 @@ function admindash_get_module_page_definitions(): array {
                 'Support reminder campaigns and escalation summaries.',
             ]
         ),
-        'compliance.mandatory' => admindash_module_page_definition(
+        'compliance.mandatory' => local_admindashboard_module_page_definition(
             '/local/admindashboard/mandatory_training.php',
             'compliance.mandatory',
             'Reports & Analytics',
@@ -1465,9 +1466,9 @@ function admindash_get_module_page_definitions(): array {
             'compliance',
             'Focused workspace for mandated learning programs and overdue completion follow-up.',
             [
-                admindash_module_action('Open Pass/Fail report', new moodle_url('/local/admindashboard/passfail_report.php'), true),
-                admindash_module_action('Open Compliance Dashboard', new moodle_url('/local/admindashboard/compliance_dashboard.php')),
-                admindash_module_action('Open Send KPI reminders', new moodle_url('/local/admindashboard/send_kpi_reminders.php')),
+                local_admindashboard_module_action('Open Pass/Fail report', new moodle_url('/local/admindashboard/passfail_report.php'), true),
+                local_admindashboard_module_action('Open Compliance Dashboard', new moodle_url('/local/admindashboard/compliance_dashboard.php')),
+                local_admindashboard_module_action('Open Send KPI reminders', new moodle_url('/local/admindashboard/send_kpi_reminders.php')),
             ],
             [
                 'Identify required courses that are incomplete, failed, or overdue.',
@@ -1480,7 +1481,7 @@ function admindash_get_module_page_definitions(): array {
                 'Surface action lists for reminders, exports, and progress tracking.',
             ]
         ),
-        'compliance.dashboard' => admindash_module_page_definition(
+        'compliance.dashboard' => local_admindashboard_module_page_definition(
             '/local/admindashboard/compliance_dashboard.php',
             'compliance.dashboard',
             'Reports & Analytics',
@@ -1488,9 +1489,9 @@ function admindash_get_module_page_definitions(): array {
             'compliance',
             'Executive compliance hub for readiness, expiry exposure, and department-level risk signals.',
             [
-                admindash_module_action('Open License Expiry module', new moodle_url('/local/admindashboard/license_expiry.php'), true),
-                admindash_module_action('Open Mandatory Training module', new moodle_url('/local/admindashboard/mandatory_training.php')),
-                admindash_module_action('Open Department Engagement report', new moodle_url('/local/admindashboard/department_reports_engagement.php')),
+                local_admindashboard_module_action('Open License Expiry module', new moodle_url('/local/admindashboard/license_expiry.php'), true),
+                local_admindashboard_module_action('Open Mandatory Training module', new moodle_url('/local/admindashboard/mandatory_training.php')),
+                local_admindashboard_module_action('Open Department Engagement report', new moodle_url('/local/admindashboard/department_reports_engagement.php')),
             ],
             [
                 'Bring expiry, overdue learning, and completion health into one screen.',
@@ -1506,7 +1507,7 @@ function admindash_get_module_page_definitions(): array {
                 'This page should become the default control room for compliance operations.',
             ]
         ),
-        'skills.gap' => admindash_module_page_definition(
+        'skills.gap' => local_admindashboard_module_page_definition(
             '/local/admindashboard/skill_gap_matrix.php',
             'skills.gap',
             'Reports & Analytics',
@@ -1514,9 +1515,9 @@ function admindash_get_module_page_definitions(): array {
             'certification',
             'Matrix-style workspace for comparing current completion, competency coverage, and target skill expectations.',
             [
-                admindash_module_action('Open Course Analytics', new moodle_url('/local/admindashboard/course_analytics.php'), true),
-                admindash_module_action('Open Certificate Status module', new moodle_url('/local/admindashboard/certificate_status.php')),
-                admindash_module_action('Open Department Completion report', new moodle_url('/local/admindashboard/department_reports.php')),
+                local_admindashboard_module_action('Open Course Analytics', new moodle_url('/local/admindashboard/course_analytics.php'), true),
+                local_admindashboard_module_action('Open Certificate Status module', new moodle_url('/local/admindashboard/certificate_status.php')),
+                local_admindashboard_module_action('Open Department Completion report', new moodle_url('/local/admindashboard/department_reports.php')),
             ],
             [
                 'Model target skills against actual completions and assessment outcomes.',
@@ -1529,7 +1530,7 @@ function admindash_get_module_page_definitions(): array {
                 'Add exportable gap summaries for management reporting.',
             ]
         ),
-        'skills.certificates' => admindash_module_page_definition(
+        'skills.certificates' => local_admindashboard_module_page_definition(
             '/local/admindashboard/certificate_status.php',
             'skills.certificates',
             'Reports & Analytics',
@@ -1537,9 +1538,9 @@ function admindash_get_module_page_definitions(): array {
             'certification',
             'Status board for active certifications, earned credentials, and missing evidence.',
             [
-                admindash_module_action('Open Renewal Readiness module', new moodle_url('/local/admindashboard/renewal_readiness.php'), true),
-                admindash_module_action('Open License Expiry module', new moodle_url('/local/admindashboard/license_expiry.php')),
-                admindash_module_action('Open Export Center', new moodle_url('/local/admindashboard/export_center.php')),
+                local_admindashboard_module_action('Open Renewal Readiness module', new moodle_url('/local/admindashboard/renewal_readiness.php'), true),
+                local_admindashboard_module_action('Open License Expiry module', new moodle_url('/local/admindashboard/license_expiry.php')),
+                local_admindashboard_module_action('Open Export Center', new moodle_url('/local/admindashboard/export_center.php')),
             ],
             [
                 'Track which certifications are current, missing, expired, or awaiting verification.',
@@ -1552,7 +1553,7 @@ function admindash_get_module_page_definitions(): array {
                 'Expose renewal-related drill-downs and outbound exports.',
             ]
         ),
-        'skills.renewals' => admindash_module_page_definition(
+        'skills.renewals' => local_admindashboard_module_page_definition(
             '/local/admindashboard/renewal_readiness.php',
             'skills.renewals',
             'Reports & Analytics',
@@ -1560,9 +1561,9 @@ function admindash_get_module_page_definitions(): array {
             'certification',
             'Forward-looking view of who is ready, blocked, or at risk for credential renewal.',
             [
-                admindash_module_action('Open Certificate Status module', new moodle_url('/local/admindashboard/certificate_status.php'), true),
-                admindash_module_action('Open License Expiry module', new moodle_url('/local/admindashboard/license_expiry.php')),
-                admindash_module_action('Open Support Tickets module', new moodle_url('/local/admindashboard/support_tickets.php')),
+                local_admindashboard_module_action('Open Certificate Status module', new moodle_url('/local/admindashboard/certificate_status.php'), true),
+                local_admindashboard_module_action('Open License Expiry module', new moodle_url('/local/admindashboard/license_expiry.php')),
+                local_admindashboard_module_action('Open Support Tickets module', new moodle_url('/local/admindashboard/support_tickets.php')),
             ],
             [
                 'Separate renewal-ready learners from those missing prerequisites or evidence.',
@@ -1575,7 +1576,7 @@ function admindash_get_module_page_definitions(): array {
                 'Integrate export and ticketing hooks for manual follow-up.',
             ]
         ),
-        'communication.announcements' => admindash_module_page_definition(
+        'communication.announcements' => local_admindashboard_module_page_definition(
             '/local/admindashboard/announcements.php',
             'communication.announcements',
             'Communication',
@@ -1583,9 +1584,9 @@ function admindash_get_module_page_definitions(): array {
             'announcement',
             'Operational surface for LMS-wide notices, department updates, and compliance communications.',
             [
-                admindash_module_action('Open notifications center', new moodle_url('/message/output/popup/notifications.php'), true),
-                admindash_module_action('Open Direct Messaging module', new moodle_url('/local/admindashboard/direct_messaging.php')),
-                admindash_module_action('Open Help Center module', new moodle_url('/local/admindashboard/help_center.php')),
+                local_admindashboard_module_action('Open notifications center', new moodle_url('/message/output/popup/notifications.php'), true),
+                local_admindashboard_module_action('Open Direct Messaging module', new moodle_url('/local/admindashboard/direct_messaging.php')),
+                local_admindashboard_module_action('Open Help Center module', new moodle_url('/local/admindashboard/help_center.php')),
             ],
             [
                 'Plan targeted announcements by audience, urgency, and business area.',
@@ -1598,7 +1599,7 @@ function admindash_get_module_page_definitions(): array {
                 'Track sent, scheduled, and archived communications.',
             ]
         ),
-        'communication.discussions' => admindash_module_page_definition(
+        'communication.discussions' => local_admindashboard_module_page_definition(
             '/local/admindashboard/forums_discussions.php',
             'communication.discussions',
             'Communication',
@@ -1606,9 +1607,9 @@ function admindash_get_module_page_definitions(): array {
             'discussion',
             'Collaboration hub for forum health, response activity, and unresolved discussion queues.',
             [
-                admindash_module_action('Open forum index', new moodle_url('/mod/forum/index.php'), true),
-                admindash_module_action('Open Sentiment Analyzer', new moodle_url('/local/admindashboard/sentiment_analyzer.php')),
-                admindash_module_action('Open Announcements module', new moodle_url('/local/admindashboard/announcements.php')),
+                local_admindashboard_module_action('Open forum index', new moodle_url('/mod/forum/index.php'), true),
+                local_admindashboard_module_action('Open Sentiment Analyzer', new moodle_url('/local/admindashboard/sentiment_analyzer.php')),
+                local_admindashboard_module_action('Open Announcements module', new moodle_url('/local/admindashboard/announcements.php')),
             ],
             [
                 'Review which course discussions are active, stale, or unmoderated.',
@@ -1621,7 +1622,7 @@ function admindash_get_module_page_definitions(): array {
                 'Support links into sentiment, engagement, and course analytics pages.',
             ]
         ),
-        'communication.messaging' => admindash_module_page_definition(
+        'communication.messaging' => local_admindashboard_module_page_definition(
             '/local/admindashboard/direct_messaging.php',
             'communication.messaging',
             'Communication',
@@ -1629,9 +1630,9 @@ function admindash_get_module_page_definitions(): array {
             'message',
             'Admin-oriented messaging workspace for outreach, follow-ups, and targeted nudges.',
             [
-                admindash_module_action('Open core messaging', new moodle_url('/message/index.php'), true),
-                admindash_module_action('Open at-risk reminders', new moodle_url('/local/admindashboard/send_at_risk_reminders.php')),
-                admindash_module_action('Open Announcements module', new moodle_url('/local/admindashboard/announcements.php')),
+                local_admindashboard_module_action('Open core messaging', new moodle_url('/message/index.php'), true),
+                local_admindashboard_module_action('Open at-risk reminders', new moodle_url('/local/admindashboard/send_at_risk_reminders.php')),
+                local_admindashboard_module_action('Open Announcements module', new moodle_url('/local/admindashboard/announcements.php')),
             ],
             [
                 'Coordinate direct outreach to at-risk, overdue, or renewal-pending learners.',
@@ -1644,7 +1645,7 @@ function admindash_get_module_page_definitions(): array {
                 'Track send intent and delivery summaries for follow-up actions.',
             ]
         ),
-        'platform.integrations' => admindash_module_page_definition(
+        'platform.integrations' => local_admindashboard_module_page_definition(
             '/local/admindashboard/integrations.php',
             'platform.integrations',
             'Platform Settings',
@@ -1652,9 +1653,9 @@ function admindash_get_module_page_definitions(): array {
             'integration',
             'Command point for identity, HR, reporting, and third-party system touchpoints around the LMS.',
             [
-                admindash_module_action('Open plugins overview', new moodle_url('/admin/plugins.php'), true),
-                admindash_module_action('Open System Config module', new moodle_url('/local/admindashboard/system_config.php')),
-                admindash_module_action('Open Export Center', new moodle_url('/local/admindashboard/export_center.php')),
+                local_admindashboard_module_action('Open plugins overview', new moodle_url('/admin/plugins.php'), true),
+                local_admindashboard_module_action('Open System Config module', new moodle_url('/local/admindashboard/system_config.php')),
+                local_admindashboard_module_action('Open Export Center', new moodle_url('/local/admindashboard/export_center.php')),
             ],
             [
                 'Document active integrations, owners, and failure sensitivity.',
@@ -1667,7 +1668,7 @@ function admindash_get_module_page_definitions(): array {
                 'Surface warnings and support actions when dependencies fail.',
             ]
         ),
-        'platform.config' => admindash_module_page_definition(
+        'platform.config' => local_admindashboard_module_page_definition(
             '/local/admindashboard/system_config.php',
             'platform.config',
             'Platform Settings',
@@ -1675,9 +1676,9 @@ function admindash_get_module_page_definitions(): array {
             'config',
             'Configuration workspace for operational settings, policy-sensitive changes, and admin checklists.',
             [
-                admindash_module_action('Open site administration search', new moodle_url('/admin/search.php'), true),
-                admindash_module_action('Open Integrations module', new moodle_url('/local/admindashboard/integrations.php')),
-                admindash_module_action('Open Platform Branding module', new moodle_url('/local/admindashboard/platform_branding.php')),
+                local_admindashboard_module_action('Open site administration search', new moodle_url('/admin/search.php'), true),
+                local_admindashboard_module_action('Open Integrations module', new moodle_url('/local/admindashboard/integrations.php')),
+                local_admindashboard_module_action('Open Platform Branding module', new moodle_url('/local/admindashboard/platform_branding.php')),
             ],
             [
                 'Centralize references to the highest-value configuration areas.',
@@ -1690,7 +1691,7 @@ function admindash_get_module_page_definitions(): array {
                 'Prepare for change logs and environment validation notes.',
             ]
         ),
-        'platform.branding' => admindash_module_page_definition(
+        'platform.branding' => local_admindashboard_module_page_definition(
             '/local/admindashboard/platform_branding.php',
             'platform.branding',
             'Platform Settings',
@@ -1698,9 +1699,9 @@ function admindash_get_module_page_definitions(): array {
             'branding',
             'Visual and messaging control point for branded experiences across admin flows and learner touchpoints.',
             [
-                admindash_module_action('Open mobile branding tools', new moodle_url('/admin/tool/mobile/launch.php'), true),
-                admindash_module_action('Open Announcements module', new moodle_url('/local/admindashboard/announcements.php')),
-                admindash_module_action('Open Create Course module', new moodle_url('/local/admindashboard/create_course.php')),
+                local_admindashboard_module_action('Open mobile branding tools', new moodle_url('/admin/tool/mobile/launch.php'), true),
+                local_admindashboard_module_action('Open Announcements module', new moodle_url('/local/admindashboard/announcements.php')),
+                local_admindashboard_module_action('Open Create Course module', new moodle_url('/local/admindashboard/create_course.php')),
             ],
             [
                 'Keep logos, UI language, and campaign styling consistent.',
@@ -1713,7 +1714,7 @@ function admindash_get_module_page_definitions(): array {
                 'Expose links to the relevant Moodle configuration screens.',
             ]
         ),
-        'support.tickets' => admindash_module_page_definition(
+        'support.tickets' => local_admindashboard_module_page_definition(
             '/local/admindashboard/support_tickets.php',
             'support.tickets',
             'Support & Account',
@@ -1721,9 +1722,9 @@ function admindash_get_module_page_definitions(): array {
             'support',
             'Support operations surface for triage, learning blockers, and routed admin issues.',
             [
-                admindash_module_action('Open inbound message settings', new moodle_url('/admin/tool/messageinbound/index.php'), true),
-                admindash_module_action('Open Help Center module', new moodle_url('/local/admindashboard/help_center.php')),
-                admindash_module_action('Open Direct Messaging module', new moodle_url('/local/admindashboard/direct_messaging.php')),
+                local_admindashboard_module_action('Open inbound message settings', new moodle_url('/admin/tool/messageinbound/index.php'), true),
+                local_admindashboard_module_action('Open Help Center module', new moodle_url('/local/admindashboard/help_center.php')),
+                local_admindashboard_module_action('Open Direct Messaging module', new moodle_url('/local/admindashboard/direct_messaging.php')),
             ],
             [
                 'Create a clean place for learning-support and admin-escalation queues.',
@@ -1736,7 +1737,7 @@ function admindash_get_module_page_definitions(): array {
                 'Expose a queue summary for operations and service-level follow-up.',
             ]
         ),
-        'support.help' => admindash_module_page_definition(
+        'support.help' => local_admindashboard_module_page_definition(
             '/local/admindashboard/help_center.php',
             'support.help',
             'Support & Account',
@@ -1744,9 +1745,9 @@ function admindash_get_module_page_definitions(): array {
             'help',
             'Knowledge base landing page for admin playbooks, common fixes, and guided support routes.',
             [
-                admindash_module_action('Open Moodle help', new moodle_url('/help.php'), true),
-                admindash_module_action('Open Support Tickets module', new moodle_url('/local/admindashboard/support_tickets.php')),
-                admindash_module_action('Open System Config module', new moodle_url('/local/admindashboard/system_config.php')),
+                local_admindashboard_module_action('Open Moodle help', new moodle_url('/help.php'), true),
+                local_admindashboard_module_action('Open Support Tickets module', new moodle_url('/local/admindashboard/support_tickets.php')),
+                local_admindashboard_module_action('Open System Config module', new moodle_url('/local/admindashboard/system_config.php')),
             ],
             [
                 'Collect high-value admin help topics in one place.',
@@ -1759,7 +1760,7 @@ function admindash_get_module_page_definitions(): array {
                 'Support future embedded documentation or internal SOP links.',
             ]
         ),
-        'support.profile' => admindash_module_page_definition(
+        'support.profile' => local_admindashboard_module_page_definition(
             '/local/admindashboard/my_profile.php',
             'support.profile',
             'Support & Account',
@@ -1767,9 +1768,9 @@ function admindash_get_module_page_definitions(): array {
             'profile',
             'Profile workspace for admin identity details, account ownership, and workflow shortcuts.',
             [
-                admindash_module_action('Open core profile', new moodle_url('/user/profile.php'), true),
-                admindash_module_action('Open Settings module', new moodle_url('/local/admindashboard/account_settings.php')),
-                admindash_module_action('Open Help Center module', new moodle_url('/local/admindashboard/help_center.php')),
+                local_admindashboard_module_action('Open core profile', new moodle_url('/user/profile.php'), true),
+                local_admindashboard_module_action('Open Settings module', new moodle_url('/local/admindashboard/account_settings.php')),
+                local_admindashboard_module_action('Open Help Center module', new moodle_url('/local/admindashboard/help_center.php')),
             ],
             [
                 'Keep profile maintenance and admin-facing shortcuts together.',
@@ -1782,7 +1783,7 @@ function admindash_get_module_page_definitions(): array {
                 'Support future personal task snapshots or pinned modules.',
             ]
         ),
-        'support.settings' => admindash_module_page_definition(
+        'support.settings' => local_admindashboard_module_page_definition(
             '/local/admindashboard/account_settings.php',
             'support.settings',
             'Support & Account',
@@ -1790,9 +1791,9 @@ function admindash_get_module_page_definitions(): array {
             'settings',
             'Account-settings hub for preferences, notification controls, and personal admin defaults.',
             [
-                admindash_module_action('Open user preferences', new moodle_url('/user/preferences.php'), true),
-                admindash_module_action('Open My Profile module', new moodle_url('/local/admindashboard/my_profile.php')),
-                admindash_module_action('Open Direct Messaging module', new moodle_url('/local/admindashboard/direct_messaging.php')),
+                local_admindashboard_module_action('Open user preferences', new moodle_url('/user/preferences.php'), true),
+                local_admindashboard_module_action('Open My Profile module', new moodle_url('/local/admindashboard/my_profile.php')),
+                local_admindashboard_module_action('Open Direct Messaging module', new moodle_url('/local/admindashboard/direct_messaging.php')),
             ],
             [
                 'Gather the most-used preference destinations in one dashboard-aligned screen.',
@@ -1808,15 +1809,15 @@ function admindash_get_module_page_definitions(): array {
     ];
 }
 
-function admindash_render_module_page(string $pagekey): void {
-    $pages = admindash_get_module_page_definitions();
+function local_admindashboard_render_module_page(string $pagekey): void {
+    $pages = local_admindashboard_get_module_page_definitions();
     if (!array_key_exists($pagekey, $pages)) {
         throw new moodle_exception('invalidpage');
     }
 
     $page = $pages[$pagekey];
-    admindash_setup_page($page['script'], $page['title'], $page['active']);
-    admindash_render_header($page['active']);
+    local_admindashboard_setup_page($page['script'], $page['title'], $page['active']);
+    local_admindashboard_render_header($page['active']);
 
     $summary = html_writer::tag('p', s($page['summary']), ['class' => 'admindash-module-hero__summary']);
 
@@ -1858,7 +1859,7 @@ function admindash_render_module_page(string $pagekey): void {
     echo html_writer::start_div('admindash-card admindash-module-hero');
     echo html_writer::tag('div', s($page['eyebrow']), ['class' => 'admindash-module-hero__eyebrow']);
     echo html_writer::start_div('admindash-module-hero__titleline');
-    echo html_writer::tag('div', admindash_get_nav_icon_svg($page['icon']), ['class' => 'admindash-module-hero__icon', 'aria-hidden' => 'true']);
+    echo html_writer::tag('div', local_admindashboard_get_nav_icon_svg($page['icon']), ['class' => 'admindash-module-hero__icon', 'aria-hidden' => 'true']);
     echo html_writer::tag('h2', s($page['title']), ['class' => 'admindash-module-hero__title']);
     echo html_writer::end_div();
     echo $summary;
@@ -1902,10 +1903,10 @@ function admindash_render_module_page(string $pagekey): void {
     echo html_writer::end_div();
     echo html_writer::end_div();
 
-    admindash_render_footer();
+    local_admindashboard_render_footer();
 }
 
-function admindash_get_manage_users_suite_tabs(): array {
+function local_admindashboard_get_manage_users_suite_tabs(): array {
     return [
         [
             'key' => 'admintools.users.list',
@@ -1925,7 +1926,7 @@ function admindash_get_manage_users_suite_tabs(): array {
     ];
 }
 
-function admindash_get_manage_courses_suite_tabs(): array {
+function local_admindashboard_get_manage_courses_suite_tabs(): array {
     return [
         [
             'key' => 'admintools.courses.list',
@@ -1945,7 +1946,7 @@ function admindash_get_manage_courses_suite_tabs(): array {
     ];
 }
 
-function admindash_get_skill_certifications_suite_tabs(): array {
+function local_admindashboard_get_skill_certifications_suite_tabs(): array {
     return [
         [
             'key' => 'skills.gap',
@@ -1965,7 +1966,7 @@ function admindash_get_skill_certifications_suite_tabs(): array {
     ];
 }
 
-function admindash_get_communication_suite_tabs(): array {
+function local_admindashboard_get_communication_suite_tabs(): array {
     return [
         [
             'key' => 'communication.announcements',
@@ -1985,7 +1986,7 @@ function admindash_get_communication_suite_tabs(): array {
     ];
 }
 
-function admindash_get_compliance_suite_tabs(): array {
+function local_admindashboard_get_compliance_suite_tabs(): array {
     return [
         [
             'key' => 'compliance.dashboard',
@@ -2005,7 +2006,7 @@ function admindash_get_compliance_suite_tabs(): array {
     ];
 }
 
-function admindash_get_platform_settings_suite_tabs(): array {
+function local_admindashboard_get_platform_settings_suite_tabs(): array {
     return [
         [
             'key' => 'platform.config',
@@ -2030,7 +2031,7 @@ function admindash_get_platform_settings_suite_tabs(): array {
     ];
 }
 
-function admindash_get_support_account_suite_tabs(): array {
+function local_admindashboard_get_support_account_suite_tabs(): array {
     return [
         [
             'key' => 'support.tickets',
@@ -2055,7 +2056,7 @@ function admindash_get_support_account_suite_tabs(): array {
     ];
 }
 
-function admindash_get_certificate_issue_union_sql(): array {
+function local_admindashboard_get_certificate_issue_union_sql(): array {
     global $CFG, $DB;
 
     require_once($CFG->libdir . '/xmldb/xmldb_table.php');
@@ -2161,7 +2162,7 @@ function admindash_get_certificate_issue_union_sql(): array {
     ];
 }
 
-function admindash_render_workspace_header(
+function local_admindashboard_render_workspace_header(
     string $eyebrow,
     string $title,
     string $summary,
@@ -2174,7 +2175,7 @@ function admindash_render_workspace_header(
     echo html_writer::start_div('admindash-card admindash-module-hero');
     echo html_writer::tag('div', s($eyebrow), ['class' => 'admindash-module-hero__eyebrow']);
     echo html_writer::start_div('admindash-module-hero__titleline');
-    echo html_writer::tag('div', admindash_get_nav_icon_svg($icon), ['class' => 'admindash-module-hero__icon', 'aria-hidden' => 'true']);
+    echo html_writer::tag('div', local_admindashboard_get_nav_icon_svg($icon), ['class' => 'admindash-module-hero__icon', 'aria-hidden' => 'true']);
     echo html_writer::tag('h2', s($title), ['class' => 'admindash-module-hero__title']);
     echo html_writer::end_div();
 
@@ -2205,7 +2206,7 @@ function admindash_render_workspace_header(
     echo html_writer::end_div();
 }
 
-function admindash_render_header(string $active): void {
+function local_admindashboard_render_header(string $active): void {
     global $OUTPUT, $SITE, $PAGE;
 
     $PAGE->add_body_class('admindash-page');
@@ -2218,7 +2219,7 @@ function admindash_render_header(string $active): void {
     }
     $sitename = format_string($SITE->fullname);
 
-    $navitems = admindash_get_nav_items();
+    $navitems = local_admindashboard_get_nav_items();
 
     echo html_writer::start_div('admindash-layout');
 
@@ -2237,7 +2238,7 @@ function admindash_render_header(string $active): void {
     }
     echo html_writer::link(
         new moodle_url('/local/admindashboard/dashboard.php'),
-        html_writer::tag('span', admindash_get_nav_icon_svg('home'), ['class' => 'admindash-nav-icon', 'aria-hidden' => 'true'])
+        html_writer::tag('span', local_admindashboard_get_nav_icon_svg('home'), ['class' => 'admindash-nav-icon', 'aria-hidden' => 'true'])
             . html_writer::tag('span', 'Dashboard', ['class' => 'admindash-nav-label']),
         ['class' => $homeclass]
     );
@@ -2248,7 +2249,7 @@ function admindash_render_header(string $active): void {
         echo html_writer::tag('div', s($section['heading']), ['class' => 'admindash-nav-heading']);
         echo html_writer::start_div('admindash-nav-list');
         foreach ($section['items'] as $itemindex => $item) {
-            if (!empty($item['require_edit_notes']) && !admindash_user_can_edit_course_schedule_notes()) {
+            if (!empty($item['require_edit_notes']) && !local_admindashboard_user_can_edit_course_schedule_notes()) {
                 continue;
             }
             $itemkey = (string)($item['key'] ?? '');
@@ -2271,9 +2272,9 @@ function admindash_render_header(string $active): void {
                 }
                 echo html_writer::tag(
                     'button',
-                    html_writer::tag('span', admindash_get_nav_icon_svg((string)($item['icon'] ?? 'report')), ['class' => 'admindash-nav-icon', 'aria-hidden' => 'true'])
+                    html_writer::tag('span', local_admindashboard_get_nav_icon_svg((string)($item['icon'] ?? 'report')), ['class' => 'admindash-nav-icon', 'aria-hidden' => 'true'])
                         . html_writer::tag('span', s($item['label']), ['class' => 'admindash-nav-label'])
-                        . html_writer::tag('span', admindash_get_nav_icon_svg('caret'), ['class' => 'admindash-nav-caret', 'aria-hidden' => 'true']),
+                        . html_writer::tag('span', local_admindashboard_get_nav_icon_svg('caret'), ['class' => 'admindash-nav-caret', 'aria-hidden' => 'true']),
                     [
                         'type' => 'button',
                         'class' => $toggleclass,
@@ -2310,7 +2311,7 @@ function admindash_render_header(string $active): void {
                 }
                 echo html_writer::link(
                     $item['url'],
-                    html_writer::tag('span', admindash_get_nav_icon_svg((string)($item['icon'] ?? 'report')), ['class' => 'admindash-nav-icon', 'aria-hidden' => 'true'])
+                    html_writer::tag('span', local_admindashboard_get_nav_icon_svg((string)($item['icon'] ?? 'report')), ['class' => 'admindash-nav-icon', 'aria-hidden' => 'true'])
                         . html_writer::tag('span', s($item['label']), ['class' => 'admindash-nav-label']),
                     $attrs
                 );
@@ -2329,7 +2330,7 @@ function admindash_render_header(string $active): void {
     echo html_writer::start_div('admindash-main');
 
     echo html_writer::start_div('admindash-topbar');
-    echo html_writer::tag('button', admindash_get_nav_icon_svg('menu'), [
+    echo html_writer::tag('button', local_admindashboard_get_nav_icon_svg('menu'), [
         'type' => 'button',
         'class' => 'btn btn-outline-secondary admindash-sidebar-toggle',
         'aria-expanded' => 'false',
@@ -2353,7 +2354,7 @@ function local_admindashboard_extend_navigation(global_navigation $navigation): 
     if (!isloggedin() || isguestuser()) {
         return;
     }
-    if (!admindash_user_can_view()) {
+    if (!local_admindashboard_user_can_view()) {
         return;
     }
 
@@ -2379,7 +2380,7 @@ function local_admindashboard_extend_navigation_frontpage(navigation_node $front
     if (!isloggedin() || isguestuser()) {
         return;
     }
-    if (!admindash_user_can_view()) {
+    if (!local_admindashboard_user_can_view()) {
         return;
     }
 
@@ -2404,7 +2405,7 @@ function local_admindashboard_extend_navigation_frontpage(navigation_node $front
 function local_admindashboard_before_standard_top_of_body_html(): string {
     global $PAGE;
 
-    if (!admindash_user_can_view()) {
+    if (!local_admindashboard_user_can_view()) {
         return '';
     }
 
@@ -2427,7 +2428,7 @@ function local_admindashboard_before_standard_top_of_body_html(): string {
     );
 }
 
-function admindash_render_footer(): void {
+function local_admindashboard_render_footer(): void {
     global $OUTPUT;
     echo html_writer::end_div(); // main
     echo html_writer::end_div(); // layout
@@ -2446,7 +2447,7 @@ function local_admindashboard_extend_navigation_primary(core\navigation\views\pr
     }
 
     // Only show to users who can view the dashboard.
-    if (!admindash_user_can_view()) {
+    if (!local_admindashboard_user_can_view()) {
         return;
     }
 

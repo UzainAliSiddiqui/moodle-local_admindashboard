@@ -1,5 +1,18 @@
 <?php
-
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 declare(strict_types=1);
 
 namespace local_admindashboard\external;
@@ -51,12 +64,13 @@ class get_kpi_users extends external_api {
             'metric' => $metric,
         ]);
 
+        $context = context_system::instance();
+        self::validate_context($context);
         require_login();
-        self::validate_context(context_system::instance());
-        \admindash_require_view_access();
+        require_capability('local/admindashboard:view', $context);
 
         $metric = strtolower(trim((string)$params['metric']));
-        $users = \admindash_get_kpi_user_rows(
+        $users = \local_admindashboard_get_kpi_user_rows(
             (int)$params['courseid'],
             trim((string)$params['department']),
             (int)$params['moduleid'],

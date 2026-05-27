@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 define('AJAX_SCRIPT', true);
 define('NO_DEBUG_DISPLAY', true);
 
@@ -8,16 +22,16 @@ require_once(__DIR__ . '/metricslib.php');
 
 require_login();
 require_sesskey();
-admindash_require_view_access();
+local_admindashboard_require_view_access();
 $PAGE->set_context(context_system::instance());
 
 header('Content-Type: application/json; charset=utf-8');
 
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $department = trim(optional_param('department', '', PARAM_TEXT));
-$useridsraw = trim(optional_param('userids', '', PARAM_RAW_TRIMMED));
+$useridsraw = trim(optional_param('userids', '', PARAM_SEQUENCE));
 
-if ($courseid <= 0 || !admindash_is_course_running($courseid)) {
+if ($courseid <= 0 || !local_admindashboard_is_course_running($courseid)) {
     http_response_code(400);
     echo json_encode([
         'error' => 'At-risk reminders are only available for a currently running course.',
@@ -40,7 +54,7 @@ try {
 
     require_once($CFG->dirroot . '/message/lib.php');
 
-    $atriskrows = admindash_get_at_risk_participants($courseid, $department, 0);
+    $atriskrows = local_admindashboard_get_at_risk_participants($courseid, $department, 0);
     $eligible = [];
     foreach ($atriskrows as $row) {
         $userid = (int)($row['userid'] ?? 0);

@@ -1,18 +1,32 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 
-admindash_setup_page('/local/admindashboard/direct_messaging.php', 'Direct Messaging', 'communication.messaging');
-admindash_render_header('communication.messaging');
+local_admindashboard_setup_page('/local/admindashboard/direct_messaging.php', 'Direct Messaging', 'communication.messaging');
+local_admindashboard_render_header('communication.messaging');
 
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $convtype = trim(optional_param('convtype', 'all', PARAM_ALPHA));
 $state = trim(optional_param('state', 'all', PARAM_ALPHA));
 $q = trim(optional_param('q', '', PARAM_TEXT));
 
-$tabs = admindash_get_communication_suite_tabs();
-$meta = admindash_get_meta($courseid);
+$tabs = local_admindashboard_get_communication_suite_tabs();
+$meta = local_admindashboard_get_meta($courseid);
 $pluginmanager = \core_plugin_manager::instance();
 
 $courseoptions = $meta['courses'] ?? [];
@@ -260,7 +274,7 @@ $unreadnotifications = (int)$DB->count_records_select('notifications', 'useridto
 $enabledmessageplugins = $pluginmanager->get_enabled_plugins('message');
 $messagechannelcount = is_array($enabledmessageplugins) ? count($enabledmessageplugins) : 0;
 
-$atriskrows = $resolvedcourseid > 0 ? admindash_get_at_risk_participants($resolvedcourseid, '', 6) : [];
+$atriskrows = $resolvedcourseid > 0 ? local_admindashboard_get_at_risk_participants($resolvedcourseid, '', 6) : [];
 $atriskcount = is_array($atriskrows) ? count($atriskrows) : 0;
 
 $statusbadge = static function(string $label, string $class): string {
@@ -277,7 +291,7 @@ $typebadge = static function(int $type) use ($statusbadge): string {
 	return $statusbadge('Individual', 'is-success');
 };
 
-admindash_render_workspace_header(
+local_admindashboard_render_workspace_header(
 	'Communication',
 	'Direct Messaging',
 	'Operator-facing messaging workspace for inbox posture, unread backlog, muted conversations, contact readiness, and course-aware outreach candidates.',
@@ -497,4 +511,4 @@ admindash_render_workspace_header(
 </div>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

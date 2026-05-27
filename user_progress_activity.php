@@ -1,16 +1,30 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 
-admindash_setup_page('/local/admindashboard/user_progress_activity.php', 'Recent Activity Report', 'reports.useractivity');
-admindash_render_header('reports.useractivity');
+local_admindashboard_setup_page('/local/admindashboard/user_progress_activity.php', 'Recent Activity Report', 'reports.useractivity');
+local_admindashboard_render_header('reports.useractivity');
 
 $department = trim(optional_param('department', '', PARAM_TEXT));
-$meta = admindash_get_meta();
+$meta = local_admindashboard_get_meta();
 
 $since = time() - (7 * 24 * 60 * 60);
-[$userwhere, $userparams] = admindash_build_user_filter($department);
+[$userwhere, $userparams] = local_admindashboard_build_user_filter($department);
 $where = "{$userwhere} AND u.lastaccess > :since";
 $params = $userparams + ['since' => $since];
 
@@ -49,4 +63,4 @@ foreach ($rows as $r) {
 <?php
 echo html_writer::tag('div', html_writer::table($table), ['class' => 'mt-3']);
 
-admindash_render_footer();
+local_admindashboard_render_footer();

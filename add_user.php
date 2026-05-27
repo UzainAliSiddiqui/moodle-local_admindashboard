@@ -1,13 +1,27 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 
-admindash_setup_page('/local/admindashboard/add_user.php', 'Add User', 'admintools.users.add');
-admindash_render_header('admintools.users.add');
+local_admindashboard_setup_page('/local/admindashboard/add_user.php', 'Add User', 'admintools.users.add');
+local_admindashboard_render_header('admintools.users.add');
 
-$meta = admindash_get_meta();
-$tabs = admindash_get_manage_users_suite_tabs();
+$meta = local_admindashboard_get_meta();
+$tabs = local_admindashboard_get_manage_users_suite_tabs();
 $systemcontextid = context_system::instance()->id;
 
 $roles = $DB->get_records_sql(
@@ -70,7 +84,7 @@ $totcohorts = (int)$DB->count_records('cohort');
 $requiredcount = (int)$DB->count_records('user_info_field', ['required' => 1]);
 $deptcount = count($meta['departments']);
 
-admindash_render_workspace_header(
+local_admindashboard_render_workspace_header(
 	'Admin Tools / Manage Users',
 	'Add User',
 	'Guided onboarding workspace for preparing defaults, checking taxonomy readiness, and then handing off into Moodle core account creation.',
@@ -187,4 +201,4 @@ admindash_render_workspace_header(
 </div>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

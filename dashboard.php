@@ -1,9 +1,23 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
-admindash_setup_page('/local/admindashboard/dashboard.php', 'Admin Dashboard', 'dashboard');
-admindash_render_header('dashboard');
+local_admindashboard_setup_page('/local/admindashboard/dashboard.php', 'Admin Dashboard', 'dashboard');
+local_admindashboard_render_header('dashboard');
 $sesskey = sesskey();
 ?>
 
@@ -300,7 +314,7 @@ $sesskey = sesskey();
                 </div>
             </div>
         </div>
-        <?php echo admindash_render_course_schedule_sticky_board(); ?>
+        <?php echo local_admindashboard_render_course_schedule_sticky_board(); ?>
     </div>
     <div class="admindash-charts__column admindash-charts__column--right">
         <div id="coursesOverviewCard" class="admindash-card p-2 bg-white admindash-overview-leaders">
@@ -1740,23 +1754,16 @@ function openKpiUsersModal(metric, label) {
     setKpiModalLoading(label + ' Users', 'Loading…');
     modal.show();
 
-    const url = new URL('kpi_users.php', window.location.href);
-    url.searchParams.set('courseid', String(Number(dashboardState.courseid || 0)));
-    url.searchParams.set('department', dashboardState.department || '');
-    url.searchParams.set('moduleid', String(Number(dashboardState.moduleid || 0)));
-    url.searchParams.set('metric', String(metric || ''));
-
-    fetch(url.toString(), { credentials: 'same-origin' })
-        .then(function(response) {
-            return response.json().catch(function() {
-                return {};
-            }).then(function(payload) {
-                if (!response.ok) {
-                    throw new Error((payload && payload.error) ? payload.error : ('HTTP ' + response.status));
-                }
-                return payload;
-            });
-        })
+    require(['core/ajax'], function(Ajax) {
+        Ajax.call([{
+            methodname: 'local_admindashboard_get_kpi_users',
+            args: {
+                courseid: Number(dashboardState.courseid || 0),
+                department: dashboardState.department || '',
+                moduleid: Number(dashboardState.moduleid || 0),
+                metric: String(metric || '')
+            }
+        }])[0]
         .then(function(response) {
             const count = Number(response && response.count || 0);
             const isRecordMetric = kpiModalMetricKey === 'total_enrollments' || kpiModalMetricKey === 'certified';
@@ -1788,6 +1795,7 @@ function openKpiUsersModal(metric, label) {
             });
             Notification.exception(error);
         });
+    });
 }
 
 const doughnutValueLabelsPlugin = {
@@ -3298,4 +3306,4 @@ init();
 </script>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

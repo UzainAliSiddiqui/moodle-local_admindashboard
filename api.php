@@ -503,7 +503,7 @@ function local_admindashboard_api_count_tracked_activities(int $courseid): int {
  */
 function local_admindashboard_api_get_departments(int $courseid = 0): array {
     $courseid = $courseid > 0 ? local_admindashboard_api_resolve_courseid($courseid) : 0;
-    $meta = admindash_get_meta($courseid);
+    $meta = local_admindashboard_get_meta($courseid);
     $departments = array_values(array_filter(array_map('trim', $meta['departments'] ?? [])));
     array_unshift($departments, 'All Departments');
     return array_values(array_unique($departments));
@@ -517,7 +517,7 @@ function local_admindashboard_api_get_departments(int $courseid = 0): array {
  */
 function local_admindashboard_api_build_meta(int $courseid = 0): array {
     $resolvedcourseid = $courseid > 0 ? local_admindashboard_api_resolve_courseid($courseid) : 0;
-    $meta = admindash_get_meta($resolvedcourseid);
+    $meta = local_admindashboard_get_meta($resolvedcourseid);
 
     $courses = array_map(static function(array $course): array {
         return [
@@ -635,7 +635,7 @@ function local_admindashboard_api_get_dashboard_metrics(int $courseid, string $d
     $normalizeddepartment = local_admindashboard_api_normalize_department($department);
     $meta = local_admindashboard_api_build_meta($resolvedcourseid);
     $resolvedmodule = $resolvedcourseid > 0 ? local_admindashboard_api_resolve_module($moduleid, $meta) : ['id' => 0, 'name' => 'All Modules'];
-    $metrics = admindash_get_metrics($resolvedcourseid, $normalizeddepartment, $resolvedmodule['id']);
+    $metrics = local_admindashboard_get_metrics($resolvedcourseid, $normalizeddepartment, $resolvedmodule['id']);
 
     return [
         'courseid' => $resolvedcourseid,
@@ -703,7 +703,7 @@ function local_admindashboard_api_format_at_risk_users(array $metrics): array {
 /**
  * Format KPI metrics with percentage-of-enrollments (or participants fallback) for the mobile app.
  *
- * @param array $metrics  Raw metrics array from admindash_get_metrics()
+ * @param array $metrics  Raw metrics array from local_admindashboard_get_metrics()
  * @param int   $courseid Resolved course id (0 = overview)
  * @return array
  */
@@ -923,8 +923,8 @@ try {
     }
 
     if ($action === 'login') {
-        $username = optional_param('username', '', PARAM_RAW);
-        $password = optional_param('password', '', PARAM_RAW);
+        $username = optional_param('username', '', PARAM_USERNAME);
+        $password = optional_param('password', '', PARAM_TEXT);
         local_admindashboard_api_success(local_admindashboard_api_build_login_response($username, $password));
     }
 
@@ -935,7 +935,7 @@ try {
 
     local_admindashboard_api_authenticate_token($tokenvalue);
 
-    if (!admindash_user_can_view()) {
+    if (!local_admindashboard_user_can_view()) {
         local_admindashboard_api_error(403, 'You do not have permission to access this dashboard API.', 403);
     }
 
@@ -984,13 +984,13 @@ try {
             $PAGE->set_context(context_system::instance());
             $courseid = optional_param('courseid', 0, PARAM_INT);
             $resolvedcourseid = $courseid > 0 ? local_admindashboard_api_resolve_courseid($courseid) : 0;
-            local_admindashboard_api_success(admindash_get_upcoming_event($resolvedcourseid));
+            local_admindashboard_api_success(local_admindashboard_get_upcoming_event($resolvedcourseid));
             break;
 
         case 'get_courses_overview':
             $department = optional_param('department', '', PARAM_TEXT);
             $normalizeddepartment = local_admindashboard_api_normalize_department($department);
-            local_admindashboard_api_success(admindash_get_courses_overview($normalizeddepartment));
+            local_admindashboard_api_success(local_admindashboard_get_courses_overview($normalizeddepartment));
             break;
 
         case 'get_kpi_participants':
@@ -1023,7 +1023,7 @@ try {
 
             // High-risk uses the at-risk cache, not grade rows.
             if ($metric === 'high_risk') {
-                $atriskrows = admindash_get_at_risk_participants($resolvedcourseid, $normalizeddepartment, 1000);
+                $atriskrows = local_admindashboard_get_at_risk_participants($resolvedcourseid, $normalizeddepartment, 1000);
                 $participants = [];
                 foreach ($atriskrows as $row) {
                     $riskscore = (int)($row['risk_score'] ?? 0);
@@ -1052,7 +1052,7 @@ try {
                 break;
             }
 
-            $rows = admindash_get_kpi_user_rows(
+            $rows = local_admindashboard_get_kpi_user_rows(
                 $resolvedcourseid,
                 $normalizeddepartment,
                 $moduleid,
@@ -1081,61 +1081,6 @@ try {
                 'participants' => $participants,
             ]);
             break;
-
-        case 'save_push_token':
-            // Ensure the push tokens table exists (auto-create on first use).
-            $dbman = $DB->get_manager();
-            if (!$dbman->table_exists('local_admindash_push_tokens')) {
-                $DB->execute("
-                    CREATE TABLE {local_admindash_push_tokens} (
-                        id          BIGINT(10)   NOT NULL AUTO_INCREMENT,
-                        userid      BIGINT(10)   NOT NULL,
-                        push_token  VARCHAR(512) NOT NULL,
-                        platform    VARCHAR(16)  NOT NULL DEFAULT 'android',
-                        created_at  BIGINT(10)   NOT NULL DEFAULT 0,
-                        PRIMARY KEY (id),
-                        UNIQUE KEY uniq_user_token (userid, push_token(255))
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-                ");
-            }
-
-            $pushtokenraw = optional_param('push_token', '', PARAM_TEXT);
-            $platformraw  = optional_param('platform', 'android', PARAM_ALPHANUMEXT);
-            $useridraw    = optional_param('user_id', 0, PARAM_INT);
-
-            if (empty($pushtokenraw) || $useridraw <= 0) {
-                local_admindashboard_api_error(400, 'push_token and user_id are required.', 400);
-                break;
-            }
-
-            // Sanitise — Expo push tokens start with "ExponentPushToken[" or are FCM/APNs tokens.
-            $pushtokensafe = substr(trim($pushtokenraw), 0, 512);
-            $platformsafe  = in_array($platformraw, ['android', 'ios'], true) ? $platformraw : 'android';
-
-            // Upsert — update token timestamp if already registered, insert otherwise.
-            $existing = $DB->get_record('local_admindash_push_tokens', [
-                'userid'     => $useridraw,
-                'push_token' => $pushtokensafe,
-            ]);
-
-            if ($existing) {
-                $DB->update_record('local_admindash_push_tokens', (object)[
-                    'id'         => $existing->id,
-                    'platform'   => $platformsafe,
-                    'created_at' => time(),
-                ]);
-            } else {
-                $DB->insert_record('local_admindash_push_tokens', (object)[
-                    'userid'     => $useridraw,
-                    'push_token' => $pushtokensafe,
-                    'platform'   => $platformsafe,
-                    'created_at' => time(),
-                ]);
-            }
-
-            local_admindashboard_api_success(['saved' => true]);
-            break;
-
         default:
             local_admindashboard_api_error(400, 'Unknown action requested.', 400);    }
 } catch (invalid_parameter_exception $exception) {

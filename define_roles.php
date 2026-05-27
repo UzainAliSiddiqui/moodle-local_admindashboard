@@ -1,11 +1,25 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
-admindash_setup_page('/local/admindashboard/define_roles.php', 'Define Roles', 'admintools.users.roles');
-admindash_render_header('admintools.users.roles');
+local_admindashboard_setup_page('/local/admindashboard/define_roles.php', 'Define Roles', 'admintools.users.roles');
+local_admindashboard_render_header('admintools.users.roles');
 
-$tabs = admindash_get_manage_users_suite_tabs();
+$tabs = local_admindashboard_get_manage_users_suite_tabs();
 $rolequery = $DB->get_records_sql(
 	"SELECT r.id, r.name, r.shortname, COALESCE(r.archetype, '') AS archetype,
 			COUNT(DISTINCT ra.userid) AS assignmentcount,
@@ -58,7 +72,7 @@ $contextsummary = $DB->get_records_sql(
 
 $toproles = array_slice($roles, 0, 8);
 
-admindash_render_workspace_header(
+local_admindashboard_render_workspace_header(
 	'Admin Tools / Manage Users',
 	'Define Roles',
 	'Governance view for role design, assignment volume, and privileged-access review before you step into Moodle capability management.',
@@ -188,4 +202,4 @@ admindash_render_workspace_header(
 </div>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

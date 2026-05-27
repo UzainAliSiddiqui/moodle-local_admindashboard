@@ -1,17 +1,31 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/metricslib.php');
 
-admindash_setup_page('/local/admindashboard/department_reports.php', 'Department Completion Report', 'reports.departmentcompletion');
-admindash_render_header('reports.departmentcompletion');
+local_admindashboard_setup_page('/local/admindashboard/department_reports.php', 'Department Completion Report', 'reports.departmentcompletion');
+local_admindashboard_render_header('reports.departmentcompletion');
 ?>
 
 <h2 class="mb-3">Department Completion Report</h2>
 
 <?php
 $courseid = optional_param('courseid', 0, PARAM_INT);
-$meta = admindash_get_meta($courseid);
+$meta = local_admindashboard_get_meta($courseid);
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
@@ -31,7 +45,7 @@ $meta = admindash_get_meta($courseid);
 </form>
 
 <?php
-$userfilter = admindash_build_user_filter('');
+$userfilter = local_admindashboard_build_user_filter('');
 [$userwhere, $userparams] = $userfilter;
 
 $params = $userparams;
@@ -67,7 +81,7 @@ $sql = "SELECT dept.department,
 // If a single course is selected, show Pass % based on the course's last module's last quiz.
 // This matches Dashboard/Course Analytics KPI logic.
 if ($courseid > 0) {
-    $assessment = admindash_pick_course_assessment_quiz($courseid, '', []);
+    $assessment = local_admindashboard_pick_course_assessment_quiz($courseid, '', []);
     if ($assessment && !empty($assessment->gradeitemid) && !empty($assessment->gradepass)) {
        $params['gradeitemid_dept_pass'] = (int)$assessment->gradeitemid;
        $params['gradepass_dept_pass'] = (float)$assessment->gradepass;
@@ -108,4 +122,4 @@ echo html_writer::tag('div', html_writer::table($table), ['class' => 'mt-3']);
 </div>
 
 <?php
-admindash_render_footer();
+local_admindashboard_render_footer();

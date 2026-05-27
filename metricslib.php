@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -6,7 +20,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @return int[]
  */
-function admindash_get_excluded_user_ids(): array {
+function local_admindashboard_get_excluded_user_ids(): array {
     global $DB;
 
     static $cache = null;
@@ -50,7 +64,7 @@ function admindash_get_excluded_user_ids(): array {
  *
  * @return bool
  */
-function admindash_local_atrisk_table_exists(): bool {
+function local_admindashboard_local_atrisk_table_exists(): bool {
     global $CFG, $DB;
 
     static $exists = null;
@@ -69,7 +83,7 @@ function admindash_local_atrisk_table_exists(): bool {
  * @param bool $includeexcludedusers When true, keeps staff/admin users in the result set.
  * @return array{0:string,1:array} tuple of (where sql, params)
  */
-function admindash_build_user_filter(string $department = '', bool $includeexcludedusers = false): array {
+function local_admindashboard_build_user_filter(string $department = '', bool $includeexcludedusers = false): array {
     global $DB;
 
     $department = trim($department);
@@ -88,7 +102,7 @@ function admindash_build_user_filter(string $department = '', bool $includeexclu
     $params['demouser'] = '%demo%';
 
     if (!$includeexcludedusers) {
-        $excludeduserids = admindash_get_excluded_user_ids();
+        $excludeduserids = local_admindashboard_get_excluded_user_ids();
         if (!empty($excludeduserids)) {
             list($exsql, $exparams) = $DB->get_in_or_equal($excludeduserids, SQL_PARAMS_NAMED, 'exuid', false);
             $where .= " AND u.id {$exsql}";
@@ -105,7 +119,7 @@ function admindash_build_user_filter(string $department = '', bool $includeexclu
  * @param string $name Raw module name.
  * @return string
  */
-function admindash_normalize_module_name_for_trend(string $name): string {
+function local_admindashboard_normalize_module_name_for_trend(string $name): string {
     $normalized = function_exists('mb_strtolower') ? mb_strtolower($name, 'UTF-8') : strtolower($name);
     $normalized = preg_replace('/module\s*\d+/i', '', $normalized);
     $normalized = preg_replace('/\bweek\s*\d+\b/i', '', $normalized);
@@ -123,7 +137,7 @@ function admindash_normalize_module_name_for_trend(string $name): string {
  * @param string $comparisonlabel Human-readable baseline label.
  * @return array{metric:string,supported:bool,current_period_count:int,previous_period_count:int,delta:int,change_percent:?float,direction:string,arrow:string,display_value:string,comparison_label:string,css_class:string,is_new:bool}
  */
-function admindash_build_kpi_trend_view(string $metrickey, int $currentvalue, int $previousvalue, string $comparisonlabel): array {
+function local_admindashboard_build_kpi_trend_view(string $metrickey, int $currentvalue, int $previousvalue, string $comparisonlabel): array {
     $delta = $currentvalue - $previousvalue;
     $changepercent = null;
     $direction = 'flat';
@@ -181,7 +195,7 @@ function admindash_build_kpi_trend_view(string $metrickey, int $currentvalue, in
  * @param string $comparisonlabel Label to show under the badge.
  * @return array{metric:string,supported:bool,current_period_count:int,previous_period_count:int,delta:int,change_percent:?float,direction:string,arrow:string,display_value:string,comparison_label:string,css_class:string,is_new:bool}
  */
-function admindash_build_kpi_no_previous_data_view(string $metrickey, string $comparisonlabel = 'No previous data'): array {
+function local_admindashboard_build_kpi_no_previous_data_view(string $metrickey, string $comparisonlabel = 'No previous data'): array {
     return [
         'metric' => $metrickey,
         'supported' => true,
@@ -204,7 +218,7 @@ function admindash_build_kpi_no_previous_data_view(string $metrickey, string $co
  * @param int $courseid Current course ID.
  * @return int Previous course ID, or 0 when unavailable.
  */
-function admindash_get_previous_course_id(int $courseid): int {
+function local_admindashboard_get_previous_course_id(int $courseid): int {
     global $DB;
 
     if ($courseid <= 0) {
@@ -233,7 +247,7 @@ function admindash_get_previous_course_id(int $courseid): int {
  * @param int $courseid Current course ID.
  * @return array{found:bool,courseid:int,year:?int,fullname:string,comparison_label:string}
  */
-function admindash_get_previous_year_course_match(int $courseid): array {
+function local_admindashboard_get_previous_year_course_match(int $courseid): array {
     global $DB;
 
     $empty = [
@@ -300,7 +314,7 @@ function admindash_get_previous_year_course_match(int $courseid): array {
  * @param int $moduleid Current course-module ID.
  * @return int Previous comparable course-module ID, or 0 when unavailable.
  */
-function admindash_get_previous_module_id(int $courseid, int $moduleid): int {
+function local_admindashboard_get_previous_module_id(int $courseid, int $moduleid): int {
     global $CFG, $DB;
 
     if ($courseid <= 0 || $moduleid <= 0) {
@@ -317,7 +331,7 @@ function admindash_get_previous_module_id(int $courseid, int $moduleid): int {
     $currentcm = $modinfo->cms[$moduleid];
     $currentsection = (int)($currentcm->sectionnum ?? 0);
     $currentmodname = (string)($currentcm->modname ?? '');
-    $currentname = admindash_normalize_module_name_for_trend((string)($currentcm->name ?? ''));
+    $currentname = local_admindashboard_normalize_module_name_for_trend((string)($currentcm->name ?? ''));
 
     $sections = $DB->get_records('course_sections', ['course' => $courseid], 'section ASC', 'id,section,sequence');
     $ordered = [];
@@ -346,7 +360,7 @@ function admindash_get_previous_module_id(int $courseid, int $moduleid): int {
                 'id' => $cmid,
                 'sectionnum' => $sectionnum,
                 'modname' => (string)$cm->modname,
-                'name' => admindash_normalize_module_name_for_trend((string)($cm->name ?? '')),
+                'name' => local_admindashboard_normalize_module_name_for_trend((string)($cm->name ?? '')),
             ];
         }
     }
@@ -394,11 +408,11 @@ function admindash_get_previous_module_id(int $courseid, int $moduleid): int {
 /**
  * Extracts the numeric KPI value used by trend badges.
  *
- * @param array $metrics Metrics payload from admindash_get_metrics().
+ * @param array $metrics Metrics payload from local_admindashboard_get_metrics().
  * @param string $metrickey KPI key.
  * @return int
  */
-function admindash_get_metric_value_for_trend(array $metrics, string $metrickey): int {
+function local_admindashboard_get_metric_value_for_trend(array $metrics, string $metrickey): int {
     switch ($metrickey) {
         case 'participants':
             return (int)($metrics['participants'] ?? 0);
@@ -432,40 +446,40 @@ function admindash_get_metric_value_for_trend(array $metrics, string $metrickey)
  * @param array $currentmetrics Current metrics payload.
  * @return array<string,array>
  */
-function admindash_get_kpi_trends(int $courseid, string $department, int $moduleid, array $currentmetrics): array {
+function local_admindashboard_get_kpi_trends(int $courseid, string $department, int $moduleid, array $currentmetrics): array {
     $metrickeys = ['participants', 'attempted', 'passed', 'certified', 'failed', 'dropped_midway', 'not_attempted'];
     $comparisonlabel = 'vs previous 30 days';
     $baseline = [];
     $hasbaseline = false;
 
     if ($courseid > 0 && $moduleid > 0) {
-        $previousmoduleid = admindash_get_previous_module_id($courseid, $moduleid);
+        $previousmoduleid = local_admindashboard_get_previous_module_id($courseid, $moduleid);
         $comparisonlabel = 'vs previous module';
         if ($previousmoduleid > 0) {
-            $baseline = admindash_get_metrics($courseid, $department, $previousmoduleid, false);
+            $baseline = local_admindashboard_get_metrics($courseid, $department, $previousmoduleid, false);
             $hasbaseline = true;
         }
     } else if ($courseid > 0) {
-        $previousyearcourse = admindash_get_previous_year_course_match($courseid);
+        $previousyearcourse = local_admindashboard_get_previous_year_course_match($courseid);
         $comparisonlabel = (string)$previousyearcourse['comparison_label'];
         if (!empty($previousyearcourse['found']) && !empty($previousyearcourse['courseid'])) {
-            $baseline = admindash_get_metrics((int)$previousyearcourse['courseid'], $department, 0, false);
+            $baseline = local_admindashboard_get_metrics((int)$previousyearcourse['courseid'], $department, 0, false);
             $hasbaseline = true;
         }
     }
 
     $trends = [];
     foreach ($metrickeys as $metrickey) {
-        $currentvalue = admindash_get_metric_value_for_trend($currentmetrics, $metrickey);
-        $previousvalue = admindash_get_metric_value_for_trend($baseline, $metrickey);
+        $currentvalue = local_admindashboard_get_metric_value_for_trend($currentmetrics, $metrickey);
+        $previousvalue = local_admindashboard_get_metric_value_for_trend($baseline, $metrickey);
         $label = $comparisonlabel;
 
         if ($courseid <= 0 && $moduleid <= 0) {
             $label = 'vs previous 30 days';
             if ($metrickey === 'participants') {
-                $participanttrend = admindash_build_kpi_trend_view(
+                $participanttrend = local_admindashboard_build_kpi_trend_view(
                     'participants',
-                    admindash_get_metric_value_for_trend($currentmetrics, 'participants'),
+                    local_admindashboard_get_metric_value_for_trend($currentmetrics, 'participants'),
                     0,
                     $label
                 );
@@ -481,17 +495,17 @@ function admindash_get_kpi_trends(int $courseid, string $department, int $module
                 $trends[$metrickey] = $participanttrend;
                 continue;
             }
-            $trends[$metrickey] = admindash_build_kpi_trend_view($metrickey, $currentvalue, $currentvalue, $label);
+            $trends[$metrickey] = local_admindashboard_build_kpi_trend_view($metrickey, $currentvalue, $currentvalue, $label);
             continue;
         }
 
         if (!$hasbaseline) {
-            $trends[$metrickey] = admindash_build_kpi_no_previous_data_view($metrickey, $label);
+            $trends[$metrickey] = local_admindashboard_build_kpi_no_previous_data_view($metrickey, $label);
             $trends[$metrickey]['current_period_count'] = $currentvalue;
             continue;
         }
 
-        $trends[$metrickey] = admindash_build_kpi_trend_view($metrickey, $currentvalue, $previousvalue, $label);
+        $trends[$metrickey] = local_admindashboard_build_kpi_trend_view($metrickey, $currentvalue, $previousvalue, $label);
     }
 
     return $trends;
@@ -502,7 +516,7 @@ function admindash_get_kpi_trends(int $courseid, string $department, int $module
  *
  * @return array{courses: array<int, array{id:int, fullname:string}>, departments: array<int, string>}
  */
-function admindash_get_meta(int $courseid = 0): array {
+function local_admindashboard_get_meta(int $courseid = 0): array {
     global $CFG, $DB;
 
     $courses = $DB->get_records_select('course', 'id > 1 AND visible = 1', null, 'fullname ASC', 'id, fullname');
@@ -606,7 +620,7 @@ function admindash_get_meta(int $courseid = 0): array {
  * @param int $courseid Course ID.
  * @return array<int,stdClass>
  */
-function admindash_get_at_risk_pretest_items(int $courseid): array {
+function local_admindashboard_get_at_risk_pretest_items(int $courseid): array {
     global $DB;
 
     if ($courseid <= 0) {
@@ -645,7 +659,7 @@ function admindash_get_at_risk_pretest_items(int $courseid): array {
  *
  * @return int
  */
-function admindash_get_clinic_field_id(): int {
+function local_admindashboard_get_clinic_field_id(): int {
     global $DB;
 
     static $clinicfieldid = null;
@@ -699,7 +713,7 @@ function admindash_get_clinic_field_id(): int {
  *
  * @return int
  */
-function admindash_get_gender_field_id(): int {
+function local_admindashboard_get_gender_field_id(): int {
     global $DB;
 
     static $genderfieldid = null;
@@ -754,7 +768,7 @@ function admindash_get_gender_field_id(): int {
  * @param string $presentation Presentation string from feedback_item.
  * @return array<int, array{score:float,label:string}>
  */
-function admindash_parse_multichoicerated_presentation(string $presentation): array {
+function local_admindashboard_parse_multichoicerated_presentation(string $presentation): array {
     global $CFG;
 
     static $loaded = false;
@@ -796,7 +810,7 @@ function admindash_parse_multichoicerated_presentation(string $presentation): ar
  * @param string $label Option label.
  * @return int Positive values mean positive sentiment, negative values mean negative sentiment.
  */
-function admindash_feedback_option_polarity(string $label): int {
+function local_admindashboard_feedback_option_polarity(string $label): int {
     $normalized = trim(html_entity_decode(strip_tags($label), ENT_QUOTES | ENT_HTML5));
     if ($normalized === '') {
         return 0;
@@ -858,7 +872,7 @@ function admindash_feedback_option_polarity(string $label): int {
  * @param string $presentation Presentation string from feedback_item.
  * @return array<int, array{score:float,label:string}>
  */
-function admindash_parse_multichoice_likert_presentation(string $presentation): array {
+function local_admindashboard_parse_multichoice_likert_presentation(string $presentation): array {
     global $CFG;
 
     static $loaded = false;
@@ -882,8 +896,8 @@ function admindash_parse_multichoice_likert_presentation(string $presentation): 
         return [];
     }
 
-    $firstpolarity = admindash_feedback_option_polarity($rawoptions[0]);
-    $lastpolarity = admindash_feedback_option_polarity($rawoptions[4]);
+    $firstpolarity = local_admindashboard_feedback_option_polarity($rawoptions[0]);
+    $lastpolarity = local_admindashboard_feedback_option_polarity($rawoptions[4]);
     if ($firstpolarity === 0 && $lastpolarity === 0) {
         return [];
     }
@@ -908,13 +922,13 @@ function admindash_parse_multichoice_likert_presentation(string $presentation): 
  * @param string $presentation Presentation string from feedback_item.
  * @return array<int, array{score:float,label:string}>
  */
-function admindash_parse_feedback_scale_options(string $itemtype, string $presentation): array {
+function local_admindashboard_parse_feedback_scale_options(string $itemtype, string $presentation): array {
     if ($itemtype === 'multichoicerated') {
-        return admindash_parse_multichoicerated_presentation($presentation);
+        return local_admindashboard_parse_multichoicerated_presentation($presentation);
     }
 
     if ($itemtype === 'multichoice') {
-        return admindash_parse_multichoice_likert_presentation($presentation);
+        return local_admindashboard_parse_multichoice_likert_presentation($presentation);
     }
 
     return [];
@@ -926,7 +940,7 @@ function admindash_parse_feedback_scale_options(string $itemtype, string $presen
  * @param int $courseid Course ID.
  * @return array{questions:array<string,array{itemid:int,question:string,avg_score:float,max_score:float,response_count:int}>,overall_average:?float,question_count:int}
  */
-function get_quantitative_feedback_averages(int $courseid): array {
+function local_admindashboard_get_quantitative_feedback_averages(int $courseid): array {
     global $DB;
 
     $result = [
@@ -959,7 +973,7 @@ function get_quantitative_feedback_averages(int $courseid): array {
     $totals = [];
     $recordset = $DB->get_recordset_sql($sql, $typeparams + ['courseid' => $courseid]);
     foreach ($recordset as $row) {
-        $options = admindash_parse_feedback_scale_options((string)$row->itemtype, (string)$row->presentation);
+        $options = local_admindashboard_parse_feedback_scale_options((string)$row->itemtype, (string)$row->presentation);
         if (count($options) !== 5) {
             continue;
         }
@@ -1032,7 +1046,7 @@ function get_quantitative_feedback_averages(int $courseid): array {
  * @param int $courseid Course ID.
  * @return array<int,string>
  */
-function admindash_get_feedback_comments(int $courseid): array {
+function local_admindashboard_get_feedback_comments(int $courseid): array {
     global $DB;
 
     if ($courseid <= 0) {
@@ -1071,7 +1085,7 @@ function admindash_get_feedback_comments(int $courseid): array {
  * @param array $payload Raw decoded JSON.
  * @return array{sentiment_split:array{positive_pct:int,neutral_pct:int,negative_pct:int},trending_keywords:array<int,string>,flagged_comments:array<int,array{text:string,sentiment:string}>,error:?string}
  */
-function admindash_normalize_feedback_sentiment_payload(array $payload): array {
+function local_admindashboard_normalize_feedback_sentiment_payload(array $payload): array {
     $result = [
         'sentiment_split' => [
             'positive_pct' => 0,
@@ -1133,7 +1147,7 @@ function admindash_normalize_feedback_sentiment_payload(array $payload): array {
  * @param array<string,mixed> $sentiment Normalized sentiment payload (includes flagged_comments from Groq).
  * @return array<int,array{text:string,sentiment:string}>
  */
-function admindash_merge_all_feedback_highlight_comments(array $allcomments, array $sentiment): array {
+function local_admindashboard_merge_all_feedback_highlight_comments(array $allcomments, array $sentiment): array {
     $map = [];
     foreach (($sentiment['flagged_comments'] ?? []) as $row) {
         if (!is_array($row)) {
@@ -1173,7 +1187,11 @@ function admindash_merge_all_feedback_highlight_comments(array $allcomments, arr
  * @param array<int,string> $comments_array Raw text comments.
  * @return array{sentiment_split:array{positive_pct:int,neutral_pct:int,negative_pct:int},trending_keywords:array<int,string>,flagged_comments:array<int,array{text:string,sentiment:string}>,error:?string}
  */
-function analyze_feedback_sentiment_groq(array $comments_array): array {
+function local_admindashboard_analyze_feedback_sentiment_groq(array $comments_array): array {
+    global $CFG;
+
+    require_once($CFG->libdir . '/filelib.php');
+
     $default = [
         'sentiment_split' => [
             'positive_pct' => 0,
@@ -1216,7 +1234,7 @@ function analyze_feedback_sentiment_groq(array $comments_array): array {
         $endpoint = 'https://api.groq.com/openai/v1/chat/completions';
     }
     if ($apikey === '') {
-        error_log('local_admindashboard: Groq API key missing for feedback sentiment analysis.');
+        debugging('local_admindashboard: Groq API key missing for feedback sentiment analysis.', DEBUG_DEVELOPER);
         $default['error'] = 'Groq API key is not configured.';
         return $default;
     }
@@ -1273,59 +1291,56 @@ PROMPT;
         ],
     ];
 
-    $ch = curl_init($endpoint);
-    curl_setopt_array($ch, [
-        CURLOPT_POST => true,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER => [
-            'Authorization: Bearer ' . $apikey,
-            'Content-Type: application/json',
-        ],
-        CURLOPT_POSTFIELDS => json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-        CURLOPT_CONNECTTIMEOUT => 10,
-        CURLOPT_TIMEOUT => 90,
+    $curl = new curl();
+    $curl->setHeader([
+        'Authorization: Bearer ' . $apikey,
+        'Content-Type: application/json',
     ]);
+    $rawresponse = $curl->post(
+        $endpoint,
+        json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        [
+            'CURLOPT_CONNECTTIMEOUT' => 10,
+            'CURLOPT_TIMEOUT' => 90,
+        ]
+    );
 
-    $rawresponse = curl_exec($ch);
-    $curlerrno = curl_errno($ch);
-    $curlerror = curl_error($ch);
-    $httpcode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    if ($curlerrno !== 0) {
-        error_log('local_admindashboard: Groq cURL error [' . $curlerrno . '] ' . $curlerror);
+    if ($curl->get_errno()) {
+        debugging('local_admindashboard: Groq cURL error [' . $curl->get_errno() . '] ' . $curl->error, DEBUG_DEVELOPER);
         $default['error'] = 'Groq request failed.';
         return $default;
     }
 
+    $info = $curl->get_info();
+    $httpcode = (int)($info['http_code'] ?? 0);
     if ($httpcode < 200 || $httpcode >= 300 || $rawresponse === false || $rawresponse === '') {
-        error_log('local_admindashboard: Groq HTTP error [' . $httpcode . '] ' . substr((string)$rawresponse, 0, 1000));
+        debugging('local_admindashboard: Groq HTTP error [' . $httpcode . ']', DEBUG_DEVELOPER);
         $default['error'] = 'Groq returned an unexpected HTTP response.';
         return $default;
     }
 
     $decoded = json_decode($rawresponse, true);
     if (!is_array($decoded)) {
-        error_log('local_admindashboard: Groq top-level decode failed. Raw=' . substr((string)$rawresponse, 0, 1000));
+        debugging('local_admindashboard: Groq top-level decode failed.', DEBUG_DEVELOPER);
         $default['error'] = 'Groq returned invalid JSON.';
         return $default;
     }
 
     $content = (string)($decoded['choices'][0]['message']['content'] ?? '');
     if ($content === '') {
-        error_log('local_admindashboard: Groq response missing assistant content. Raw=' . substr((string)$rawresponse, 0, 1000));
+        debugging('local_admindashboard: Groq response missing assistant content.', DEBUG_DEVELOPER);
         $default['error'] = 'Groq returned an empty completion.';
         return $default;
     }
 
     $analysis = json_decode($content, true);
     if (!is_array($analysis)) {
-        error_log('local_admindashboard: Groq analysis JSON decode failed. Content=' . substr($content, 0, 1000));
+        debugging('local_admindashboard: Groq analysis JSON decode failed.', DEBUG_DEVELOPER);
         $default['error'] = 'Groq returned invalid analysis JSON.';
         return $default;
     }
 
-    return admindash_normalize_feedback_sentiment_payload($analysis);
+    return local_admindashboard_normalize_feedback_sentiment_payload($analysis);
 }
 
 /**
@@ -1334,12 +1349,12 @@ PROMPT;
  * @param int $courseid Course ID.
  * @return array{quantitative:array{questions:array<string,array{itemid:int,question:string,avg_score:float,max_score:float,response_count:int}>,overall_average:?float,question_count:int},sentiment:array{sentiment_split:array{positive_pct:int,neutral_pct:int,negative_pct:int},trending_keywords:array<int,string>,flagged_comments:array<int,array{text:string,sentiment:string}>,error:?string},meta:array{courseid:int,comments_count:int,has_quantitative:bool,has_comments:bool}}
  */
-function admindash_get_feedback_insights(int $courseid): array {
-    $quantitative = get_quantitative_feedback_averages($courseid);
-    $comments = admindash_get_feedback_comments($courseid);
-    $sentiment = analyze_feedback_sentiment_groq($comments);
+function local_admindashboard_get_feedback_insights(int $courseid): array {
+    $quantitative = local_admindashboard_get_quantitative_feedback_averages($courseid);
+    $comments = local_admindashboard_get_feedback_comments($courseid);
+    $sentiment = local_admindashboard_analyze_feedback_sentiment_groq($comments);
     if (!empty($comments)) {
-        $sentiment['flagged_comments'] = admindash_merge_all_feedback_highlight_comments($comments, $sentiment);
+        $sentiment['flagged_comments'] = local_admindashboard_merge_all_feedback_highlight_comments($comments, $sentiment);
     }
 
     return [
@@ -1362,7 +1377,7 @@ function admindash_get_feedback_insights(int $courseid): array {
  * @param int $moduleid Optional module filter.
  * @return array{columns:array<int,array{id:int,name:string,modname:string}>,rows:array<int,array{department:string,cells:array<int,array{moduleid:int,value:int,status:string,total:int,compliant:int,label:string}>}>,summary:array{course_selected:bool,total_cells:int,red_cells:int,amber_cells:int,green_cells:int,label:string}}
  */
-function admindash_get_compliance_heatmap(int $courseid, string $department = '', int $moduleid = 0): array {
+function local_admindashboard_get_compliance_heatmap(int $courseid, string $department = '', int $moduleid = 0): array {
     global $CFG, $DB;
 
     $supervideocompliancethreshold = 80;
@@ -1389,7 +1404,7 @@ function admindash_get_compliance_heatmap(int $courseid, string $department = ''
     require_once($CFG->libdir . '/xmldb/xmldb_table.php');
 
     $department = trim($department);
-    [$userwhere, $userparams] = admindash_build_user_filter($department);
+    [$userwhere, $userparams] = local_admindashboard_build_user_filter($department);
 
     $manager = $DB->get_manager();
     $hassupervideo = $manager->table_exists(new xmldb_table('supervideo_view'))
@@ -1662,6 +1677,7 @@ function admindash_get_compliance_heatmap(int $courseid, string $department = ''
     $viewedbydeptmodule = [];
     if (!empty($resourcecmids) && $hasslog) {
         [$resourceinsql, $resourceparams] = $DB->get_in_or_equal(array_values($resourcecmids), SQL_PARAMS_NAMED, 'heatresource');
+        $resourceparams['heatresourcesince'] = time() - YEARSECS;
         $resourceviewrows = $DB->get_records_sql(
             "SELECT DISTINCT l.userid, ctx.instanceid AS cmid
                FROM {logstore_standard_log} l
@@ -1669,6 +1685,7 @@ function admindash_get_compliance_heatmap(int $courseid, string $department = ''
                JOIN {user} u ON u.id = l.userid
               WHERE ctx.instanceid {$resourceinsql}
                 AND l.eventname = :resourceviewevent
+                AND l.timecreated >= :heatresourcesince
                 AND {$userwhere}",
             $resourceparams + ['resourceviewevent' => '\\mod_resource\\event\\course_module_viewed'] + $userparams
         );
@@ -1792,7 +1809,7 @@ function admindash_get_compliance_heatmap(int $courseid, string $department = ''
  * @param int $courseid Course ID.
  * @return bool
  */
-function admindash_is_course_running(int $courseid): bool {
+function local_admindashboard_is_course_running(int $courseid): bool {
     global $DB;
 
     if ($courseid <= 0) {
@@ -1827,7 +1844,7 @@ function admindash_is_course_running(int $courseid): bool {
  * @param int|null $now Current timestamp override.
  * @return int Progress percent from 0 to 100.
  */
-function admindash_calculate_schedule_progress(int $starttimestamp, int $endtimestamp, ?int $now = null): int {
+function local_admindashboard_calculate_schedule_progress(int $starttimestamp, int $endtimestamp, ?int $now = null): int {
     $now = $now ?? time();
 
     if ($starttimestamp > 0 && $endtimestamp > 0 && $endtimestamp > $starttimestamp) {
@@ -1853,7 +1870,7 @@ function admindash_calculate_schedule_progress(int $starttimestamp, int $endtime
  * @param int $courseid Course ID.
  * @return array{coursestart:int,courseend:int,sections:array<int,array{module:string,start:int,end:int}>}
  */
-function admindash_get_course_schedule_sections(int $courseid): array {
+function local_admindashboard_get_course_schedule_sections(int $courseid): array {
     global $DB;
 
     $course = $DB->get_record('course', ['id' => $courseid], 'id,startdate,enddate', MUST_EXIST);
@@ -1973,7 +1990,7 @@ function admindash_get_course_schedule_sections(int $courseid): array {
  * @param int|null $now Current timestamp override.
  * @return int
  */
-function admindash_calculate_course_schedule_progress(array $sections, ?int $now = null): int {
+function local_admindashboard_calculate_course_schedule_progress(array $sections, ?int $now = null): int {
     $now = $now ?? time();
     if (empty($sections)) {
         return 0;
@@ -1981,7 +1998,7 @@ function admindash_calculate_course_schedule_progress(array $sections, ?int $now
 
     $progresssum = 0;
     foreach ($sections as $section) {
-        $progresssum += admindash_calculate_schedule_progress((int)($section['start'] ?? 0), (int)($section['end'] ?? 0), $now);
+        $progresssum += local_admindashboard_calculate_schedule_progress((int)($section['start'] ?? 0), (int)($section['end'] ?? 0), $now);
     }
 
     return (int)round($progresssum / count($sections));
@@ -1994,7 +2011,7 @@ function admindash_calculate_course_schedule_progress(array $sections, ?int $now
  * @param int $limit Max recent-course rows when no course is selected.
  * @return array<int,array{module:string,completion:int}>
  */
-function admindash_get_schedule_progress_rows(int $courseid, int $limit = 5): array {
+function local_admindashboard_get_schedule_progress_rows(int $courseid, int $limit = 5): array {
     global $DB;
 
     $now = time();
@@ -2014,17 +2031,17 @@ function admindash_get_schedule_progress_rows(int $courseid, int $limit = 5): ar
 
         foreach ($courses as $course) {
             $courseidlocal = (int)$course->id;
-            $schedule = admindash_get_course_schedule_sections($courseidlocal);
+            $schedule = local_admindashboard_get_course_schedule_sections($courseidlocal);
             $sections = $schedule['sections'] ?? [];
             if (!empty($sections)) {
                 $rows[] = [
                     'module' => (string)$course->fullname,
-                    'completion' => admindash_calculate_course_schedule_progress($sections, $now),
+                    'completion' => local_admindashboard_calculate_course_schedule_progress($sections, $now),
                 ];
             } else {
                 $rows[] = [
                     'module' => (string)$course->fullname,
-                    'completion' => admindash_calculate_schedule_progress((int)($course->startdate ?? 0), (int)($course->enddate ?? 0), $now),
+                    'completion' => local_admindashboard_calculate_schedule_progress((int)($course->startdate ?? 0), (int)($course->enddate ?? 0), $now),
                 ];
             }
 
@@ -2036,7 +2053,7 @@ function admindash_get_schedule_progress_rows(int $courseid, int $limit = 5): ar
         return array_slice($rows, 0, max(1, $limit));
     }
 
-    $schedule = admindash_get_course_schedule_sections($courseid);
+    $schedule = local_admindashboard_get_course_schedule_sections($courseid);
     $sections = $schedule['sections'] ?? [];
     if (empty($sections)) {
         return $rows;
@@ -2045,7 +2062,7 @@ function admindash_get_schedule_progress_rows(int $courseid, int $limit = 5): ar
     foreach ($sections as $section) {
             $rows[] = [
                 'module' => (string)$section['module'],
-                'completion' => admindash_calculate_schedule_progress((int)($section['start'] ?? 0), (int)($section['end'] ?? 0), $now),
+                'completion' => local_admindashboard_calculate_schedule_progress((int)($section['start'] ?? 0), (int)($section['end'] ?? 0), $now),
             ];
         }
 
@@ -2058,14 +2075,14 @@ function admindash_get_schedule_progress_rows(int $courseid, int $limit = 5): ar
  * @param int $courseid Course ID.
  * @return array<int,array<string,mixed>>
  */
-function admindash_calculate_at_risk_rows_for_course(int $courseid): array {
+function local_admindashboard_calculate_at_risk_rows_for_course(int $courseid): array {
     global $DB;
 
-    if ($courseid <= 0 || !admindash_is_course_running($courseid)) {
+    if ($courseid <= 0 || !local_admindashboard_is_course_running($courseid)) {
         return [];
     }
 
-    [$userwhere, $userparams] = admindash_build_user_filter('');
+    [$userwhere, $userparams] = local_admindashboard_build_user_filter('');
     $now = time();
 
     $usersql = "SELECT DISTINCT u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department, u.lastaccess
@@ -2124,7 +2141,7 @@ function admindash_calculate_at_risk_rows_for_course(int $courseid): array {
         }
     }
 
-    $pretestitems = admindash_get_at_risk_pretest_items($courseid);
+    $pretestitems = local_admindashboard_get_at_risk_pretest_items($courseid);
     $pretestavgbyuser = [];
     $coursepretestavg = null;
 
@@ -2256,10 +2273,10 @@ function admindash_calculate_at_risk_rows_for_course(int $courseid): array {
  * @param int $courseid Optional course ID.
  * @return void
  */
-function admindash_refresh_at_risk_cache(int $courseid = 0): void {
+function local_admindashboard_refresh_at_risk_cache(int $courseid = 0): void {
     global $DB;
 
-    if (!admindash_local_atrisk_table_exists()) {
+    if (!local_admindashboard_local_atrisk_table_exists()) {
         return;
     }
 
@@ -2277,12 +2294,12 @@ function admindash_refresh_at_risk_cache(int $courseid = 0): void {
     }
 
     foreach ($courseids as $thiscourseid) {
-        if (!admindash_is_course_running((int)$thiscourseid)) {
+        if (!local_admindashboard_is_course_running((int)$thiscourseid)) {
             $DB->delete_records('local_admindashboard_atrisk', ['courseid' => (int)$thiscourseid]);
             continue;
         }
 
-        $rows = admindash_calculate_at_risk_rows_for_course((int)$thiscourseid);
+        $rows = local_admindashboard_calculate_at_risk_rows_for_course((int)$thiscourseid);
         $DB->delete_records('local_admindashboard_atrisk', ['courseid' => (int)$thiscourseid]);
         foreach ($rows as $row) {
             $DB->insert_record('local_admindashboard_atrisk', (object)$row);
@@ -2298,21 +2315,21 @@ function admindash_refresh_at_risk_cache(int $courseid = 0): void {
  * @param int $limit Max rows.
  * @return array<int,array<string,mixed>>
  */
-function admindash_get_at_risk_participants(int $courseid, string $department, int $limit = 10): array {
+function local_admindashboard_get_at_risk_participants(int $courseid, string $department, int $limit = 10): array {
     global $DB;
 
-    if (!admindash_local_atrisk_table_exists()) {
+    if (!local_admindashboard_local_atrisk_table_exists()) {
         return [];
     }
 
     $department = trim($department);
 
     if ($courseid > 0) {
-        if (!admindash_is_course_running($courseid)) {
+        if (!local_admindashboard_is_course_running($courseid)) {
             return [];
         }
         try {
-            admindash_refresh_at_risk_cache($courseid);
+            local_admindashboard_refresh_at_risk_cache($courseid);
         } catch (\Throwable $e) {
             return [];
         }
@@ -2333,7 +2350,7 @@ function admindash_get_at_risk_participants(int $courseid, string $department, i
         $interval = 300;
         if ($cachehas === 0 || $lastfull <= 0 || ($now - $lastfull) >= $interval) {
             try {
-                admindash_refresh_at_risk_cache(0);
+                local_admindashboard_refresh_at_risk_cache(0);
             } catch (\Throwable $e) {
                 // Large sites may hit limits during a full rebuild; still return any rows already in cache.
             }
@@ -2432,7 +2449,7 @@ function admindash_get_at_risk_participants(int $courseid, string $department, i
  * @param int $limit Max rows.
  * @return array<int,array{name:string,action:string,course:string,timestamp:string,avatar:string}>
  */
-function admindash_get_live_feed_rows(int $courseid, string $department, int $limit = 8): array {
+function local_admindashboard_get_live_feed_rows(int $courseid, string $department, int $limit = 8): array {
     global $CFG, $DB;
 
     require_once($CFG->libdir . '/xmldb/xmldb_table.php');
@@ -2442,13 +2459,13 @@ function admindash_get_live_feed_rows(int $courseid, string $department, int $li
         return [];
     }
 
-    [$userwhere, $userparams] = admindash_build_user_filter($department, true);
+    [$userwhere, $userparams] = local_admindashboard_build_user_filter($department, true);
     $params = $userparams;
     $coursefilter = '';
     $params['livefeedsince'] = time() - (7 * DAYSECS);
     $genderselect = "'' AS genderdata";
     $genderjoin = '';
-    $genderfieldid = admindash_get_gender_field_id();
+    $genderfieldid = local_admindashboard_get_gender_field_id();
     if ($genderfieldid > 0) {
         $genderselect = 'COALESCE(uig.data, "") AS genderdata';
         $genderjoin = ' LEFT JOIN {user_info_data} uig ON uig.userid = u.id AND uig.fieldid = :livefeedgenderfieldid';
@@ -2557,7 +2574,7 @@ function admindash_get_live_feed_rows(int $courseid, string $department, int $li
  * This is used when course completion tracking and/or course gradepass isn't configured,
  * but pass/fail outcomes can be inferred from an assessment quiz with gradepass.
  */
-function admindash_pick_course_assessment_quiz(int $courseid, string $userwhere, array $userparams): ?stdClass {
+function local_admindashboard_pick_course_assessment_quiz(int $courseid, string $userwhere, array $userparams): ?stdClass {
         global $DB;
 
         if ($courseid <= 0) {
@@ -2608,7 +2625,7 @@ function admindash_pick_course_assessment_quiz(int $courseid, string $userwhere,
  * - mod_customcert: {customcert} + {customcert_issues}
  * - mod_certificate: {certificate} + {certificate_issues}
  */
-function admindash_count_certified_issued(int $courseid, string $userwhere, array $userparams, int $passgradeitemid, float $passgradepass): int {
+function local_admindashboard_count_certified_issued(int $courseid, string $userwhere, array $userparams, int $passgradeitemid, float $passgradepass): int {
     global $CFG, $DB;
 
     if ($courseid <= 0 || $passgradeitemid <= 0 || $passgradepass <= 0) {
@@ -2770,7 +2787,7 @@ function admindash_count_certified_issued(int $courseid, string $userwhere, arra
  * Supports mod_customcert, mod_certificate, and Moodle tool_certificate when issue rows can be
  * scoped to a course.
  */
-function admindash_count_certificate_issues(int $courseid, string $userwhere, array $userparams): int {
+function local_admindashboard_count_certificate_issues(int $courseid, string $userwhere, array $userparams): int {
     global $CFG, $DB;
 
     require_once($CFG->libdir . '/xmldb/xmldb_table.php');
@@ -2866,7 +2883,7 @@ function admindash_count_certificate_issues(int $courseid, string $userwhere, ar
  *
  * @return array<int,array{id:int,name:string,department:string,clinicname:string,course_name:string}>
  */
-function admindash_get_certificate_issue_user_rows(
+function local_admindashboard_get_certificate_issue_user_rows(
     int $courseid,
     string $userwhere,
     array $userparams,
@@ -2995,7 +3012,7 @@ function admindash_get_certificate_issue_user_rows(
  * @param array $userparams Base user filter params.
  * @return array{mode:string,gradeitemid:int,gradepass:float,selectedmodname:string,selectedinstance:int}
  */
-function admindash_get_kpi_grade_source(int $courseid, int $moduleid, string $userwhere, array $userparams): array {
+function local_admindashboard_get_kpi_grade_source(int $courseid, int $moduleid, string $userwhere, array $userparams): array {
     global $DB;
 
     $source = [
@@ -3052,7 +3069,7 @@ function admindash_get_kpi_grade_source(int $courseid, int $moduleid, string $us
     }
 
     if ($moduleid <= 0) {
-        $assessment = admindash_pick_course_assessment_quiz($courseid, $userwhere, $userparams);
+        $assessment = local_admindashboard_pick_course_assessment_quiz($courseid, $userwhere, $userparams);
         if ($assessment && !empty($assessment->gradeitemid)) {
             $source['mode'] = 'course_assessment';
             $source['gradeitemid'] = (int)$assessment->gradeitemid;
@@ -3089,7 +3106,7 @@ function admindash_get_kpi_grade_source(int $courseid, int $moduleid, string $us
  * @param float $passgradepass Grade pass threshold.
  * @return array<int,array{id:int,name:string,department:string}>
  */
-function admindash_get_certified_user_rows(int $courseid, string $userwhere, array $userparams, int $passgradeitemid, float $passgradepass): array {
+function local_admindashboard_get_certified_user_rows(int $courseid, string $userwhere, array $userparams, int $passgradeitemid, float $passgradepass): array {
     global $CFG, $DB;
 
     if ($courseid <= 0 || $passgradeitemid <= 0 || $passgradepass <= 0) {
@@ -3142,7 +3159,7 @@ function admindash_get_certified_user_rows(int $courseid, string $userwhere, arr
                       JOIN {customcert} ccert ON ccert.id = ci.customcertid AND ccert.course = :courseid
                      WHERE {$userwhere}
                   ORDER BY u.lastname ASC, u.firstname ASC";
-            return admindash_kpi_rows_add_course_enrolment_detail($courseid, $buildrows($DB->get_records_sql($sql, $params)));
+            return local_admindashboard_kpi_rows_add_course_enrolment_detail($courseid, $buildrows($DB->get_records_sql($sql, $params)));
         }
     }
 
@@ -3174,7 +3191,7 @@ function admindash_get_certified_user_rows(int $courseid, string $userwhere, arr
                       JOIN {certificate} cert ON cert.id = ci.certificateid AND cert.course = :courseid
                      WHERE {$userwhere}
                   ORDER BY u.lastname ASC, u.firstname ASC";
-            return admindash_kpi_rows_add_course_enrolment_detail($courseid, $buildrows($DB->get_records_sql($sql, $params)));
+            return local_admindashboard_kpi_rows_add_course_enrolment_detail($courseid, $buildrows($DB->get_records_sql($sql, $params)));
         }
     }
 
@@ -3232,7 +3249,7 @@ function admindash_get_certified_user_rows(int $courseid, string $userwhere, arr
                       {$joins}
                      WHERE {$userwhere}{$where}
                   ORDER BY u.lastname ASC, u.firstname ASC";
-            return admindash_kpi_rows_add_course_enrolment_detail($courseid, $buildrows($DB->get_records_sql($sql, $params)));
+            return local_admindashboard_kpi_rows_add_course_enrolment_detail($courseid, $buildrows($DB->get_records_sql($sql, $params)));
         }
     }
 
@@ -3242,7 +3259,7 @@ function admindash_get_certified_user_rows(int $courseid, string $userwhere, arr
 /**
  * Localised display name for an enrol instance row (enrolment method).
  */
-function admindash_format_enrol_instance_label(\stdClass $enrol): string {
+function local_admindashboard_format_enrol_instance_label(\stdClass $enrol): string {
     global $CFG;
     if (empty($enrol->id) && empty($enrol->enrol)) {
         return '';
@@ -3266,7 +3283,7 @@ function admindash_format_enrol_instance_label(\stdClass $enrol): string {
  * @param array<int,array<string,mixed>> $rows Rows with integer 'id' (userid).
  * @return array<int,array<string,mixed>>
  */
-function admindash_kpi_rows_add_course_enrolment_detail(int $courseid, array $rows): array {
+function local_admindashboard_kpi_rows_add_course_enrolment_detail(int $courseid, array $rows): array {
     global $DB;
 
     if ($courseid <= 0 || $rows === []) {
@@ -3323,7 +3340,7 @@ function admindash_kpi_rows_add_course_enrolment_detail(int $courseid, array $ro
             foreach (array_keys($byuser[$uid]) as $eid) {
                 $er = $enrolbyid[$eid] ?? null;
                 if ($er) {
-                    $lbl = admindash_format_enrol_instance_label($er);
+                    $lbl = local_admindashboard_format_enrol_instance_label($er);
                     if ($lbl !== '') {
                         $labels[] = $lbl;
                     }
@@ -3343,7 +3360,7 @@ function admindash_kpi_rows_add_course_enrolment_detail(int $courseid, array $ro
  *
  * @return array<int,\stdClass>
  */
-function admindash_sql_fetch_all_rows(string $sql, array $params = []): array {
+function local_admindashboard_sql_fetch_all_rows(string $sql, array $params = []): array {
     global $DB;
 
     $out = [];
@@ -3365,7 +3382,7 @@ function admindash_sql_fetch_all_rows(string $sql, array $params = []): array {
  * @param array<int,\stdClass> $records Rows with id, firstname, lastname, department, clinicname, coursefullname (optional).
  * @return array<int,array{id:int,name:string,department:string,clinicname:string,course_name:string,enrolment_label:string}>
  */
-function admindash_site_overview_records_to_kpi_rows(array $records): array {
+function local_admindashboard_site_overview_records_to_kpi_rows(array $records): array {
     $byuser = [];
     foreach ($records as $r) {
         $uid = (int)($r->id ?? 0);
@@ -3412,17 +3429,17 @@ function admindash_site_overview_records_to_kpi_rows(array $records): array {
 }
 
 /**
- * Site overview Dropped Midway: distinct user count matching {@see admindash_get_kpi_user_rows_site_overview}('dropped_midway').
+ * Site overview Dropped Midway: distinct user count matching {@see local_admindashboard_get_kpi_user_rows_site_overview}('dropped_midway').
  *
  * Each participant is counted at most once for the whole site, even if they match the resigned / withdrawn
  * pattern in several courses (same behaviour as the drill-down table after per-user merge).
  *
- * The legacy formula (participants − attempted) + {@see admindash_sum_resigned_midcourse_all_courses} mixed
+ * The legacy formula (participants − attempted) + {@see local_admindashboard_sum_resigned_midcourse_all_courses} mixed
  * distinct users with (user,course) pair counts and overstated the KPI vs the merged user table.
  *
  * @return int
  */
-function admindash_count_site_overview_dropped_midway_distinct_users(string $userwhere, array $userparams): int {
+function local_admindashboard_count_site_overview_dropped_midway_distinct_users(string $userwhere, array $userparams): int {
     global $DB;
 
     $kpirow = $DB->get_record_sql(
@@ -3440,7 +3457,7 @@ function admindash_count_site_overview_dropped_midway_distinct_users(string $use
     );
     $attemptedprimary = (int)($kpirow->attempted ?? 0);
 
-    $clinicfieldid = admindash_get_clinic_field_id();
+    $clinicfieldid = local_admindashboard_get_clinic_field_id();
     $clinicselect = 'COALESCE(u.institution, \'\') AS clinicname';
     $clinicjoin = '';
     $clinicparams = [];
@@ -3452,7 +3469,7 @@ function admindash_count_site_overview_dropped_midway_distinct_users(string $use
 
     $merged = [];
     if ($attemptedprimary > 0) {
-        foreach (admindash_site_overview_completion_not_attempted_records(
+        foreach (local_admindashboard_site_overview_completion_not_attempted_records(
             $userwhere,
             $userparams,
             $clinicselect,
@@ -3462,7 +3479,7 @@ function admindash_count_site_overview_dropped_midway_distinct_users(string $use
             $merged[(int)$r->id] = true;
         }
     } else {
-        foreach (admindash_site_overview_quiz_not_attempted_records(
+        foreach (local_admindashboard_site_overview_quiz_not_attempted_records(
             $userwhere,
             $userparams,
             $clinicselect,
@@ -3472,7 +3489,7 @@ function admindash_count_site_overview_dropped_midway_distinct_users(string $use
             $merged[(int)$r->id] = true;
         }
     }
-    foreach (admindash_site_overview_resigned_user_records(
+    foreach (local_admindashboard_site_overview_resigned_user_records(
         $userwhere,
         $userparams,
         $clinicselect,
@@ -3493,8 +3510,8 @@ function admindash_count_site_overview_dropped_midway_distinct_users(string $use
  *
  * @return int
  */
-function admindash_count_site_overview_resigned_midcourse_distinct_users(string $userwhere, array $userparams): int {
-    $clinicfieldid = admindash_get_clinic_field_id();
+function local_admindashboard_count_site_overview_resigned_midcourse_distinct_users(string $userwhere, array $userparams): int {
+    $clinicfieldid = local_admindashboard_get_clinic_field_id();
     $clinicselect = 'COALESCE(u.institution, \'\') AS clinicname';
     $clinicjoin = '';
     $clinicparams = [];
@@ -3504,7 +3521,7 @@ function admindash_count_site_overview_resigned_midcourse_distinct_users(string 
         $clinicparams['resoverviewclinicfieldid'] = $clinicfieldid;
     }
 
-    return count(admindash_site_overview_resigned_user_records(
+    return count(local_admindashboard_site_overview_resigned_user_records(
         $userwhere,
         $userparams,
         $clinicselect,
@@ -3514,12 +3531,12 @@ function admindash_count_site_overview_resigned_midcourse_distinct_users(string 
 }
 
 /**
- * Platform overview user lists for grade-style KPIs (mirrors {@see admindash_get_metrics} site rollups).
+ * Platform overview user lists for grade-style KPIs (mirrors {@see local_admindashboard_get_metrics} site rollups).
  *
  * @param string $metric attempted|passed|failed|dropped_midway|not_attempted
  * @return array<int,array<string,mixed>>
  */
-function admindash_get_kpi_user_rows_site_overview(
+function local_admindashboard_get_kpi_user_rows_site_overview(
     string $metric,
     string $userwhere,
     array $userparams,
@@ -3539,7 +3556,7 @@ function admindash_get_kpi_user_rows_site_overview(
         return [];
     }
 
-    // Same attempted signal as admindash_get_metrics (course_completions path).
+    // Same attempted signal as local_admindashboard_get_metrics (course_completions path).
     $kpirow = $DB->get_record_sql(
         "SELECT COUNT(DISTINCT CASE
                     WHEN cc.timestarted > 0 OR cc.timecompleted > 0 THEN u.id
@@ -3556,17 +3573,17 @@ function admindash_get_kpi_user_rows_site_overview(
     $attemptedprimary = (int)($kpirow->attempted ?? 0);
 
     if ($attemptedprimary > 0) {
-        return admindash_get_kpi_user_rows_site_overview_completion($metric, $userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
+        return local_admindashboard_get_kpi_user_rows_site_overview_completion($metric, $userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
     }
 
-    return admindash_get_kpi_user_rows_site_overview_quiz_fallback($metric, $userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
+    return local_admindashboard_get_kpi_user_rows_site_overview_quiz_fallback($metric, $userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
 }
 
 /**
  * @param string $metric attempted|passed|failed|dropped_midway|not_attempted
  * @return array<int,array<string,mixed>>
  */
-function admindash_get_kpi_user_rows_site_overview_completion(
+function local_admindashboard_get_kpi_user_rows_site_overview_completion(
     string $metric,
     string $userwhere,
     array $userparams,
@@ -3593,8 +3610,8 @@ function admindash_get_kpi_user_rows_site_overview_completion(
                     AND (cc.timestarted > 0 OR cc.timecompleted > 0)
                  WHERE {$userwhere}
               ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
-        $records = admindash_sql_fetch_all_rows($sql, $base);
-        return admindash_site_overview_records_to_kpi_rows($records);
+        $records = local_admindashboard_sql_fetch_all_rows($sql, $base);
+        return local_admindashboard_site_overview_records_to_kpi_rows($records);
     }
 
     if ($metric === 'passed') {
@@ -3604,8 +3621,8 @@ function admindash_get_kpi_user_rows_site_overview_completion(
            JOIN {course_completions} cc ON cc.userid = u.id AND cc.course = c.id AND cc.timecompleted > 0
                  WHERE {$userwhere}
               ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
-        $records = admindash_sql_fetch_all_rows($sql, $base);
-        return admindash_site_overview_records_to_kpi_rows($records);
+        $records = local_admindashboard_sql_fetch_all_rows($sql, $base);
+        return local_admindashboard_site_overview_records_to_kpi_rows($records);
     }
 
     if ($metric === 'failed') {
@@ -3617,27 +3634,27 @@ function admindash_get_kpi_user_rows_site_overview_completion(
                    AND cc.timestarted > 0
                    AND (cc.timecompleted IS NULL OR cc.timecompleted = 0)
               ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
-        $records = admindash_sql_fetch_all_rows($sql, $base);
-        return admindash_site_overview_records_to_kpi_rows($records);
+        $records = local_admindashboard_sql_fetch_all_rows($sql, $base);
+        return local_admindashboard_site_overview_records_to_kpi_rows($records);
     }
 
     if ($metric === 'not_attempted') {
-        $records = admindash_site_overview_completion_not_attempted_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
-        return admindash_site_overview_records_to_kpi_rows($records);
+        $records = local_admindashboard_site_overview_completion_not_attempted_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
+        return local_admindashboard_site_overview_records_to_kpi_rows($records);
     }
 
     if ($metric === 'dropped_midway') {
-        $records = admindash_site_overview_completion_not_attempted_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
+        $records = local_admindashboard_site_overview_completion_not_attempted_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
         $merged = [];
         foreach ($records as $r) {
             $merged[(int)$r->id] = $r;
         }
-        foreach (admindash_site_overview_resigned_user_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams) as $id => $rec) {
+        foreach (local_admindashboard_site_overview_resigned_user_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams) as $id => $rec) {
             if (!isset($merged[$id])) {
                 $merged[$id] = $rec;
             }
         }
-        return admindash_site_overview_records_to_kpi_rows(array_values($merged));
+        return local_admindashboard_site_overview_records_to_kpi_rows(array_values($merged));
     }
 
     return [];
@@ -3646,7 +3663,7 @@ function admindash_get_kpi_user_rows_site_overview_completion(
 /**
  * @return array<int,\stdClass>
  */
-function admindash_site_overview_completion_not_attempted_records(
+function local_admindashboard_site_overview_completion_not_attempted_records(
     string $userwhere,
     array $userparams,
     string $clinicselect,
@@ -3675,7 +3692,7 @@ function admindash_site_overview_completion_not_attempted_records(
                       AND (cc2.timestarted > 0 OR cc2.timecompleted > 0)
                )
           ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
-    return admindash_sql_fetch_all_rows($sql, $base);
+    return local_admindashboard_sql_fetch_all_rows($sql, $base);
 }
 
 /**
@@ -3684,7 +3701,7 @@ function admindash_site_overview_completion_not_attempted_records(
  *
  * @return array<int,\stdClass> keyed by userid
  */
-function admindash_site_overview_resigned_user_records(
+function local_admindashboard_site_overview_resigned_user_records(
     string $userwhere,
     array $userparams,
     string $clinicselect,
@@ -3715,7 +3732,7 @@ function admindash_site_overview_resigned_user_records(
                      WHERE ue2.userid = gg.userid AND ue2.status = 0
                 )
            ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
-    foreach (admindash_sql_fetch_all_rows($sqla, $base) as $r) {
+    foreach (local_admindashboard_sql_fetch_all_rows($sqla, $base) as $r) {
         $merged[(int)$r->id] = $r;
     }
 
@@ -3727,7 +3744,7 @@ function admindash_site_overview_resigned_user_records(
                JOIN {enrol} e ON e.id = ue.enrolid AND e.status = 0
                JOIN {course} c ON c.id = e.courseid AND c.visible = 1 AND c.id > 1
               WHERE {$suspendeduserwhere}";
-    foreach (admindash_sql_fetch_all_rows($sqlb, $susbase) as $r) {
+    foreach (local_admindashboard_sql_fetch_all_rows($sqlb, $susbase) as $r) {
         $merged[(int)$r->id] = $r;
     }
 
@@ -3747,7 +3764,7 @@ function admindash_site_overview_resigned_user_records(
                            AND gi2.itemtype = 'mod'
                      WHERE gg2.userid = u.id AND gg2.finalgrade IS NOT NULL
                 )";
-    foreach (admindash_sql_fetch_all_rows($sqlc, $base) as $r) {
+    foreach (local_admindashboard_sql_fetch_all_rows($sqlc, $base) as $r) {
         $merged[(int)$r->id] = $r;
     }
 
@@ -3758,7 +3775,7 @@ function admindash_site_overview_resigned_user_records(
  * @param string $metric attempted|passed|failed|dropped_midway|not_attempted
  * @return array<int,array<string,mixed>>
  */
-function admindash_get_kpi_user_rows_site_overview_quiz_fallback(
+function local_admindashboard_get_kpi_user_rows_site_overview_quiz_fallback(
     string $metric,
     string $userwhere,
     array $userparams,
@@ -3788,20 +3805,20 @@ function admindash_get_kpi_user_rows_site_overview_quiz_fallback(
     } else if ($metric === 'failed') {
         $status = ' AND gi.gradepass > 0 AND gg.finalgrade IS NOT NULL AND gg.finalgrade < gi.gradepass';
     } else if ($metric === 'not_attempted') {
-        $records = admindash_site_overview_quiz_not_attempted_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
-        return admindash_site_overview_records_to_kpi_rows($records);
+        $records = local_admindashboard_site_overview_quiz_not_attempted_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
+        return local_admindashboard_site_overview_records_to_kpi_rows($records);
     } else if ($metric === 'dropped_midway') {
-        $records = admindash_site_overview_quiz_not_attempted_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
+        $records = local_admindashboard_site_overview_quiz_not_attempted_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
         $merged = [];
         foreach ($records as $r) {
             $merged[(int)$r->id] = $r;
         }
-        foreach (admindash_site_overview_resigned_user_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams) as $id => $rec) {
+        foreach (local_admindashboard_site_overview_resigned_user_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams) as $id => $rec) {
             if (!isset($merged[$id])) {
                 $merged[$id] = $rec;
             }
         }
-        return admindash_site_overview_records_to_kpi_rows(array_values($merged));
+        return local_admindashboard_site_overview_records_to_kpi_rows(array_values($merged));
     } else {
         return [];
     }
@@ -3811,8 +3828,8 @@ function admindash_get_kpi_user_rows_site_overview_quiz_fallback(
               {$fromcore}
              WHERE {$userwhere}{$status}
           ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
-    $records = admindash_sql_fetch_all_rows($sql, $base);
-    return admindash_site_overview_records_to_kpi_rows($records);
+    $records = local_admindashboard_sql_fetch_all_rows($sql, $base);
+    return local_admindashboard_site_overview_records_to_kpi_rows($records);
 }
 
 /**
@@ -3820,7 +3837,7 @@ function admindash_get_kpi_user_rows_site_overview_quiz_fallback(
  *
  * @return array<int,\stdClass>
  */
-function admindash_site_overview_quiz_not_attempted_records(
+function local_admindashboard_site_overview_quiz_not_attempted_records(
     string $userwhere,
     array $userparams,
     string $clinicselect,
@@ -3853,7 +3870,7 @@ function admindash_site_overview_quiz_not_attempted_records(
                       AND gg2.finalgrade IS NOT NULL
                )
           ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
-    return admindash_sql_fetch_all_rows($sql, $base);
+    return local_admindashboard_sql_fetch_all_rows($sql, $base);
 }
 
 /**
@@ -3865,7 +3882,7 @@ function admindash_site_overview_quiz_not_attempted_records(
  * @param string $metric KPI key.
  * @return array<int,array{id:int,name:string,department:string,clinicname:string}>
  */
-function admindash_get_kpi_user_rows(int $courseid, string $department, int $moduleid, string $metric): array {
+function local_admindashboard_get_kpi_user_rows(int $courseid, string $department, int $moduleid, string $metric): array {
     global $DB;
 
     $metric = strtolower(trim($metric));
@@ -3873,7 +3890,7 @@ function admindash_get_kpi_user_rows(int $courseid, string $department, int $mod
         $metric = 'not_attempted';
     }
 
-    [$userwhere, $userparams] = admindash_build_user_filter($department);
+    [$userwhere, $userparams] = local_admindashboard_build_user_filter($department);
 
     $rows = [];
     $buildrows = static function(array $records): array {
@@ -3889,7 +3906,7 @@ function admindash_get_kpi_user_rows(int $courseid, string $department, int $mod
         return $rows;
     };
 
-    $clinicfieldid = admindash_get_clinic_field_id();
+    $clinicfieldid = local_admindashboard_get_clinic_field_id();
     $clinicselect = 'COALESCE(u.institution, \'\') AS clinicname';
     $clinicjoin = '';
     $clinicparams = [];
@@ -3936,7 +3953,7 @@ function admindash_get_kpi_user_rows(int $courseid, string $department, int $mod
                     'department' => (string)($rec->department ?? ''),
                     'clinicname' => (string)($rec->clinicname ?? ''),
                     'course_name' => $coursename,
-                    'enrolment_label' => $efull ? admindash_format_enrol_instance_label($efull) : '',
+                    'enrolment_label' => $efull ? local_admindashboard_format_enrol_instance_label($efull) : '',
                 ];
             }
             return $out;
@@ -3950,24 +3967,24 @@ function admindash_get_kpi_user_rows(int $courseid, string $department, int $mod
             return $buildrows($DB->get_records_sql($sql, $userparams + $clinicparams));
         }
         if ($metric === 'certified') {
-            return admindash_get_certificate_issue_user_rows($courseid, $userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
+            return local_admindashboard_get_certificate_issue_user_rows($courseid, $userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
         }
         if ($metric === 'resigned_midcourse') {
-            $records = admindash_site_overview_resigned_user_records(
+            $records = local_admindashboard_site_overview_resigned_user_records(
                 $userwhere,
                 $userparams,
                 $clinicselect,
                 $clinicjoin,
                 $clinicparams
             );
-            return admindash_site_overview_records_to_kpi_rows(array_values($records));
+            return local_admindashboard_site_overview_records_to_kpi_rows(array_values($records));
         }
         if ($moduleid > 0) {
             return [];
         }
         $sitemetrics = ['attempted', 'passed', 'failed', 'dropped_midway', 'not_attempted'];
         if (in_array($metric, $sitemetrics, true)) {
-            return admindash_get_kpi_user_rows_site_overview($metric, $userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
+            return local_admindashboard_get_kpi_user_rows_site_overview($metric, $userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
         }
         return [];
     }
@@ -4013,7 +4030,7 @@ function admindash_get_kpi_user_rows(int $courseid, string $department, int $mod
                 'department' => (string)($rec->department ?? ''),
                 'clinicname' => (string)($rec->clinicname ?? ''),
                 'course_name' => '',
-                'enrolment_label' => $efull ? admindash_format_enrol_instance_label($efull) : '',
+                'enrolment_label' => $efull ? local_admindashboard_format_enrol_instance_label($efull) : '',
             ];
         }
         return $out;
@@ -4070,16 +4087,16 @@ function admindash_get_kpi_user_rows(int $courseid, string $department, int $mod
             $cmp = strcasecmp((string)($a->lastname ?? ''), (string)($b->lastname ?? ''));
             return $cmp !== 0 ? $cmp : strcasecmp((string)($a->firstname ?? ''), (string)($b->firstname ?? ''));
         });
-        return admindash_kpi_rows_add_course_enrolment_detail($courseid, $buildrows($activerows));
+        return local_admindashboard_kpi_rows_add_course_enrolment_detail($courseid, $buildrows($activerows));
     }
 
-    $source = admindash_get_kpi_grade_source($courseid, $moduleid, $userwhere, $userparams);
+    $source = local_admindashboard_get_kpi_grade_source($courseid, $moduleid, $userwhere, $userparams);
     $gradeitemid = (int)($source['gradeitemid'] ?? 0);
     $gradepass = (float)($source['gradepass'] ?? 0);
     $ismodulequiz = ((string)($source['selectedmodname'] ?? '') === 'quiz');
 
     if ($metric === 'certified') {
-        return admindash_get_certificate_issue_user_rows($courseid, $userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
+        return local_admindashboard_get_certificate_issue_user_rows($courseid, $userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
     }
 
     if ($gradeitemid <= 0) {
@@ -4185,7 +4202,7 @@ function admindash_get_kpi_user_rows(int $courseid, string $department, int $mod
                 $cmp = strcasecmp((string)($a->lastname ?? ''), (string)($b->lastname ?? ''));
                 return $cmp !== 0 ? $cmp : strcasecmp((string)($a->firstname ?? ''), (string)($b->firstname ?? ''));
             });
-            return admindash_kpi_rows_add_course_enrolment_detail($courseid, $buildrows($resigned));
+            return local_admindashboard_kpi_rows_add_course_enrolment_detail($courseid, $buildrows($resigned));
 
         default:
             return [];
@@ -4199,13 +4216,13 @@ function admindash_get_kpi_user_rows(int $courseid, string $department, int $mod
          LEFT JOIN {grade_grades} gg ON gg.userid = u.id AND gg.itemid = :gradeitemid_list
              WHERE 1=1{$statuswhere}
           ORDER BY u.lastname ASC, u.firstname ASC";
-    return admindash_kpi_rows_add_course_enrolment_detail($courseid, $buildrows($DB->get_records_sql($sql, $params)));
+    return local_admindashboard_kpi_rows_add_course_enrolment_detail($courseid, $buildrows($DB->get_records_sql($sql, $params)));
 }
 
 /**
  * Sum of per-course "Resigned Mid-Course" counts across all visible courses.
  *
- * Mirrors the three components of the course-scoped {@see admindash_get_metrics} resigned_midcourse
+ * Mirrors the three components of the course-scoped {@see local_admindashboard_get_metrics} resigned_midcourse
  * logic (grade-but-unenrolled, account-suspended enrolments, suspended-enrolment-without-grade),
  * counting distinct (course, user) pairs so totals match summing each course's KPI.
  *
@@ -4213,7 +4230,7 @@ function admindash_get_kpi_user_rows(int $courseid, string $department, int $mod
  * @param array $userparams Bound parameters for $userwhere
  * @return int
  */
-function admindash_sum_resigned_midcourse_all_courses(string $userwhere, array $userparams): int {
+function local_admindashboard_sum_resigned_midcourse_all_courses(string $userwhere, array $userparams): int {
     global $DB;
 
     $total = 0;
@@ -4311,12 +4328,12 @@ function admindash_sum_resigned_midcourse_all_courses(string $userwhere, array $
  *
  * Excludes users with roles: manager, editingteacher, teacher, coursecreator, admin, and users with username or name like 'ZMT Student' or 'test'.
  */
-function admindash_get_metrics(int $courseid, string $department, int $moduleid = 0, bool $includetrends = true): array {
+function local_admindashboard_get_metrics(int $courseid, string $department, int $moduleid = 0, bool $includetrends = true): array {
     global $CFG, $DB;
 
     $department = trim($department);
 
-    [$userwhere, $userparams] = admindash_build_user_filter($department);
+    [$userwhere, $userparams] = local_admindashboard_build_user_filter($department);
 
     // Total Learners: count the same enrolled learner cohort used by the outcome KPIs.
     if ($courseid > 0) {
@@ -4432,7 +4449,7 @@ function admindash_get_metrics(int $courseid, string $department, int $moduleid 
         $passed = (int)($qrow->passed ?? 0);
         $failed = (int)($qrow->failed ?? 0);
         if ($gradeitemid > 0 && $gradepass > 0) {
-            $certified = admindash_count_certified_issued($courseid, $userwhere, $userparams, $gradeitemid, $gradepass);
+            $certified = local_admindashboard_count_certified_issued($courseid, $userwhere, $userparams, $gradeitemid, $gradepass);
         }
         // For quizzes, treat "dropped" as enrolled but not attempted (no grade yet).
         $droppedmidway = max(0, $participants - $attempted);
@@ -4454,7 +4471,7 @@ function admindash_get_metrics(int $courseid, string $department, int $moduleid 
             // Only apply this when no specific module is selected; otherwise keep module selection semantics.
             $usedassessmentkpi = false;
             if ($moduleid <= 0) {
-                $assessment = ($participants > 0) ? admindash_pick_course_assessment_quiz($courseid, $userwhere, $userparams) : null;
+                $assessment = ($participants > 0) ? local_admindashboard_pick_course_assessment_quiz($courseid, $userwhere, $userparams) : null;
                 if ($assessment && !empty($assessment->gradeitemid) && !empty($assessment->gradepass)) {
                     $assessmentgradeitemid = (int)$assessment->gradeitemid;
                     $assessmentgradepass = (float)$assessment->gradepass;
@@ -4484,7 +4501,7 @@ function admindash_get_metrics(int $courseid, string $department, int $moduleid 
                     $failed = (int)($frow->failed ?? 0);
                     $droppedmidway = max(0, $participants - $attempted);
 
-                    $certified = admindash_count_certified_issued($courseid, $userwhere, $userparams, $assessmentgradeitemid, $assessmentgradepass);
+                    $certified = local_admindashboard_count_certified_issued($courseid, $userwhere, $userparams, $assessmentgradeitemid, $assessmentgradepass);
 
                     // Signal dashboard to treat this as assessment-quiz mode.
                     $selectedmodname = 'quiz';
@@ -4561,7 +4578,7 @@ function admindash_get_metrics(int $courseid, string $department, int $moduleid 
                         IGNORE_MULTIPLE
                     );
                     if ($coursegi && !empty($coursegi->id) && !empty($coursegi->gradepass)) {
-                        $certified = admindash_count_certified_issued($courseid, $userwhere, $userparams, (int)$coursegi->id, (float)$coursegi->gradepass);
+                        $certified = local_admindashboard_count_certified_issued($courseid, $userwhere, $userparams, (int)$coursegi->id, (float)$coursegi->gradepass);
                     }
                 }
             }
@@ -4625,12 +4642,12 @@ function admindash_get_metrics(int $courseid, string $department, int $moduleid 
                 $failed       = (int)($fbrow->failed ?? 0);
             }
 
-            $droppedmidway = admindash_count_site_overview_dropped_midway_distinct_users($userwhere, $userparams);
+            $droppedmidway = local_admindashboard_count_site_overview_dropped_midway_distinct_users($userwhere, $userparams);
         }
     }
 
     // Certificates issued are counted directly from certificate issue records.
-    $certified = admindash_count_certificate_issues($courseid, $userwhere, $userparams);
+    $certified = local_admindashboard_count_certificate_issues($courseid, $userwhere, $userparams);
 
     // ── Suspended participants (account-suspended OR enrolment-suspended) ──
     // Case A: User account suspended (u.suspended = 1) — still enrolled in course.
@@ -4724,7 +4741,7 @@ function admindash_get_metrics(int $courseid, string $department, int $moduleid 
                 $departmentbyuser = [];
                 $clinicbyuser = [];
                 if (!empty($userids)) {
-                    $clinicfieldid = admindash_get_clinic_field_id();
+                    $clinicfieldid = local_admindashboard_get_clinic_field_id();
                     $clinicselect = 'COALESCE(u.institution, \'\') AS clinicname';
                     $clinicjoin = '';
                     $clinicparams = [];
@@ -5867,7 +5884,7 @@ function admindash_get_metrics(int $courseid, string $department, int $moduleid 
     // Schedule-based course progress.
     // - No course selected: top 5 recent courses by current schedule progress.
     // - Course selected: section/module progress based on schedule windows.
-    $moduleprogress = admindash_get_schedule_progress_rows($courseid, 5);
+    $moduleprogress = local_admindashboard_get_schedule_progress_rows($courseid, 5);
     $moduleprogressnames = [];
 
     $now = time();
@@ -6069,7 +6086,7 @@ function admindash_get_metrics(int $courseid, string $department, int $moduleid 
             // silent
         }
     } else {
-        $resignedmidcourse = admindash_count_site_overview_resigned_midcourse_distinct_users($userwhere, $userparams);
+        $resignedmidcourse = local_admindashboard_count_site_overview_resigned_midcourse_distinct_users($userwhere, $userparams);
     }
 
     // Total user–course enrollment rows (denominator for outcome KPI percentages).
@@ -6104,10 +6121,10 @@ function admindash_get_metrics(int $courseid, string $department, int $moduleid 
         $completionrate = $totalenrollments > 0 ? (int)round(100 * ($passed / $totalenrollments)) : 0;
     }
 
-    $heatmap = admindash_get_compliance_heatmap($courseid, $department, $moduleid);
-    $atriskcourserunning = ($courseid > 0) ? admindash_is_course_running($courseid) : false;
-    $atriskparticipants = admindash_get_at_risk_participants($courseid, $department);
-    $livefeed = admindash_get_live_feed_rows($courseid, $department, 8);
+    $heatmap = local_admindashboard_get_compliance_heatmap($courseid, $department, $moduleid);
+    $atriskcourserunning = ($courseid > 0) ? local_admindashboard_is_course_running($courseid) : false;
+    $atriskparticipants = local_admindashboard_get_at_risk_participants($courseid, $department);
+    $livefeed = local_admindashboard_get_live_feed_rows($courseid, $department, 8);
 
     $result = [
         'total_students' => $totalstudents,
@@ -6146,7 +6163,7 @@ function admindash_get_metrics(int $courseid, string $department, int $moduleid 
     ];
 
     try {
-        $result['trends'] = $includetrends ? admindash_get_kpi_trends($courseid, $department, $moduleid, $result) : [];
+        $result['trends'] = $includetrends ? local_admindashboard_get_kpi_trends($courseid, $department, $moduleid, $result) : [];
     } catch (\Throwable $e) {
         $result['trends'] = [];
     }
@@ -6154,7 +6171,7 @@ function admindash_get_metrics(int $courseid, string $department, int $moduleid 
     return $result;
 }
 
-function admindash_get_upcoming_event(int $courseid = 0): array {
+function local_admindashboard_get_upcoming_event(int $courseid = 0): array {
     global $DB;
 
     $now = time();
@@ -6252,11 +6269,11 @@ function admindash_get_upcoming_event(int $courseid = 0): array {
     ];
 }
 
-function admindash_get_courses_overview(string $department = ''): array {
+function local_admindashboard_get_courses_overview(string $department = ''): array {
     global $DB;
 
     $department = trim($department);
-    [$userwhere, $userparams] = admindash_build_user_filter($department);
+    [$userwhere, $userparams] = local_admindashboard_build_user_filter($department);
 
     // Get all visible courses with enrollments first.
     $enrollsql = "SELECT c.id, c.fullname, c.shortname,
@@ -6273,7 +6290,7 @@ function admindash_get_courses_overview(string $department = ''): array {
     try {
         $rows = $DB->get_records_sql($enrollsql, $userparams, 0, 20);
     } catch (\Throwable $e) {
-        debugging('admindash_get_courses_overview SQL error: ' . $e->getMessage(), DEBUG_DEVELOPER);
+        debugging('local_admindashboard_get_courses_overview SQL error: ' . $e->getMessage(), DEBUG_DEVELOPER);
         return ['courses' => []];
     }
 
@@ -6288,7 +6305,7 @@ function admindash_get_courses_overview(string $department = ''): array {
         $enrolled = (int)($row->enrolled ?? 0);
 
         // Try assessment quiz first (the last/final quiz in the course).
-        $assessment = admindash_pick_course_assessment_quiz($cid, $userwhere, $userparams);
+        $assessment = local_admindashboard_pick_course_assessment_quiz($cid, $userwhere, $userparams);
         if ($assessment && !empty($assessment->gradeitemid) && !empty($assessment->gradepass)) {
             $pparams = $userparams + [
                 'cov_courseid' => $cid,
@@ -6346,7 +6363,7 @@ function admindash_get_courses_overview(string $department = ''): array {
  * @param array<int,int> $courseids
  * @return array{selected_courseids:array<int,int>,participants:array<int,array>,clinics:array<int,array>}
  */
-function admindash_get_multi_course_leaders(array $courseids, string $department = '', int $limit = 10): array {
+function local_admindashboard_get_multi_course_leaders(array $courseids, string $department = '', int $limit = 10): array {
     global $DB, $CFG;
 
     $courseids = array_values(array_unique(array_filter(array_map('intval', $courseids), static function(int $id): bool {
@@ -6364,7 +6381,7 @@ function admindash_get_multi_course_leaders(array $courseids, string $department
     require_once($CFG->dirroot . '/course/lib.php');
     require_once($CFG->libdir . '/completionlib.php');
 
-    [$userwhere, $userparams] = admindash_build_user_filter(trim($department));
+    [$userwhere, $userparams] = local_admindashboard_build_user_filter(trim($department));
 
     [$coursesql, $courseparams] = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'mclvisiblecid');
     $visiblecourses = $DB->get_records_select(
@@ -6429,7 +6446,7 @@ function admindash_get_multi_course_leaders(array $courseids, string $department
 
         $departmentbyuser = [];
         $clinicbyuser = [];
-        $clinicfieldid = admindash_get_clinic_field_id();
+        $clinicfieldid = local_admindashboard_get_clinic_field_id();
         $clinicselect = 'COALESCE(u.institution, \'\') AS clinicname';
         $clinicjoin = '';
         $clinicparams = [];
