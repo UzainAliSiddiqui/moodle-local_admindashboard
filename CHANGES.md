@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.10 - 2026-05-27
+
+- Renamed overview labels from Unique Learners to Total Learners and Active Courses to Total Courses.
+
 ## 0.1.9 - 2026-05-27
 
 - Forced the KPI Distribution chart container to keep all three pie charts in a single row.

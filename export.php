@@ -39,7 +39,7 @@ if ($format === 'csv') {
 
     $csv->add_data(['Metric', 'Value']);
     $csv->add_data(['Total Students', $metrics['total_students']]);
-    $csv->add_data(['Active Courses', $metrics['active_courses']]);
+    $csv->add_data(['Total Courses', $metrics['active_courses']]);
     $csv->add_data(['Completion Rate', $metrics['completion_rate'] . '%']);
     $csv->add_data(['Pending Modules', $metrics['pending_modules']]);
 
@@ -89,7 +89,7 @@ if ($format === 'pdf') {
     $html .= '<table border="1" cellpadding="6" cellspacing="0">
         <tr><th>Metric</th><th>Value</th></tr>
         <tr><td>Total Students</td><td>' . (int)$metrics['total_students'] . '</td></tr>
-        <tr><td>Active Courses</td><td>' . (int)$metrics['active_courses'] . '</td></tr>
+        <tr><td>Total Courses</td><td>' . (int)$metrics['active_courses'] . '</td></tr>
         <tr><td>Completion Rate</td><td>' . (int)$metrics['completion_rate'] . '%</td></tr>
         <tr><td>Pending Modules</td><td>' . (int)$metrics['pending_modules'] . '</td></tr>
     </table>';

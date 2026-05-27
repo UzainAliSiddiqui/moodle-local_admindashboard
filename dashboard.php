@@ -87,14 +87,14 @@ $sesskey = sesskey();
         <span class="admindash-stat__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M7 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM14.5 9a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM1.615 16.428a1.224 1.224 0 0 1-.569-1.175 6.002 6.002 0 0 1 11.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 0 1 7 18a9.953 9.953 0 0 1-5.385-1.572ZM14.5 16h-.106c.07-.297.088-.611.048-.933a7.47 7.47 0 0 0-1.588-3.755 4.502 4.502 0 0 1 5.874 2.636.818.818 0 0 1-.36.98A7.465 7.465 0 0 1 14.5 16Z"/></svg></span>
         <div class="admindash-stat__body">
             <div class="admindash-stat__value" id="statTotalStudents">—</div>
-            <div class="admindash-stat__label" id="statTotalStudentsLabel">Unique Learners</div>
+            <div class="admindash-stat__label" id="statTotalStudentsLabel">Total Learners</div>
         </div>
     </div>
     <div class="admindash-stat s2">
         <span class="admindash-stat__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 0 0-.788 0l-7 3a1 1 0 0 0 0 1.84L5.25 8.051a.999.999 0 0 1 .356-.257l4-1.714a1 1 0 1 1 .788 1.838L7.667 9.088l1.94.831a1 1 0 0 0 .787 0l7-3a1 1 0 0 0 0-1.838l-7-3ZM3.31 9.397 5 10.12v4.102a8.969 8.969 0 0 0-1.05-.174 1 1 0 0 1-.89-.89 11.115 11.115 0 0 1 .25-3.762ZM9.3 16.573A9.026 9.026 0 0 0 10 17a9.026 9.026 0 0 0 .7-.427V12.5L10 12l-.7.5v4.073Zm4.39-2.477a8.989 8.989 0 0 1-1.05.175 1 1 0 0 1-.89-.89 11.115 11.115 0 0 1 .25-3.762l1.69.723v3.754Z"/></svg></span>
         <div class="admindash-stat__body">
             <div class="admindash-stat__value" id="statActiveCourses">—</div>
-            <div class="admindash-stat__label">Active Courses</div>
+            <div class="admindash-stat__label" id="statActiveCoursesLabel">Total Courses</div>
         </div>
     </div>
     <div class="admindash-stat s3">
@@ -595,7 +595,7 @@ function renderKpiPieChart(data, isQuiz, hasCourse) {
     const values = [];
     const colors = [];
 
-    labels.push(hasCourse ? 'Total Enrollment' : 'Unique Learners');
+    labels.push(hasCourse ? 'Total Enrollment' : 'Total Learners');
     values.push(Number(data.participants || 0));
     colors.push('#12c2b3');
 
@@ -2247,13 +2247,13 @@ async function loadDashboardData() {
     certifiedCard.style.display = '';
 
     const isCourseOverview = Number(courseid || 0) <= 0;
-    document.getElementById('kpiParticipantsLabel').textContent = isCourseOverview ? 'Unique Learners' : 'Total Enrollment';
+    document.getElementById('kpiParticipantsLabel').textContent = isCourseOverview ? 'Total Learners' : 'Total Enrollment';
     document.getElementById('kpiTotalEnrollmentsLabel').textContent = isCourseOverview ? 'Course Enrollments' : 'Current Total Enrollment';
     document.getElementById('kpiPassedLabel').textContent = 'Passed';
     document.getElementById('kpiDroppedLabel').textContent = 'Not Attempted';
-    document.getElementById('kpiParticipantsCard').dataset.kpiLabel = isCourseOverview ? 'Unique Learners' : 'Total Enrollment';
+    document.getElementById('kpiParticipantsCard').dataset.kpiLabel = isCourseOverview ? 'Total Learners' : 'Total Enrollment';
     document.getElementById('kpiTotalEnrollmentsCard').dataset.kpiLabel = isCourseOverview ? 'Course Enrollments' : 'Current Total Enrollment';
-    document.getElementById('kpiParticipantsCard').setAttribute('title', isCourseOverview ? 'Unique people enrolled anywhere in active courses.' : 'Unique participants in this course.');
+    document.getElementById('kpiParticipantsCard').setAttribute('title', isCourseOverview ? 'Distinct learner accounts enrolled anywhere in available courses.' : 'Unique participants in this course.');
     document.getElementById('kpiTotalEnrollmentsCard').setAttribute('title', 'Learner-course records. The same learner is counted once per course.');
     document.getElementById('kpiAttemptedCard').dataset.kpiLabel = 'Attempted';
     document.getElementById('kpiPassedCard').dataset.kpiLabel = 'Passed';
@@ -2303,7 +2303,8 @@ async function loadDashboardData() {
         const inactiveLearners = Math.max(0, Number(data.total_students || 0) - activeLearners);
         setS('statActiveUsers',    numberFmt.format(activeLearners));
         setS('statInactiveUsers',  numberFmt.format(inactiveLearners));
-        setS('statTotalStudentsLabel', Number(courseid || 0) > 0 ? 'Course Learners' : 'Unique Learners');
+        setS('statTotalStudentsLabel', Number(courseid || 0) > 0 ? 'Course Learners' : 'Total Learners');
+        setS('statActiveCoursesLabel', Number(courseid || 0) > 0 ? 'Selected Course' : 'Total Courses');
         setS('statCompletionRateLabel', Number(courseid || 0) > 0 ? 'Course Completion' : 'Enrollment Completion');
         setS('statPendingModulesLabel', Number(courseid || 0) > 0 ? 'Modules Pending' : 'Tracked Modules Pending');
         var lbl = document.getElementById('kpiSectionLabel');
