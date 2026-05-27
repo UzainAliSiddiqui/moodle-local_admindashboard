@@ -1,5 +1,12 @@
 # Admin dashboard changes
 
+## 0.1.5 - 2026-05-27
+
+- Aligned overview KPI drill-down rows with KPI card counts.
+- Restricted overview Unique Learners drill-down to learners enrolled in visible courses.
+- Returned per-course records for overview Attempted, Passed, Failed, and Not Attempted drill-downs.
+- Updated the KPI users external service return structure to include course and enrolment detail fields.
+
 ## 0.1.4 - 2026-05-27
 
 - Fixed the KPI users external service class to use Moodle's `core_external` API namespace.

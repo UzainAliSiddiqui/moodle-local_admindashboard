@@ -3377,12 +3377,28 @@ function local_admindashboard_sql_fetch_all_rows(string $sql, array $params = []
 }
 
 /**
- * Collapse duplicate user rows (multi-course) into KPI JSON rows with combined course_name.
+ * Convert site overview records into KPI JSON rows.
  *
  * @param array<int,\stdClass> $records Rows with id, firstname, lastname, department, clinicname, coursefullname (optional).
+ * @param bool $collapseusers When true, one user appears once with course names combined.
  * @return array<int,array{id:int,name:string,department:string,clinicname:string,course_name:string,enrolment_label:string}>
  */
-function local_admindashboard_site_overview_records_to_kpi_rows(array $records): array {
+function local_admindashboard_site_overview_records_to_kpi_rows(array $records, bool $collapseusers = true): array {
+    if (!$collapseusers) {
+        $out = [];
+        foreach ($records as $r) {
+            $out[] = [
+                'id' => (int)($r->id ?? 0),
+                'name' => trim(fullname($r)),
+                'department' => (string)($r->department ?? ''),
+                'clinicname' => (string)($r->clinicname ?? ''),
+                'course_name' => strip_tags((string)($r->coursefullname ?? '')),
+                'enrolment_label' => (string)($r->enrolmentlabel ?? ''),
+            ];
+        }
+        return $out;
+    }
+
     $byuser = [];
     foreach ($records as $r) {
         $uid = (int)($r->id ?? 0);
@@ -3603,31 +3619,37 @@ function local_admindashboard_get_kpi_user_rows_site_overview_completion(
     $records = [];
 
     if ($metric === 'attempted') {
-        $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department,
-                       {$clinicselect}, c.fullname AS coursefullname
+        $sql = "SELECT CONCAT(u.id, '-', c.id) AS rowkey,
+                       u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department,
+                       {$clinicselect}, c.fullname AS coursefullname,
+                       'Attempted' AS enrolmentlabel
                   {$fromcore}
            JOIN {course_completions} cc ON cc.userid = u.id AND cc.course = c.id
                     AND (cc.timestarted > 0 OR cc.timecompleted > 0)
                  WHERE {$userwhere}
               ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
         $records = local_admindashboard_sql_fetch_all_rows($sql, $base);
-        return local_admindashboard_site_overview_records_to_kpi_rows($records);
+        return local_admindashboard_site_overview_records_to_kpi_rows($records, false);
     }
 
     if ($metric === 'passed') {
-        $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department,
-                       {$clinicselect}, c.fullname AS coursefullname
+        $sql = "SELECT CONCAT(u.id, '-', c.id) AS rowkey,
+                       u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department,
+                       {$clinicselect}, c.fullname AS coursefullname,
+                       'Completed' AS enrolmentlabel
                   {$fromcore}
            JOIN {course_completions} cc ON cc.userid = u.id AND cc.course = c.id AND cc.timecompleted > 0
                  WHERE {$userwhere}
               ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
         $records = local_admindashboard_sql_fetch_all_rows($sql, $base);
-        return local_admindashboard_site_overview_records_to_kpi_rows($records);
+        return local_admindashboard_site_overview_records_to_kpi_rows($records, false);
     }
 
     if ($metric === 'failed') {
-        $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department,
-                       {$clinicselect}, c.fullname AS coursefullname
+        $sql = "SELECT CONCAT(u.id, '-', c.id) AS rowkey,
+                       u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department,
+                       {$clinicselect}, c.fullname AS coursefullname,
+                       'In progress' AS enrolmentlabel
                   {$fromcore}
            JOIN {course_completions} cc ON cc.userid = u.id AND cc.course = c.id
                  WHERE {$userwhere}
@@ -3635,12 +3657,12 @@ function local_admindashboard_get_kpi_user_rows_site_overview_completion(
                    AND (cc.timecompleted IS NULL OR cc.timecompleted = 0)
               ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
         $records = local_admindashboard_sql_fetch_all_rows($sql, $base);
-        return local_admindashboard_site_overview_records_to_kpi_rows($records);
+        return local_admindashboard_site_overview_records_to_kpi_rows($records, false);
     }
 
     if ($metric === 'not_attempted') {
         $records = local_admindashboard_site_overview_completion_not_attempted_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
-        return local_admindashboard_site_overview_records_to_kpi_rows($records);
+        return local_admindashboard_site_overview_records_to_kpi_rows($records, false);
     }
 
     if ($metric === 'dropped_midway') {
@@ -3673,24 +3695,18 @@ function local_admindashboard_site_overview_completion_not_attempted_records(
     global $DB;
 
     $base = $userparams + $clinicparams;
-    $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department,
-                   {$clinicselect}, c.fullname AS coursefullname
+    $sql = "SELECT CONCAT(u.id, '-', c.id) AS rowkey,
+                   u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department,
+                   {$clinicselect}, c.fullname AS coursefullname,
+                   'Not attempted' AS enrolmentlabel
               FROM {user} u
               {$clinicjoin}
          JOIN {user_enrolments} ue ON ue.userid = u.id AND ue.status = 0
          JOIN {enrol} e ON e.id = ue.enrolid AND e.status = 0
          JOIN {course} c ON c.id = e.courseid AND c.visible = 1 AND c.id > 1
+    LEFT JOIN {course_completions} cc ON cc.userid = u.id AND cc.course = c.id
              WHERE {$userwhere}
-               AND NOT EXISTS (
-                   SELECT 1
-                     FROM {user_enrolments} ue2
-                     JOIN {enrol} e2 ON e2.id = ue2.enrolid AND e2.status = 0
-                     JOIN {course} c2 ON c2.id = e2.courseid AND c2.visible = 1 AND c2.id > 1
-                LEFT JOIN {course_completions} cc2 ON cc2.userid = u.id AND cc2.course = c2.id
-                    WHERE ue2.userid = u.id
-                      AND ue2.status = 0
-                      AND (cc2.timestarted > 0 OR cc2.timecompleted > 0)
-               )
+               AND (cc.id IS NULL OR (COALESCE(cc.timestarted, 0) = 0 AND COALESCE(cc.timecompleted, 0) = 0))
           ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
     return local_admindashboard_sql_fetch_all_rows($sql, $base);
 }
@@ -3806,7 +3822,7 @@ function local_admindashboard_get_kpi_user_rows_site_overview_quiz_fallback(
         $status = ' AND gi.gradepass > 0 AND gg.finalgrade IS NOT NULL AND gg.finalgrade < gi.gradepass';
     } else if ($metric === 'not_attempted') {
         $records = local_admindashboard_site_overview_quiz_not_attempted_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
-        return local_admindashboard_site_overview_records_to_kpi_rows($records);
+        return local_admindashboard_site_overview_records_to_kpi_rows($records, false);
     } else if ($metric === 'dropped_midway') {
         $records = local_admindashboard_site_overview_quiz_not_attempted_records($userwhere, $userparams, $clinicselect, $clinicjoin, $clinicparams);
         $merged = [];
@@ -3823,13 +3839,20 @@ function local_admindashboard_get_kpi_user_rows_site_overview_quiz_fallback(
         return [];
     }
 
-    $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department,
-                   {$clinicselect}, c.fullname AS coursefullname
+    $sql = "SELECT DISTINCT CONCAT(u.id, '-', c.id) AS rowkey,
+                   u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department,
+                   {$clinicselect}, c.fullname AS coursefullname,
+                   CASE
+                       WHEN gg.finalgrade IS NULL THEN 'Not attempted'
+                       WHEN gi.gradepass > 0 AND gg.finalgrade >= gi.gradepass THEN 'Passed'
+                       WHEN gi.gradepass > 0 AND gg.finalgrade < gi.gradepass THEN 'Failed'
+                       ELSE 'Attempted'
+                   END AS enrolmentlabel
               {$fromcore}
              WHERE {$userwhere}{$status}
           ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
     $records = local_admindashboard_sql_fetch_all_rows($sql, $base);
-    return local_admindashboard_site_overview_records_to_kpi_rows($records);
+    return local_admindashboard_site_overview_records_to_kpi_rows($records, false);
 }
 
 /**
@@ -3847,8 +3870,10 @@ function local_admindashboard_site_overview_quiz_not_attempted_records(
     global $DB;
 
     $base = $userparams + $clinicparams;
-    $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department,
-                   {$clinicselect}, c.fullname AS coursefullname
+    $sql = "SELECT DISTINCT CONCAT(u.id, '-', c.id) AS rowkey,
+                   u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department,
+                   {$clinicselect}, c.fullname AS coursefullname,
+                   'Not attempted' AS enrolmentlabel
               FROM {user} u
               {$clinicjoin}
          JOIN {user_enrolments} ue ON ue.userid = u.id AND ue.status = 0
@@ -3867,6 +3892,7 @@ function local_admindashboard_site_overview_quiz_not_attempted_records(
                 LEFT JOIN {grade_grades} gg2 ON gg2.itemid = gi2.id AND gg2.userid = u.id
                     WHERE ue2.userid = u.id
                       AND ue2.status = 0
+                      AND e2.courseid = e.courseid
                       AND gg2.finalgrade IS NOT NULL
                )
           ORDER BY u.lastname ASC, u.firstname ASC, c.fullname ASC";
@@ -3959,9 +3985,12 @@ function local_admindashboard_get_kpi_user_rows(int $courseid, string $departmen
             return $out;
         }
         if ($metric === 'participants') {
-            $sql = "SELECT u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department, {$clinicselect}
+            $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, COALESCE(u.department, '') AS department, {$clinicselect}
                       FROM {user} u
                  {$clinicjoin}
+                      JOIN {user_enrolments} ue ON ue.userid = u.id AND ue.status = 0
+                      JOIN {enrol} e ON e.id = ue.enrolid AND e.status = 0
+                      JOIN {course} c ON c.id = e.courseid AND c.visible = 1 AND c.id > 1
                      WHERE {$userwhere}
                   ORDER BY u.lastname ASC, u.firstname ASC";
             return $buildrows($DB->get_records_sql($sql, $userparams + $clinicparams));

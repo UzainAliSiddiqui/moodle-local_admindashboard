@@ -98,6 +98,9 @@ class get_kpi_users extends external_api {
                     'id' => new external_value(PARAM_INT, 'User ID'),
                     'name' => new external_value(PARAM_TEXT, 'User full name'),
                     'department' => new external_value(PARAM_TEXT, 'User department'),
+                    'clinicname' => new external_value(PARAM_TEXT, 'Clinic or institution name', VALUE_OPTIONAL),
+                    'course_name' => new external_value(PARAM_TEXT, 'Course name for overview rows', VALUE_OPTIONAL),
+                    'enrolment_label' => new external_value(PARAM_TEXT, 'Enrolment or record label', VALUE_OPTIONAL),
                 ])
             ),
         ]);
