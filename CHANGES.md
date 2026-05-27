@@ -1,5 +1,10 @@
 # Admin dashboard changes
 
+## 0.1.13 - 2026-05-27
+
+- Matched Course Completion card height to Live Feed and kept the course list scrollable.
+- Prioritized current-year courses in the Course Completion ordering.
+
 ## 0.1.12 - 2026-05-27
 
 - Redesigned the Course Completion card as a scrollable all-course list with running courses shown first.

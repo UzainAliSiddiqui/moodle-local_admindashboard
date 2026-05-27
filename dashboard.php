@@ -2675,7 +2675,8 @@ function renderCourseProgress(rows, hasCourse) {
             const runningCount = items.filter(function(item) {
                 return String(item.status_key || '').toLowerCase() === 'running';
             }).length;
-            meta.textContent = numberFmt.format(items.length) + ' courses shown - ' + numberFmt.format(runningCount) + ' running now.';
+            const currentYear = new Date().getFullYear();
+            meta.textContent = numberFmt.format(items.length) + ' courses shown - ' + numberFmt.format(runningCount) + ' running now - ' + currentYear + ' first.';
         }
     }
 
@@ -2692,6 +2693,9 @@ function renderCourseProgress(rows, hasCourse) {
         }
         if (endDate > 0) {
             dateParts.push('End ' + formatUnixDate(endDate));
+        }
+        if (!hasCourse && item.year) {
+            dateParts.push(String(item.year));
         }
         const metaText = dateParts.join(' - ');
         return ''

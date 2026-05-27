@@ -2015,6 +2015,7 @@ function local_admindashboard_get_schedule_progress_rows(int $courseid, int $lim
     global $DB;
 
     $now = time();
+    $currentyear = (int)date('Y', $now);
     $rows = [];
 
     if ($courseid <= 0) {
@@ -2051,18 +2052,37 @@ function local_admindashboard_get_schedule_progress_rows(int $courseid, int $lim
                 $statusrank = 2;
             }
 
+            if ($startdate > 0 && ($enddate === 0 || $enddate >= $now) && $startdate <= $now) {
+                $courseyear = $currentyear;
+            } else if ($startdate > 0) {
+                $courseyear = (int)date('Y', $startdate);
+            } else if ($enddate > 0) {
+                $courseyear = (int)date('Y', $enddate);
+            } else {
+                $courseyear = 0;
+            }
+            $yearrank = ($courseyear > 0) ? abs($courseyear - $currentyear) : 9999;
+
             $rows[] = [
                 'module' => (string)$course->fullname,
                 'completion' => $completion,
                 'status' => $statuslabel,
                 'status_key' => $statuskey,
                 'status_rank' => $statusrank,
+                'year' => $courseyear,
+                'year_rank' => $yearrank,
                 'startdate' => $startdate,
                 'enddate' => $enddate,
             ];
         }
 
         usort($rows, static function(array $a, array $b): int {
+            if ((int)($a['year_rank'] ?? 9999) !== (int)($b['year_rank'] ?? 9999)) {
+                return (int)($a['year_rank'] ?? 9999) <=> (int)($b['year_rank'] ?? 9999);
+            }
+            if ((int)($a['year'] ?? 0) !== (int)($b['year'] ?? 0)) {
+                return (int)($b['year'] ?? 0) <=> (int)($a['year'] ?? 0);
+            }
             if ((int)($a['status_rank'] ?? 0) !== (int)($b['status_rank'] ?? 0)) {
                 return (int)($a['status_rank'] ?? 0) <=> (int)($b['status_rank'] ?? 0);
             }
