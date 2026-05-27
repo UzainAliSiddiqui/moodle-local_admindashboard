@@ -2416,35 +2416,6 @@ function local_admindashboard_extend_navigation_frontpage(navigation_node $front
     );
 }
 
-/**
- * Show a dashboard button on the site Home page.
- */
-function local_admindashboard_before_standard_top_of_body_html(): string {
-    global $PAGE;
-
-    if (!local_admindashboard_user_can_view()) {
-        return '';
-    }
-
-    // Show only on site Home (frontpage).
-    if (($PAGE->pagetype ?? '') !== 'site-index') {
-        return '';
-    }
-
-    $url = new moodle_url('/local/admindashboard/dashboard.php');
-    $label = get_string('pluginname', 'local_admindashboard');
-
-    $button = html_writer::link($url, $label, ['class' => 'btn btn-primary']);
-
-    return html_writer::div(
-        html_writer::div(
-            html_writer::div($button, 'd-flex justify-content-end'),
-            'container-fluid my-3'
-        ),
-        'local-admindashboard-home-link'
-    );
-}
-
 function local_admindashboard_render_footer(): void {
     global $OUTPUT;
     echo html_writer::end_div(); // main

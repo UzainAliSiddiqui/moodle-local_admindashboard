@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.19 - 2026-05-28
+
+- Removed the legacy `before_standard_top_of_body_html` callback so Moodle 5 no longer warns during page rendering.
+
 ## 0.1.18 - 2026-05-28
 
 - Hardened the legacy JSON API so requests require a Moodle session, sesskey, and the dashboard view capability.

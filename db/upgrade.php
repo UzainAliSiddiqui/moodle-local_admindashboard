@@ -95,5 +95,9 @@ function xmldb_local_admindashboard_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026052700, 'local', 'admindashboard');
     }
 
+    if ($oldversion < 2026052802) {
+        upgrade_plugin_savepoint(true, 2026052802, 'local', 'admindashboard');
+    }
+
     return true;
 }
