@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.7 - 2026-05-27
+
+- Adjusted KPI Distribution layout so all three pie charts stay in one row on desktop and tablet widths.
+
 ## 0.1.6 - 2026-05-27
 
 - Added an Enrollment Status pie chart to KPI Distribution using existing dashboard metrics.
