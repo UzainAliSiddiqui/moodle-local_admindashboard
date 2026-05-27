@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.12 - 2026-05-27
+
+- Redesigned the Course Completion card as a scrollable all-course list with running courses shown first.
+
 ## 0.1.11 - 2026-05-27
 
 - Excluded completed learner-course records from At-Risk Network Wide and course-specific at-risk lists.

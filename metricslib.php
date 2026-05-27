@@ -2005,13 +2005,13 @@ function local_admindashboard_calculate_course_schedule_progress(array $sections
 }
 
 /**
- * Returns schedule-based progress rows for recent courses or one selected course.
+ * Returns schedule-based progress rows for all courses or one selected course.
  *
  * @param int $courseid Selected course ID.
- * @param int $limit Max recent-course rows when no course is selected.
+ * @param int $limit Max course rows when no course is selected; 0 means all.
  * @return array<int,array{module:string,completion:int}>
  */
-function local_admindashboard_get_schedule_progress_rows(int $courseid, int $limit = 5): array {
+function local_admindashboard_get_schedule_progress_rows(int $courseid, int $limit = 0): array {
     global $DB;
 
     $now = time();
@@ -2023,34 +2023,60 @@ function local_admindashboard_get_schedule_progress_rows(int $courseid, int $lim
                FROM {course}
               WHERE visible = 1
                 AND id > 1
-           ORDER BY timecreated DESC, id DESC",
-            null,
-            0,
-            max(5, $limit * 4)
+           ORDER BY sortorder ASC, fullname ASC, id ASC"
         );
 
         foreach ($courses as $course) {
             $courseidlocal = (int)$course->id;
+            $startdate = (int)($course->startdate ?? 0);
+            $enddate = (int)($course->enddate ?? 0);
             $schedule = local_admindashboard_get_course_schedule_sections($courseidlocal);
             $sections = $schedule['sections'] ?? [];
             if (!empty($sections)) {
-                $rows[] = [
-                    'module' => (string)$course->fullname,
-                    'completion' => local_admindashboard_calculate_course_schedule_progress($sections, $now),
-                ];
+                $completion = local_admindashboard_calculate_course_schedule_progress($sections, $now);
             } else {
-                $rows[] = [
-                    'module' => (string)$course->fullname,
-                    'completion' => local_admindashboard_calculate_schedule_progress((int)($course->startdate ?? 0), (int)($course->enddate ?? 0), $now),
-                ];
+                $completion = local_admindashboard_calculate_schedule_progress($startdate, $enddate, $now);
             }
 
-            if (count($rows) >= $limit) {
-                break;
+            $statuskey = 'running';
+            $statuslabel = 'Running';
+            $statusrank = 0;
+            if ($startdate > 0 && $startdate > $now) {
+                $statuskey = 'upcoming';
+                $statuslabel = 'Upcoming';
+                $statusrank = 1;
+            } else if (($enddate > 0 && $enddate < $now) || $completion >= 100) {
+                $statuskey = 'completed';
+                $statuslabel = 'Completed';
+                $statusrank = 2;
             }
+
+            $rows[] = [
+                'module' => (string)$course->fullname,
+                'completion' => $completion,
+                'status' => $statuslabel,
+                'status_key' => $statuskey,
+                'status_rank' => $statusrank,
+                'startdate' => $startdate,
+                'enddate' => $enddate,
+            ];
         }
 
-        return array_slice($rows, 0, max(1, $limit));
+        usort($rows, static function(array $a, array $b): int {
+            if ((int)($a['status_rank'] ?? 0) !== (int)($b['status_rank'] ?? 0)) {
+                return (int)($a['status_rank'] ?? 0) <=> (int)($b['status_rank'] ?? 0);
+            }
+            if ((int)($a['completion'] ?? 0) !== (int)($b['completion'] ?? 0)) {
+                return (int)($b['completion'] ?? 0) <=> (int)($a['completion'] ?? 0);
+            }
+            return strcasecmp((string)($a['module'] ?? ''), (string)($b['module'] ?? ''));
+        });
+
+        if ($limit > 0) {
+            return array_slice($rows, 0, $limit);
+        }
+
+        return $rows;
     }
 
     $schedule = local_admindashboard_get_course_schedule_sections($courseid);
@@ -2063,6 +2089,10 @@ function local_admindashboard_get_schedule_progress_rows(int $courseid, int $lim
             $rows[] = [
                 'module' => (string)$section['module'],
                 'completion' => local_admindashboard_calculate_schedule_progress((int)($section['start'] ?? 0), (int)($section['end'] ?? 0), $now),
+                'status' => 'Module',
+                'status_key' => 'module',
+                'startdate' => (int)($section['start'] ?? 0),
+                'enddate' => (int)($section['end'] ?? 0),
             ];
         }
 
@@ -5919,9 +5949,9 @@ function local_admindashboard_get_metrics(int $courseid, string $department, int
     }
 
     // Schedule-based course progress.
-    // - No course selected: top 5 recent courses by current schedule progress.
+    // - No course selected: all visible courses, sorted with running courses first.
     // - Course selected: section/module progress based on schedule windows.
-    $moduleprogress = local_admindashboard_get_schedule_progress_rows($courseid, 5);
+    $moduleprogress = local_admindashboard_get_schedule_progress_rows($courseid, 0);
     $moduleprogressnames = [];
 
     $now = time();

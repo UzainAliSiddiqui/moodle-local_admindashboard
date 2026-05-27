@@ -313,7 +313,7 @@ $sesskey = sesskey();
                 <div class="admindash-widget-card__header">
                     <div>
                         <h5 class="mb-1">Course Completion</h5>
-                        <div class="text-muted small">Top 5 recent courses, or selected-course modules by schedule progress.</div>
+                        <div class="text-muted small" id="courseProgressMeta">All courses sorted by status. Running courses appear first.</div>
                     </div>
                 </div>
                 <div id="courseProgressWrap" class="admindash-courseprogress">
@@ -507,6 +507,18 @@ function kpiModalShowsCourseEnrolColumn() {
 function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>"']/g, function(ch) {
         return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch] || ch;
+    });
+}
+
+function formatUnixDate(timestamp) {
+    const seconds = Number(timestamp || 0);
+    if (!seconds) {
+        return '';
+    }
+    return new Date(seconds * 1000).toLocaleDateString(undefined, {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
     });
 }
 
@@ -2639,26 +2651,60 @@ function renderActivityFeed(rows, hasCourse) {
 
 function renderCourseProgress(rows, hasCourse) {
     const wrap = document.getElementById('courseProgressWrap');
+    const meta = document.getElementById('courseProgressMeta');
     if (!wrap) {
         return;
     }
 
     const items = Array.isArray(rows) ? rows : [];
+    wrap.classList.toggle('is-course-list', !hasCourse);
     if (!items.length) {
+        if (meta) {
+            meta.textContent = hasCourse ? 'Selected-course modules by schedule progress.' : 'All courses sorted by status. Running courses appear first.';
+        }
         wrap.innerHTML = '<div class="admindash-widget-empty">'
-            + (hasCourse ? 'No course completion data found for the selected filters.' : 'No recent course schedule data found.')
+            + (hasCourse ? 'No course completion data found for the selected filters.' : 'No course schedule data found.')
             + '</div>';
         return;
+    }
+
+    if (meta) {
+        if (hasCourse) {
+            meta.textContent = 'Selected-course modules by schedule progress.';
+        } else {
+            const runningCount = items.filter(function(item) {
+                return String(item.status_key || '').toLowerCase() === 'running';
+            }).length;
+            meta.textContent = numberFmt.format(items.length) + ' courses shown - ' + numberFmt.format(runningCount) + ' running now.';
+        }
     }
 
     wrap.innerHTML = items.map(function(item, index) {
         const label = item.module || item.name || ('Module ' + (index + 1));
         const percent = Math.max(0, Math.min(100, Math.round(Number(item.completion || item.percent || 0))));
+        const statusKey = String(item.status_key || (hasCourse ? 'module' : 'running')).toLowerCase();
+        const statusLabel = item.status || (hasCourse ? 'Module' : 'Running');
+        const startDate = Number(item.startdate || 0);
+        const endDate = Number(item.enddate || 0);
+        const dateParts = [];
+        if (startDate > 0) {
+            dateParts.push('Start ' + formatUnixDate(startDate));
+        }
+        if (endDate > 0) {
+            dateParts.push('End ' + formatUnixDate(endDate));
+        }
+        const metaText = dateParts.join(' - ');
         return ''
-            + '<div class="admindash-courseprogress__item">'
+            + '<div class="admindash-courseprogress__item admindash-courseprogress__item--' + escapeHtml(statusKey) + '">'
             + '<div class="admindash-courseprogress__head">'
+            + '<div class="admindash-courseprogress__main">'
             + '<div class="course-progress-name">' + escapeHtml(label) + '</div>'
+            + (metaText ? '<div class="admindash-courseprogress__meta">' + escapeHtml(metaText) + '</div>' : '')
+            + '</div>'
+            + '<div class="admindash-courseprogress__side">'
+            + '<span class="admindash-courseprogress__status">' + escapeHtml(statusLabel) + '</span>'
             + '<div class="course-progress-percent">' + percent + '%</div>'
+            + '</div>'
             + '</div>'
             + '<div class="admindash-courseprogress__track"><div class="admindash-courseprogress__fill" style="width:' + percent + '%"></div></div>'
             + '</div>';
