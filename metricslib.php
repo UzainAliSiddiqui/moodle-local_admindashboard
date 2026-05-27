@@ -5493,13 +5493,8 @@ function local_admindashboard_get_metrics(int $courseid, string $department, int
         $coursecoverage = (int)($row->coursecount ?? 1);
         $enrollmentcount = (int)($row->enrollmentcount ?? 0);
         $coveragefactor = 1.0;
-        if ($courseid <= 0) {
-            // A one-course department should not look equally "network ready" beside
-            // departments represented across several courses.
-            $coveragefactor = min(1.0, log(1 + max(1, $coursecoverage)) / log(1 + max(2, $maxdepartmentcourses)));
-        }
-        $readinesscompletion = max(0, min(100, (int)round($completionpct * $coveragefactor)));
-        $readinesspass = max(0, min(100, (int)round($passpct * $coveragefactor)));
+        $readinesscompletion = max(0, min(100, $completionpct));
+        $readinesspass = max(0, min(100, $passpct));
         $common = [
             'coursecount' => $coursecoverage,
             'enrollmentcount' => $enrollmentcount,

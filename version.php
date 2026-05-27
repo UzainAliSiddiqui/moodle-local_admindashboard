@@ -17,7 +17,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_admindashboard';
-$plugin->version = 2026052700;
+$plugin->version = 2026052701;
 $plugin->requires = 2022041900; // Moodle 4.0+
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '0.1.2';
+$plugin->release = '0.1.3';

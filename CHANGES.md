@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.3 - 2026-05-27
+
+- Restored department readiness bars to show raw completion/pass percentages instead of coverage-adjusted scores.
+
 ## 0.1.2 - 2026-05-27
 
 - Tightened access checks by moving the dashboard view capability to the system context and using explicit capability validation in the external service.
