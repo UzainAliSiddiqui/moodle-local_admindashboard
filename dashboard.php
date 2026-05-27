@@ -226,6 +226,13 @@ $sesskey = sesskey();
             </div>
             <div id="kpiPassFailPieEmptyMsg" class="text-muted small" style="display:none;margin-top:6px">No pass/fail data yet for the selected filters.</div>
         </div>
+        <div class="admindash-kpi-pie-card__chart-panel">
+            <div class="admindash-kpi-pie-card__chart-title">Enrollment Status</div>
+            <div class="admindash-kpi-pie-card__canvas-wrap">
+                <canvas id="kpiEnrollmentStatusPieChart" height="140"></canvas>
+            </div>
+            <div id="kpiEnrollmentStatusPieEmptyMsg" class="text-muted small" style="display:none;margin-top:6px">No enrollment status data yet for the selected filters.</div>
+        </div>
     </div>
     <div id="kpiPieEmptyMsg" class="text-muted small" style="display:none;margin-top:6px">No KPI data yet for the selected filters.</div>
 </div>
@@ -450,6 +457,7 @@ let enrolChartInstance = null;
 let skillGapChartInstance = null;
 let kpiPieChartInstance = null;
 let kpiPassFailPieChartInstance = null;
+let kpiEnrollmentStatusPieChartInstance = null;
 let feedbackSentimentChartInstance = null;
 let dashboardViewMode = 'overview'; // 'overview' | 'filtered'
 const numberFmt = new Intl.NumberFormat('en-US');
@@ -575,8 +583,10 @@ function renderKpiTrend(slotId, trend) {
 function renderKpiPieChart(data, isQuiz, hasCourse) {
     const canvas = document.getElementById('kpiPieChart');
     const passFailCanvas = document.getElementById('kpiPassFailPieChart');
+    const enrollmentStatusCanvas = document.getElementById('kpiEnrollmentStatusPieChart');
     const empty = document.getElementById('kpiPieEmptyMsg');
     const passFailEmpty = document.getElementById('kpiPassFailPieEmptyMsg');
+    const enrollmentStatusEmpty = document.getElementById('kpiEnrollmentStatusPieEmptyMsg');
     if (!canvas) {
         return;
     }
@@ -639,10 +649,17 @@ function renderKpiPieChart(data, isQuiz, hasCourse) {
         kpiPassFailPieChartInstance.destroy();
         kpiPassFailPieChartInstance = null;
     }
+    if (kpiEnrollmentStatusPieChartInstance) {
+        kpiEnrollmentStatusPieChartInstance.destroy();
+        kpiEnrollmentStatusPieChartInstance = null;
+    }
 
     if (!hasValues) {
         if (passFailEmpty) {
             passFailEmpty.style.display = 'block';
+        }
+        if (enrollmentStatusEmpty) {
+            enrollmentStatusEmpty.style.display = 'block';
         }
         return;
     }
@@ -782,6 +799,72 @@ function renderKpiPieChart(data, isQuiz, hasCourse) {
                             label: function(context) {
                                 const value = Number(context.parsed || 0);
                                 const percent = passFailTotal > 0 ? ((value / passFailTotal) * 100).toFixed(1) : '0.0';
+                                return `${context.label}: ${numberFmt.format(value)} (${percent}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    const totalEnrollmentRecords = Number(data.total_enrollments || data.participants || 0);
+    const notStarted = Math.max(0, Number(notAttVal || 0));
+    const resigned = Math.max(0, Number(data.resigned_midcourse || 0));
+    const startedActive = Math.max(0, totalEnrollmentRecords - notStarted);
+    const enrollmentStatusValues = [startedActive, notStarted, resigned];
+    const enrollmentStatusLabels = [
+        hasCourse ? 'Started / Active' : 'Started Enrollments',
+        'Not Started',
+        'Resigned / Suspended'
+    ];
+    const enrollmentStatusColors = ['#10b981', '#ef4444', '#f97316'];
+    const enrollmentStatusHasValues = enrollmentStatusValues.some(function(value) {
+        return Number(value) > 0;
+    });
+    const enrollmentStatusTotal = enrollmentStatusValues.reduce(function(sum, value) {
+        return sum + Number(value || 0);
+    }, 0);
+
+    if (enrollmentStatusEmpty) {
+        enrollmentStatusEmpty.style.display = enrollmentStatusHasValues ? 'none' : 'block';
+    }
+
+    if (enrollmentStatusCanvas && enrollmentStatusHasValues) {
+        kpiEnrollmentStatusPieChartInstance = new Chart(enrollmentStatusCanvas.getContext('2d'), {
+            type: 'pie',
+            plugins: [piePercentLabelsPlugin],
+            data: {
+                labels: enrollmentStatusLabels,
+                datasets: [{
+                    data: enrollmentStatusValues,
+                    backgroundColor: enrollmentStatusColors,
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 14,
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            font: {
+                                size: 12,
+                                weight: '700'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = Number(context.parsed || 0);
+                                const percent = enrollmentStatusTotal > 0 ? ((value / enrollmentStatusTotal) * 100).toFixed(1) : '0.0';
                                 return `${context.label}: ${numberFmt.format(value)} (${percent}%)`;
                             }
                         }

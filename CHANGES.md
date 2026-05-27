@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.6 - 2026-05-27
+
+- Added an Enrollment Status pie chart to KPI Distribution using existing dashboard metrics.
+
 ## 0.1.5 - 2026-05-27
 
 - Aligned overview KPI drill-down rows with KPI card counts.

@@ -336,7 +336,7 @@ body.admindash-page.admindash-theme-dark .admindash-module-hero:after{background
 @media(max-width:700px){.admindash-filters{padding:10px 12px}.admindash-filters__sep{display:none}.admindash-filters__header{padding-right:0;width:100%}.admindash-filters__fields{gap:8px}.admindash-filter-group{min-width:calc(50% - 4px);max-width:none;flex:1 1 calc(50% - 4px)}.admindash-filters__reset{margin-left:0;margin-top:2px;width:100%;justify-content:center}}
 .admindash-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;margin-top:18px;}
 .admindash-kpi-pie-card{margin-top:18px;border:1px solid var(--ad-border);box-shadow:var(--ad-shadow-soft);padding:18px !important}
-.admindash-kpi-pie-card__charts{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:18px;margin-top:10px;align-items:stretch}
+.admindash-kpi-pie-card__charts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:10px;align-items:stretch}
 .admindash-kpi-pie-card__chart-panel{min-width:0}
 .admindash-kpi-pie-card__chart-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--ad-muted)}
 .admindash-kpi-pie-card__canvas-wrap{position:relative;min-height:320px;margin-top:10px}
