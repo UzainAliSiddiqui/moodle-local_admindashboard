@@ -1,5 +1,9 @@
 # Admin dashboard changes
 
+## 0.1.16 - 2026-05-27
+
+- Prevented Course Completion rows from shrinking inside the scrollable container.
+
 ## 0.1.15 - 2026-05-27
 
 - Calculated Course Completion height from Live Feed content height instead of stretched grid height.

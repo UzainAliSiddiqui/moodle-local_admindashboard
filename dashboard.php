@@ -2722,7 +2722,14 @@ function syncCourseCompletionHeight() {
         progressCard.style.setProperty('align-self', 'start', 'important');
         progressWrap.style.setProperty('height', progressBodyHeight + 'px', 'important');
         progressWrap.style.setProperty('max-height', progressBodyHeight + 'px', 'important');
+        progressWrap.style.setProperty('align-items', 'stretch', 'important');
+        progressWrap.style.setProperty('gap', '10px', 'important');
         progressWrap.style.setProperty('overflow-y', 'scroll', 'important');
+
+        progressWrap.querySelectorAll('.admindash-courseprogress__item').forEach(function(item) {
+            item.style.setProperty('flex', '0 0 auto', 'important');
+            item.style.setProperty('min-height', '78px', 'important');
+        });
     });
 }
 

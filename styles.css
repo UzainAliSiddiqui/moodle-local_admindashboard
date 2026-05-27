@@ -292,10 +292,10 @@ body.admindash-page.admindash-theme-dark .admindash-module-hero:after{background
 .admindash-livefeed__line{color:var(--ad-text);font-size:13px;line-height:1.45}
 .admindash-livefeed__line strong{font-weight:900}
 .admindash-livefeed__meta{color:var(--ad-muted);font-size:12px;line-height:1.35}
-.admindash-courseprogress{display:flex;flex-direction:column;gap:10px;min-height:0}
+.admindash-courseprogress{display:flex;flex-direction:column;gap:10px;min-height:0;align-items:stretch}
 #courseProgressWrap{padding-right:4px;scrollbar-width:thin;overflow-y:scroll}
 #courseProgressWrap.is-course-list{min-height:0}
-.admindash-courseprogress__item{position:relative;padding:12px 13px;border:1px solid rgba(148,163,184,.20);border-radius:8px;background:#fff;box-shadow:0 8px 18px rgba(15,23,42,.035);overflow:hidden}
+.admindash-courseprogress__item{position:relative;flex:0 0 auto;min-height:78px;padding:12px 13px;border:1px solid rgba(148,163,184,.20);border-radius:8px;background:#fff;box-shadow:0 8px 18px rgba(15,23,42,.035);overflow:hidden}
 .admindash-courseprogress__item::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#64748b}
 .admindash-courseprogress__item--running::before{background:#16a34a}
 .admindash-courseprogress__item--upcoming::before{background:#2563eb}
