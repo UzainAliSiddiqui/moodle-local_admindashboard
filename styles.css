@@ -215,16 +215,21 @@ body.admindash-fullscreen #page {
 .admindash-admin-user__name:hover{text-decoration:none;color:var(--ad-accent)}
 .admindash-admin-badges{display:flex;flex-wrap:wrap;gap:6px}
 .admindash-admin-badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.02em;border:1px solid transparent;line-height:1.2}
-.admindash-admin-badge.is-success{background:rgba(22,163,74,.10);color:#166534;border-color:rgba(22,163,74,.18)}
-.admindash-admin-badge.is-danger{background:rgba(220,38,38,.10);color:#991b1b;border-color:rgba(220,38,38,.18)}
-.admindash-admin-badge.is-warn{background:rgba(245,158,11,.12);color:#9a6700;border-color:rgba(245,158,11,.2)}
-.admindash-admin-badge.is-info{background:rgba(59,130,246,.10);color:#1d4ed8;border-color:rgba(59,130,246,.18)}
+.admindash-admin-badge.is-success{background:#dcfce7;color:#14532d;border-color:#86efac}
+.admindash-admin-badge.is-danger{background:#fee2e2;color:#7f1d1d;border-color:#fca5a5}
+.admindash-admin-badge.is-warn{background:#fef3c7;color:#78350f;border-color:#fbbf24}
+.admindash-admin-badge.is-info{background:#dbeafe;color:#1e3a8a;border-color:#93c5fd}
 .admindash-admin-actions-inline{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;font-weight:700}
 .admindash-admin-actions-inline a{text-decoration:none;color:var(--ad-accent)}
 .admindash-admin-actions-inline a:hover{text-decoration:underline}
-.admindash-admin-table{--bs-table-color:var(--ad-text);--bs-table-bg:var(--ad-surface);--bs-table-border-color:var(--ad-border);--bs-table-striped-bg:rgba(59,130,246,.04);--bs-table-striped-color:var(--ad-text);--bs-table-hover-bg:rgba(59,130,246,.08);--bs-table-hover-color:var(--ad-text);color:var(--ad-text);background:var(--ad-surface);margin-bottom:0}
+.admindash-admin-table{--bs-table-color:var(--ad-text);--bs-table-bg:var(--ad-surface);--bs-table-border-color:var(--ad-border);--bs-table-striped-bg:var(--ad-surface-2);--bs-table-striped-color:var(--ad-text);--bs-table-hover-bg:rgba(59,130,246,.08);--bs-table-hover-color:var(--ad-text);color:var(--ad-text);background:var(--ad-surface);margin-bottom:0}
+.admindash-admin-table > :not(caption) > * > *{color:var(--ad-text);background-color:var(--ad-surface);border-color:var(--ad-border);box-shadow:none}
 .admindash-admin-table thead th{background:var(--ad-tablehead-bg);color:var(--ad-tablehead-text);border-bottom:1px solid var(--ad-border);white-space:nowrap}
-.admindash-admin-table tbody td{color:var(--ad-text);background:transparent;border-color:var(--ad-border);vertical-align:middle}
+.admindash-admin-table tbody td{color:var(--ad-text);background-color:var(--ad-surface);border-color:var(--ad-border);vertical-align:middle}
+.admindash-admin-table.table-striped > tbody > tr:nth-of-type(odd) > *{color:var(--ad-text);background-color:var(--ad-surface-2);box-shadow:none}
+.admindash-admin-table.table-hover > tbody > tr:hover > *{color:var(--ad-text);background-color:rgba(59,130,246,.08);box-shadow:none}
+.admindash-admin-table a{color:#1d4ed8;font-weight:800}
+.admindash-admin-table a:hover{color:#1e40af}
 .admindash-workspace-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;padding-top:18px;border-top:1px solid rgba(148,163,184,.18);position:relative;z-index:1}
 .admindash-workspace-tab{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;background:rgba(15,23,42,.05);border:1px solid rgba(148,163,184,.18);color:var(--ad-text);text-decoration:none;font-size:13px;font-weight:800;letter-spacing:.02em;transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease}
 .admindash-workspace-tab:hover{text-decoration:none;background:rgba(15,118,110,.08);border-color:rgba(15,118,110,.16);color:#0f766e;transform:translateY(-1px)}
@@ -242,14 +247,19 @@ body.admindash-fullscreen #page {
 .admindash-admin-table td .admindash-admin-note{margin-top:4px}
 
 body.admindash-page.admindash-theme-dark .admindash-admin-list li{background:rgba(255,255,255,.03)}
-body.admindash-page.admindash-theme-dark .admindash-admin-badge.is-success{background:rgba(34,197,94,.16);color:#86efac;border-color:rgba(34,197,94,.22)}
-body.admindash-page.admindash-theme-dark .admindash-admin-badge.is-danger{background:rgba(239,68,68,.16);color:#fca5a5;border-color:rgba(239,68,68,.22)}
-body.admindash-page.admindash-theme-dark .admindash-admin-badge.is-warn{background:rgba(245,158,11,.16);color:#fde68a;border-color:rgba(245,158,11,.22)}
-body.admindash-page.admindash-theme-dark .admindash-admin-badge.is-info{background:rgba(59,130,246,.18);color:#bfdbfe;border-color:rgba(59,130,246,.24)}
+body.admindash-page.admindash-theme-dark .admindash-admin-badge.is-success{background:#064e3b;color:#bbf7d0;border-color:#34d399}
+body.admindash-page.admindash-theme-dark .admindash-admin-badge.is-danger{background:#7f1d1d;color:#fee2e2;border-color:#f87171}
+body.admindash-page.admindash-theme-dark .admindash-admin-badge.is-warn{background:#78350f;color:#fef3c7;border-color:#f59e0b}
+body.admindash-page.admindash-theme-dark .admindash-admin-badge.is-info{background:#1e3a8a;color:#dbeafe;border-color:#60a5fa}
 body.admindash-page.admindash-theme-dark .admindash-admin-user__name{color:#eaf0ff}
-body.admindash-page.admindash-theme-dark .admindash-admin-table{--bs-table-color:#eaf0ff;--bs-table-bg:#0f172a;--bs-table-border-color:rgba(255,255,255,.10);--bs-table-striped-bg:rgba(148,163,184,.08);--bs-table-striped-color:#eaf0ff;--bs-table-hover-bg:rgba(59,130,246,.14);--bs-table-hover-color:#ffffff;background:var(--ad-surface)}
+body.admindash-page.admindash-theme-dark .admindash-admin-table{--bs-table-color:#eaf0ff;--bs-table-bg:#0f172a;--bs-table-border-color:rgba(255,255,255,.10);--bs-table-striped-bg:#111c33;--bs-table-striped-color:#eaf0ff;--bs-table-hover-bg:#172544;--bs-table-hover-color:#ffffff;background:#0f172a}
+body.admindash-page.admindash-theme-dark .admindash-admin-table > :not(caption) > * > *{color:#eaf0ff !important;background-color:#0f172a !important;border-color:rgba(255,255,255,.10);box-shadow:none !important}
 body.admindash-page.admindash-theme-dark .admindash-admin-table thead th{background:#0e1730;color:#eaf0ff;border-bottom-color:var(--ad-border)}
-body.admindash-page.admindash-theme-dark .admindash-admin-table tbody td{color:#eaf0ff !important;background:transparent !important;border-color:var(--ad-border)}
+body.admindash-page.admindash-theme-dark .admindash-admin-table tbody td{color:#eaf0ff !important;background-color:#0f172a !important;border-color:var(--ad-border)}
+body.admindash-page.admindash-theme-dark .admindash-admin-table.table-striped > tbody > tr:nth-of-type(odd) > *{color:#eaf0ff !important;background-color:#111c33 !important;box-shadow:none !important}
+body.admindash-page.admindash-theme-dark .admindash-admin-table.table-hover > tbody > tr:hover > *{color:#ffffff !important;background-color:#172544 !important;box-shadow:none !important}
+body.admindash-page.admindash-theme-dark .admindash-admin-table a{color:#93c5fd}
+body.admindash-page.admindash-theme-dark .admindash-admin-table a:hover{color:#bfdbfe}
 body.admindash-page.admindash-theme-dark .admindash-workspace-tab{background:rgba(255,255,255,.05);border-color:rgba(148,163,184,.18);color:#eaf0ff}
 body.admindash-page.admindash-theme-dark .admindash-workspace-tab:hover{background:rgba(45,212,191,.12);border-color:rgba(45,212,191,.2);color:#99f6e4}
 body.admindash-page.admindash-theme-dark .admindash-workspace-tab.active{background:linear-gradient(135deg,#0f766e 0%,#14b8a6 100%);color:#ffffff}
@@ -525,18 +535,31 @@ body.admindash-page.admindash-theme-dark .admindash-kpi-placeholder__ico{backgro
 .admindash-risk-detail-heading{font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--ad-muted);margin-bottom:8px}
 .admindash-risk-detail-list{margin:0;padding-left:18px;color:var(--ad-text)}
 .admindash-risk-detail-list li + li{margin-top:6px}
-#atRiskTable{--bs-table-color:var(--ad-text);--bs-table-bg:var(--ad-surface);--bs-table-border-color:var(--ad-border);--bs-table-striped-bg:rgba(59,130,246,.04);--bs-table-striped-color:var(--ad-text);--bs-table-hover-bg:rgba(59,130,246,.08);--bs-table-hover-color:var(--ad-text);color:var(--ad-text);background:var(--ad-surface)}
-#atRiskTable thead th{background:var(--ad-tablehead-bg);color:var(--ad-tablehead-text);border-bottom:1px solid var(--ad-border)}
-#atRiskTable tbody td{color:var(--ad-text);background:transparent;border-color:var(--ad-border)}
-#atRiskTable tbody tr{background:transparent}
-#atRiskTable tbody tr:nth-of-type(odd){background:rgba(59,130,246,.04)}
-#atRiskTable tbody tr:hover{background:rgba(59,130,246,.08)}
+#atRiskTable,
+#kpiUsersTable{--bs-table-color:var(--ad-text);--bs-table-bg:var(--ad-surface);--bs-table-border-color:var(--ad-border);--bs-table-striped-bg:var(--ad-surface-2);--bs-table-striped-color:var(--ad-text);--bs-table-hover-bg:rgba(59,130,246,.08);--bs-table-hover-color:var(--ad-text);color:var(--ad-text);background:var(--ad-surface)}
+#atRiskTable > :not(caption) > * > *,
+#kpiUsersTable > :not(caption) > * > *{color:var(--ad-text);background-color:var(--ad-surface);border-color:var(--ad-border);box-shadow:none}
+#atRiskTable thead th,
+#kpiUsersTable thead th{background:var(--ad-tablehead-bg);color:var(--ad-tablehead-text);border-bottom:1px solid var(--ad-border)}
+#atRiskTable tbody td,
+#kpiUsersTable tbody td{color:var(--ad-text);background-color:var(--ad-surface);border-color:var(--ad-border)}
+#atRiskTable.table-striped > tbody > tr:nth-of-type(odd) > *,
+#kpiUsersTable.table-striped > tbody > tr:nth-of-type(odd) > *{color:var(--ad-text);background-color:var(--ad-surface-2);box-shadow:none}
+#atRiskTable.table-hover > tbody > tr:hover > *,
+#kpiUsersTable.table-hover > tbody > tr:hover > *{color:var(--ad-text);background-color:rgba(59,130,246,.08);box-shadow:none}
 body.admindash-page.admindash-theme-dark .admindash-risk-reason{background:rgba(220,38,38,.18);color:#fecaca}
-body.admindash-page.admindash-theme-dark #atRiskTable{--bs-table-color:#eaf0ff;--bs-table-bg:#0f172a;--bs-table-border-color:rgba(255,255,255,.10);--bs-table-striped-bg:rgba(148,163,184,.08);--bs-table-striped-color:#eaf0ff;--bs-table-hover-bg:rgba(59,130,246,.14);--bs-table-hover-color:#ffffff;color:var(--ad-text);background:var(--ad-surface)}
-body.admindash-page.admindash-theme-dark #atRiskTable thead th{background:#0e1730;color:#eaf0ff;border-bottom-color:var(--ad-border)}
-body.admindash-page.admindash-theme-dark #atRiskTable tbody td{color:#eaf0ff !important;background:transparent !important;border-color:var(--ad-border)}
-body.admindash-page.admindash-theme-dark #atRiskTable tbody tr:nth-of-type(odd){background:rgba(148,163,184,.08)}
-body.admindash-page.admindash-theme-dark #atRiskTable tbody tr:hover{background:rgba(59,130,246,.14)}
+body.admindash-page.admindash-theme-dark #atRiskTable,
+body.admindash-page.admindash-theme-dark #kpiUsersTable{--bs-table-color:#eaf0ff;--bs-table-bg:#0f172a;--bs-table-border-color:rgba(255,255,255,.10);--bs-table-striped-bg:#111c33;--bs-table-striped-color:#eaf0ff;--bs-table-hover-bg:#172544;--bs-table-hover-color:#ffffff;color:#eaf0ff;background:#0f172a}
+body.admindash-page.admindash-theme-dark #atRiskTable > :not(caption) > * > *,
+body.admindash-page.admindash-theme-dark #kpiUsersTable > :not(caption) > * > *{color:#eaf0ff !important;background-color:#0f172a !important;border-color:rgba(255,255,255,.10);box-shadow:none !important}
+body.admindash-page.admindash-theme-dark #atRiskTable thead th,
+body.admindash-page.admindash-theme-dark #kpiUsersTable thead th{background:#0e1730;color:#eaf0ff;border-bottom-color:var(--ad-border)}
+body.admindash-page.admindash-theme-dark #atRiskTable tbody td,
+body.admindash-page.admindash-theme-dark #kpiUsersTable tbody td{color:#eaf0ff !important;background-color:#0f172a !important;border-color:var(--ad-border)}
+body.admindash-page.admindash-theme-dark #atRiskTable.table-striped > tbody > tr:nth-of-type(odd) > *,
+body.admindash-page.admindash-theme-dark #kpiUsersTable.table-striped > tbody > tr:nth-of-type(odd) > *{color:#eaf0ff !important;background-color:#111c33 !important;box-shadow:none !important}
+body.admindash-page.admindash-theme-dark #atRiskTable.table-hover > tbody > tr:hover > *,
+body.admindash-page.admindash-theme-dark #kpiUsersTable.table-hover > tbody > tr:hover > *{color:#ffffff !important;background-color:#172544 !important;box-shadow:none !important}
 body.admindash-page.admindash-theme-dark .admindash-risk-score,
 body.admindash-page.admindash-theme-dark #atRiskMeta,
 body.admindash-page.admindash-theme-dark #atRiskReminderStatus{color:#cbd5e1 !important}
@@ -742,32 +765,40 @@ body.admindash-page.admindash-theme-dark .admindash-risk-detail-card{
 	color:#0b1b3d;
 }
 body.admindash-page.admindash-theme-dark #atRiskTable{
-	--bs-table-color:#0b1b3d;
-	--bs-table-bg:#ffffff;
-	--bs-table-border-color:#e7edf7;
-	--bs-table-striped-bg:rgba(59,130,246,.04);
-	--bs-table-striped-color:#0b1b3d;
-	--bs-table-hover-bg:rgba(59,130,246,.08);
-	--bs-table-hover-color:#0b1b3d;
-	color:#0b1b3d;
-	background:#ffffff;
+	--bs-table-color:#eaf0ff;
+	--bs-table-bg:#0f172a;
+	--bs-table-border-color:rgba(255,255,255,.10);
+	--bs-table-striped-bg:#111c33;
+	--bs-table-striped-color:#eaf0ff;
+	--bs-table-hover-bg:#172544;
+	--bs-table-hover-color:#ffffff;
+	color:#eaf0ff;
+	background:#0f172a;
 }
 body.admindash-page.admindash-theme-dark #atRiskTable thead th{
-	background:#f3f6fb;
-	color:#0b1b3d;
-	border-bottom-color:#e7edf7;
+	background:#0e1730;
+	color:#eaf0ff;
+	border-bottom-color:rgba(255,255,255,.10);
 }
 body.admindash-page.admindash-theme-dark #atRiskTable tbody td{
-	color:#0b1b3d !important;
-	background:transparent !important;
-	border-color:#e7edf7;
+	color:#eaf0ff !important;
+	background-color:#0f172a !important;
+	border-color:rgba(255,255,255,.10);
+	box-shadow:none !important;
 }
 
-table.table.admindash-card{background:var(--ad-surface);border-radius:14px;overflow:hidden;border:1px solid var(--ad-border);box-shadow:var(--ad-shadow-soft)}
+table.table.admindash-card{--bs-table-color:var(--ad-text);--bs-table-bg:var(--ad-surface);--bs-table-border-color:var(--ad-border);--bs-table-striped-bg:var(--ad-surface-2);--bs-table-striped-color:var(--ad-text);--bs-table-hover-bg:rgba(59,130,246,.08);--bs-table-hover-color:var(--ad-text);background:var(--ad-surface);border-radius:14px;overflow:hidden;border:1px solid var(--ad-border);box-shadow:var(--ad-shadow-soft)}
 table.table.admindash-card{color:var(--ad-text)}
+table.table.admindash-card > :not(caption) > * > *{color:var(--ad-text);background-color:var(--ad-surface);border-color:var(--ad-border);box-shadow:none}
 table.table.admindash-card th,table.table.admindash-card td{padding:.85rem 1rem;vertical-align:middle}
 table.table.admindash-card thead th{background:var(--ad-tablehead-bg);color:var(--ad-tablehead-text);font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--ad-border)}
-table.table.admindash-card tbody tr:hover{background:rgba(59,130,246,.06)}
+table.table.admindash-card.table-striped > tbody > tr:nth-of-type(odd) > *{color:var(--ad-text);background-color:var(--ad-surface-2);box-shadow:none}
+table.table.admindash-card.table-hover > tbody > tr:hover > *{color:var(--ad-text);background-color:rgba(59,130,246,.08);box-shadow:none}
+body.admindash-page.admindash-theme-dark table.table.admindash-card{--bs-table-color:#eaf0ff;--bs-table-bg:#0f172a;--bs-table-border-color:rgba(255,255,255,.10);--bs-table-striped-bg:#111c33;--bs-table-striped-color:#eaf0ff;--bs-table-hover-bg:#172544;--bs-table-hover-color:#ffffff;background:#0f172a;color:#eaf0ff;border-color:rgba(255,255,255,.10)}
+body.admindash-page.admindash-theme-dark table.table.admindash-card > :not(caption) > * > *{color:#eaf0ff !important;background-color:#0f172a !important;border-color:rgba(255,255,255,.10);box-shadow:none !important}
+body.admindash-page.admindash-theme-dark table.table.admindash-card thead th{background:#0e1730;color:#eaf0ff;border-bottom-color:rgba(255,255,255,.10)}
+body.admindash-page.admindash-theme-dark table.table.admindash-card.table-striped > tbody > tr:nth-of-type(odd) > *{color:#eaf0ff !important;background-color:#111c33 !important;box-shadow:none !important}
+body.admindash-page.admindash-theme-dark table.table.admindash-card.table-hover > tbody > tr:hover > *{color:#ffffff !important;background-color:#172544 !important;box-shadow:none !important}
 
 body.admindash-modal-open{overflow:hidden}
 #kpiUsersModal{display:none;position:fixed;inset:0;z-index:10050;background:rgba(15,23,42,.48);padding:24px;overflow:auto;opacity:0}
