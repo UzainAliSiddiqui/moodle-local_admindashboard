@@ -45,7 +45,7 @@ $profilefilled = count(array_filter($profilefields, static function(string $valu
 $profilereadiness = (int)round(($profilefilled / max(count($profilefields), 1)) * 100);
 
 $rolerows = $DB->get_records_sql(
-	"SELECT DISTINCT r.id, r.name, r.shortname
+	"SELECT DISTINCT r.id, r.name, r.shortname, r.sortorder
 	   FROM {role_assignments} ra
 	   JOIN {role} r ON r.id = ra.roleid
 	  WHERE ra.userid = :userid

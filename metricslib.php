@@ -5362,7 +5362,7 @@ function local_admindashboard_get_metrics(int $courseid, string $department, int
                                                                  {$pendingmodulefilter}
                                                                  AND {$userwhere}
                                                         GROUP BY cm.id
-                                                            HAVING completed < participants
+                                                            HAVING COUNT(DISTINCT CASE WHEN cmc.completionstate IS NOT NULL AND cmc.completionstate > 0 THEN u.id END) < COUNT(DISTINCT u.id)
                                                  ) t";
                 $pendingmodules = (int)$DB->count_records_sql($pendingsql, $pendingparams);
         } else {
@@ -5384,7 +5384,7 @@ function local_admindashboard_get_metrics(int $courseid, string $department, int
                                            {$pendingmodulefilter}
                                            AND {$userwhere}
                                       GROUP BY cm.id
-                                        HAVING completed < participants
+                                        HAVING COUNT(DISTINCT CASE WHEN cmc.completionstate IS NOT NULL AND cmc.completionstate > 0 THEN u.id END) < COUNT(DISTINCT u.id)
                                        ) t";
                 $pendingmodules = (int)$DB->count_records_sql($pendingsql, $pendingparams);
         }
@@ -5828,8 +5828,7 @@ function local_admindashboard_get_metrics(int $courseid, string $department, int
         $esparams['courseid'] = $courseid;
     }
 
-    $essql = "SELECT FROM_UNIXTIME(ue.timecreated, '%Y-%m-%d') AS day,
-                     COUNT(DISTINCT ue.userid) AS cnt
+    $essql = "SELECT ue.userid, ue.timecreated
                 FROM {user_enrolments} ue
                 JOIN {enrol} e ON e.id = ue.enrolid AND e.status = 0
                 JOIN {course} c ON c.id = e.courseid AND c.visible = 1 AND c.id > 1
@@ -5837,19 +5836,19 @@ function local_admindashboard_get_metrics(int $courseid, string $department, int
                WHERE ue.status = 0
                  AND ue.timecreated >= :since
                  {$escoursefilter}
-                 AND {$userwhere}
-            GROUP BY day
-            ORDER BY day ASC";
-    $rows = $DB->get_records_sql($essql, $esparams);
+                 AND {$userwhere}";
+    $rows = $DB->get_recordset_sql($essql, $esparams);
 
-    $daily = [];
+    $dailyusers = [];
     foreach ($rows as $r) {
-        $daily[$r->day] = (int)$r->cnt;
+        $day = userdate((int)$r->timecreated, '%Y-%m-%d', 99, false);
+        $dailyusers[$day][(int)$r->userid] = true;
     }
+    $rows->close();
 
     for ($i = 13; $i >= 0; $i--) {
         $day = date('Y-m-d', strtotime('-' . $i . ' days'));
-        $enrolseries[] = ['day' => $day, 'count' => $daily[$day] ?? 0];
+        $enrolseries[] = ['day' => $day, 'count' => isset($dailyusers[$day]) ? count($dailyusers[$day]) : 0];
     }
 
     // Content engagement: SuperVideo watch time + PDF views over the last 30 days.
@@ -5878,8 +5877,7 @@ function local_admindashboard_get_metrics(int $courseid, string $department, int
             $svparams['sv_cmid'] = $moduleid;
         }
 
-        $svsql = "SELECT FROM_UNIXTIME(sv.timemodified, '%Y-%m-%d') AS day,
-                         SUM(COALESCE(sv.currenttime, 0)) AS seconds
+        $svsql = "SELECT sv.timemodified, COALESCE(sv.currenttime, 0) AS seconds
                     FROM {supervideo_view} sv
                     JOIN {course_modules} cm ON cm.id = sv.cm_id
                     JOIN {modules} m ON m.id = cm.module AND m.name = 'supervideo'
@@ -5888,15 +5886,15 @@ function local_admindashboard_get_metrics(int $courseid, string $department, int
                    WHERE sv.timemodified >= :since_sv
                      AND sv.percent IS NOT NULL AND sv.percent > 0
                      {$svcoursefilter}
-                     AND {$userwhere}
-                GROUP BY day
-                ORDER BY day ASC";
+                     AND {$userwhere}";
 
-        $svrows = $DB->get_records_sql($svsql, $svparams);
+        $svrows = $DB->get_recordset_sql($svsql, $svparams);
         $svdaily = [];
         foreach ($svrows as $r) {
-            $svdaily[$r->day] = (int)($r->seconds ?? 0);
+            $day = userdate((int)$r->timemodified, '%Y-%m-%d', 99, false);
+            $svdaily[$day] = ($svdaily[$day] ?? 0) + (int)($r->seconds ?? 0);
         }
+        $svrows->close();
         for ($i = $engagementdays - 1; $i >= 0; $i--) {
             $day = date('Y-m-d', strtotime('-' . $i . ' days'));
             $supervideowatchseries[] = ['day' => $day, 'seconds' => $svdaily[$day] ?? 0];
@@ -5928,8 +5926,7 @@ function local_admindashboard_get_metrics(int $courseid, string $department, int
         }
         $pvparams['pv_pdfextension'] = '%.pdf';
 
-                $pvsql = "SELECT FROM_UNIXTIME(l.timecreated, '%Y-%m-%d') AS day,
-                                                 COUNT(1) AS views
+                $pvsql = "SELECT l.timecreated
                                         FROM {logstore_standard_log} l
                                         JOIN {context} ctx ON ctx.id = l.contextid AND ctx.contextlevel = 70
                                         JOIN {course_modules} cm ON cm.id = ctx.instanceid
@@ -5949,15 +5946,15 @@ function local_admindashboard_get_metrics(int $courseid, string $department, int
                                                         AND f.filearea = 'content'
                                                         AND f.filename <> '.'
                                                         AND (f.mimetype = 'application/pdf' OR LOWER(f.filename) LIKE :pv_pdfextension)
-                                         )
-                                GROUP BY day
-                                ORDER BY day ASC";
+                                         )";
 
-        $pvrows = $DB->get_records_sql($pvsql, $pvparams);
+        $pvrows = $DB->get_recordset_sql($pvsql, $pvparams);
         $pvdaily = [];
         foreach ($pvrows as $r) {
-            $pvdaily[$r->day] = (int)($r->views ?? 0);
+            $day = userdate((int)$r->timecreated, '%Y-%m-%d', 99, false);
+            $pvdaily[$day] = ($pvdaily[$day] ?? 0) + 1;
         }
+        $pvrows->close();
         for ($i = $engagementdays - 1; $i >= 0; $i--) {
             $day = date('Y-m-d', strtotime('-' . $i . ' days'));
             $pdfviewseries[] = ['day' => $day, 'views' => $pvdaily[$day] ?? 0];

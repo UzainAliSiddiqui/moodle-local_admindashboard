@@ -134,7 +134,7 @@ $rolesbyuser = [];
 if (!empty($userids)) {
 	list($userinsql, $userinparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'uid');
 	$rolerows = $DB->get_records_sql(
-		"SELECT DISTINCT ra.userid, r.name, r.shortname
+		"SELECT ra.id AS assignmentid, ra.userid, r.name, r.shortname, r.sortorder
 		   FROM {role_assignments} ra
 		   JOIN {role} r ON r.id = ra.roleid
 		  WHERE ra.userid {$userinsql}

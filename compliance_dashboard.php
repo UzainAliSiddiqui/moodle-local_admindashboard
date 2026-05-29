@@ -122,7 +122,7 @@ if ($certunion['available']) {
 				SUM(CASE
 					WHEN issued.latestissuedat > 0
 					 AND issued.latestissuedat > :readythreshold
-					 AND issued.latestissuedat <= :watchthreshold
+					 AND issued.latestissuedat <= :watchthresholdready
 					 AND issued.lastaccess >= :activecutoff
 					THEN 1 ELSE 0 END) AS readycount,
 				SUM(CASE
@@ -133,7 +133,7 @@ if ($certunion['available']) {
 					 AND (
 						issued.latestissuedat <= :riskthreshold
 						OR (
-							issued.latestissuedat <= :watchthreshold
+							issued.latestissuedat <= :watchthresholdrisk
 							AND (issued.lastaccess = 0 OR issued.lastaccess < :activecutoff2)
 						)
 					 )
@@ -141,7 +141,8 @@ if ($certunion['available']) {
 		   FROM ({$issuedsubsql}) issued",
 		[
 			'readythreshold' => $now - (365 * DAYSECS),
-			'watchthreshold' => $now - (300 * DAYSECS),
+			'watchthresholdready' => $now - (300 * DAYSECS),
+			'watchthresholdrisk' => $now - (300 * DAYSECS),
 			'riskthreshold' => $now - (365 * DAYSECS),
 			'activecutoff' => $now - (90 * DAYSECS),
 			'activecutoff2' => $now - (90 * DAYSECS),
