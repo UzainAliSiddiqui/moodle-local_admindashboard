@@ -22,7 +22,6 @@ local_admindashboard_setup_page('/local/admindashboard/system_config.php', 'Syst
 local_admindashboard_render_header('platform.config');
 
 $tabs = local_admindashboard_get_platform_settings_suite_tabs();
-$pluginmanager = \core_plugin_manager::instance();
 $dbmanager = $DB->get_manager();
 
 $coreconfigcount = (int)$DB->count_records('config');
@@ -35,16 +34,20 @@ $enrolcount = count($enabledenrols);
 $totalscheduledtasks = 0;
 $disabledscheduledtasks = 0;
 $customisedscheduledtasks = 0;
-if (class_exists('\core\task\manager')) {
-	foreach (\core\task\manager::get_all_scheduled_tasks() as $task) {
-		$totalscheduledtasks++;
-		if (method_exists($task, 'get_disabled') && $task->get_disabled()) {
-			$disabledscheduledtasks++;
-		}
-		if (method_exists($task, 'is_customised') && $task->is_customised()) {
-			$customisedscheduledtasks++;
-		}
+$pluginmanagercount = 0;
+if ($dbmanager->table_exists(new xmldb_table('task_scheduled'))) {
+	$totalscheduledtasks = (int)$DB->count_records('task_scheduled');
+	$disabledscheduledtasks = (int)$DB->count_records('task_scheduled', ['disabled' => 1]);
+	if ($dbmanager->field_exists(new xmldb_table('task_scheduled'), 'customised')) {
+		$customisedscheduledtasks = (int)$DB->count_records('task_scheduled', ['customised' => 1]);
 	}
+}
+
+try {
+	$pluginmanager = \core_plugin_manager::instance();
+	$pluginmanagercount = count($pluginmanager->get_plugins());
+} catch (Throwable $e) {
+	$pluginmanagercount = 0;
 }
 
 $externalservicescount = 0;
@@ -150,7 +153,7 @@ $quickdestinations = [
 $pluginmix = [
 	['label' => 'Enabled auth plugins', 'value' => $authcount . ' active', 'detail' => !empty($enabledauths) ? implode(', ', $enabledauths) : 'none'],
 	['label' => 'Enabled enrol plugins', 'value' => $enrolcount . ' active', 'detail' => !empty($enabledenrols) ? implode(', ', $enabledenrols) : 'none'],
-	['label' => 'Installed plugin types', 'value' => count($pluginmanager->get_plugins()) . ' plugin types', 'detail' => 'Directly reported by Moodle plugin manager'],
+	['label' => 'Installed plugin types', 'value' => $pluginmanagercount . ' plugin types', 'detail' => $pluginmanagercount > 0 ? 'Directly reported by Moodle plugin manager' : 'Plugin manager details unavailable'],
 	['label' => 'Plugin-scoped overrides', 'value' => $pluginoverridecount . ' keys', 'detail' => 'Configuration keys stored in config_plugins'],
 ];
 
