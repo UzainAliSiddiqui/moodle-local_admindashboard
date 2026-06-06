@@ -187,9 +187,9 @@ local_admindashboard_render_workspace_header(
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_compliance_dashboard_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="complianceCourse">Course</label>
+	<label class="mb-0" for="complianceCourse"><?php echo get_string('ui_compliance_dashboard_course', 'local_admindashboard'); ?></label>
 	<select id="complianceCourse" name="courseid" class="form-select" style="max-width:320px">
 		<option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>All Courses</option>
 		<?php foreach ($courseoptions as $course): ?>
@@ -199,7 +199,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="complianceDepartment">Department</label>
+	<label class="mb-0" for="complianceDepartment"><?php echo get_string('ui_compliance_dashboard_department', 'local_admindashboard'); ?></label>
 	<select id="complianceDepartment" name="department" class="form-select" style="max-width:320px">
 		<option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
 		<?php foreach ($meta['departments'] as $dept): ?>
@@ -209,28 +209,28 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_compliance_dashboard_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/compliance_dashboard.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Mandatory Tracks</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_compliance_dashboard_mandatory_tracks', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $mandatorytracks; ?></div>
-		<div class="admindash-module-stat__meta">Visible completion-enabled courses used as the mandatory-learning control set.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_compliance_dashboard_visible_completion_enabled_courses_used_as_the_mandatory_learni_1eee574b', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Completion Rate</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_compliance_dashboard_completion_rate', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $completionrate; ?>%</div>
-		<div class="admindash-module-stat__meta"><?php echo $totalcompleted; ?> completions across <?php echo $totalenrolled; ?> tracked enrolments in the current scope.</div>
+		<div class="admindash-module-stat__meta"><?php echo $totalcompleted; ?> <?php echo get_string('ui_compliance_dashboard_completions_across', 'local_admindashboard'); ?> <?php echo $totalenrolled; ?> <?php echo get_string('ui_compliance_dashboard_tracked_enrolments_in_the_current_scope', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Overdue Learners</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_compliance_dashboard_overdue_learners', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $totaloverdue; ?></div>
-		<div class="admindash-module-stat__meta">Learners still incomplete after the course end date has already passed.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_compliance_dashboard_learners_still_incomplete_after_the_course_end_date_has_already_passed', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Renewal Risk</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_compliance_dashboard_renewal_risk', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($certsummary->riskcount ?? 0); ?></div>
 		<div class="admindash-module-stat__meta"><?php echo $certunion['available'] ? ((int)($certsummary->coveredcount ?? 0) . ' certificate-backed records assessed for issue age and inactivity.') : 'No supported certificate issue source was detected.'; ?></div>
 	</div>
@@ -239,21 +239,21 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Mandatory Track Health</h5>
-			<span class="admindash-admin-note">Top exposure</span>
+			<h5 class="mb-0"><?php echo get_string('ui_compliance_dashboard_mandatory_track_health', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_compliance_dashboard_top_exposure', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php if (empty($courserows)): ?>
 				<li>
-					<span class="admindash-admin-list__label">No compliance tracks</span>
-					<span class="admindash-admin-list__value">No visible completion-enabled courses matched the active filter scope.</span>
+					<span class="admindash-admin-list__label"><?php echo get_string('ui_compliance_dashboard_no_compliance_tracks', 'local_admindashboard'); ?></span>
+					<span class="admindash-admin-list__value"><?php echo get_string('ui_compliance_dashboard_no_visible_completion_enabled_courses_matched_the_active_filter_scope', 'local_admindashboard'); ?></span>
 				</li>
 			<?php else: ?>
 				<?php foreach ($courserows as $row): ?>
 					<?php $rowrate = (int)$row->enrolledcount > 0 ? (int)round(((int)$row->completedcount / (int)$row->enrolledcount) * 100) : 0; ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s($row->fullname); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)$row->completedcount; ?>/<?php echo (int)$row->enrolledcount; ?> complete · <?php echo $rowrate; ?>% · <?php echo (int)$row->overduecount; ?> overdue</span>
+						<span class="admindash-admin-list__value"><?php echo (int)$row->completedcount; ?>/<?php echo (int)$row->enrolledcount; ?> <?php echo get_string('ui_compliance_dashboard_complete', 'local_admindashboard'); ?> <?php echo $rowrate; ?>% · <?php echo (int)$row->overduecount; ?> <?php echo get_string('ui_compliance_dashboard_overdue', 'local_admindashboard'); ?></span>
 					</li>
 				<?php endforeach; ?>
 			<?php endif; ?>
@@ -262,13 +262,13 @@ local_admindashboard_render_workspace_header(
 
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Renewal Risk Queue</h5>
-			<span class="admindash-admin-note">Oldest records</span>
+			<h5 class="mb-0"><?php echo get_string('ui_compliance_dashboard_renewal_risk_queue', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_compliance_dashboard_oldest_records', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php if (empty($renewalrows)): ?>
 				<li>
-					<span class="admindash-admin-list__label">No certificate risk queue</span>
+					<span class="admindash-admin-list__label"><?php echo get_string('ui_compliance_dashboard_no_certificate_risk_queue', 'local_admindashboard'); ?></span>
 					<span class="admindash-admin-list__value"><?php echo $certunion['available'] ? 'No certificate-backed records matched the current filters.' : 'No supported certificate plugin data was detected.'; ?></span>
 				</li>
 			<?php else: ?>
@@ -289,25 +289,25 @@ local_admindashboard_render_workspace_header(
 	<div class="admindash-card admindash-admin-panel mt-3">
 		<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 			<div>
-				<h5 class="mb-1">At-Risk Learners in Selected Course</h5>
-				<p class="admindash-admin-note mb-0">This panel brings active outreach pressure into the compliance view for the selected course.</p>
+				<h5 class="mb-1"><?php echo get_string('ui_compliance_dashboard_at_risk_learners_in_selected_course', 'local_admindashboard'); ?></h5>
+				<p class="admindash-admin-note mb-0"><?php echo get_string('ui_compliance_dashboard_this_panel_brings_active_outreach_pressure_into_the_compliance__67829c7d', 'local_admindashboard'); ?></p>
 			</div>
 		</div>
 		<div class="admindash-tablewrap">
 			<table class="table table-striped table-hover admindash-admin-table">
 				<thead>
 					<tr>
-						<th>Learner</th>
-						<th>Department</th>
-						<th>Completion</th>
-						<th>Risk Score</th>
-						<th>Primary Reason</th>
+						<th><?php echo get_string('ui_compliance_dashboard_learner', 'local_admindashboard'); ?></th>
+						<th><?php echo get_string('ui_compliance_dashboard_department', 'local_admindashboard'); ?></th>
+						<th><?php echo get_string('ui_compliance_dashboard_completion', 'local_admindashboard'); ?></th>
+						<th><?php echo get_string('ui_compliance_dashboard_risk_score', 'local_admindashboard'); ?></th>
+						<th><?php echo get_string('ui_compliance_dashboard_primary_reason', 'local_admindashboard'); ?></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php if (empty($atriskrows)): ?>
 						<tr>
-							<td colspan="5" class="text-center py-4">No at-risk learners were returned for the selected course.</td>
+							<td colspan="5" class="text-center py-4"><?php echo get_string('ui_compliance_dashboard_no_at_risk_learners_were_returned_for_the_selected_course', 'local_admindashboard'); ?></td>
 						</tr>
 					<?php else: ?>
 						<?php foreach ($atriskrows as $row): ?>
@@ -315,7 +315,7 @@ local_admindashboard_render_workspace_header(
 								<td><?php echo s((string)($row['name'] ?? 'Unknown user')); ?></td>
 								<td><?php echo s((string)($row['department'] ?? 'Unassigned')); ?></td>
 								<td><?php echo s(rtrim(rtrim(number_format((float)($row['completion_pct'] ?? 0), 1, '.', ''), '0'), '.')); ?>%</td>
-								<td><?php echo (int)($row['risk_score'] ?? 0); ?>/3</td>
+								<td><?php echo (int)($row['risk_score'] ?? 0); ?><?php echo get_string('ui_compliance_dashboard_3', 'local_admindashboard'); ?></td>
 								<td><?php echo s((string)($row['reasons'][0] ?? 'No reason available')); ?></td>
 							</tr>
 						<?php endforeach; ?>

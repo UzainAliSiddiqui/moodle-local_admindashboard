@@ -160,9 +160,9 @@ local_admindashboard_render_workspace_header(
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_support_tickets_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="courseSelect">Course</label>
+	<label class="mb-0" for="courseSelect"><?php echo get_string('ui_support_tickets_course', 'local_admindashboard'); ?></label>
 	<select id="courseSelect" name="courseid" class="form-select" style="max-width:320px">
 		<option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>Auto-select course</option>
 		<?php foreach ($courseoptions as $course): ?>
@@ -172,7 +172,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="issueTypeSelect">Issue Type</label>
+	<label class="mb-0" for="issueTypeSelect"><?php echo get_string('ui_support_tickets_issue_type', 'local_admindashboard'); ?></label>
 	<select id="issueTypeSelect" name="issuetype" class="form-select" style="max-width:240px">
 		<?php foreach ($statusoptions as $value => $label): ?>
 			<option value="<?php echo s($value); ?>" <?php echo $issuetype === $value ? 'selected' : ''; ?>>
@@ -181,10 +181,10 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="ticketSearch">Search</label>
+	<label class="mb-0" for="ticketSearch"><?php echo get_string('ui_support_tickets_search', 'local_admindashboard'); ?></label>
 	<input id="ticketSearch" name="q" class="form-control" style="max-width:280px" value="<?php echo s($q); ?>" placeholder="Name, email, or username" />
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_support_tickets_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/support_tickets.php'); ?>">Reset</a>
 </form>
 
@@ -201,25 +201,25 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Attention Queue</h5>
-			<p class="admindash-admin-note mb-0">This queue lists accounts likely to generate or already represent support workload in the current filter scope.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_support_tickets_attention_queue', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_support_tickets_this_queue_lists_accounts_likely_to_generate_or_already_represe_59af973a', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>User</th>
-					<th>Department</th>
-					<th>Signals</th>
-					<th>Last Access</th>
-					<th>Action</th>
+					<th><?php echo get_string('ui_support_tickets_user', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_support_tickets_department', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_support_tickets_signals', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_support_tickets_last_access', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_support_tickets_action', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($userrows)): ?>
 					<tr>
-						<td colspan="5" class="text-center py-4">No support-queue rows were returned for the current filters.</td>
+						<td colspan="5" class="text-center py-4"><?php echo get_string('ui_support_tickets_no_support_queue_rows_were_returned_for_the_current_filters', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach ($userrows as $row): ?>

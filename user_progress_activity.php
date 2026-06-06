@@ -43,11 +43,11 @@ foreach ($rows as $r) {
 }
 ?>
 
-<h2 class="mb-3">Recent Activity Report</h2>
+<h2 class="mb-3"><?php echo get_string('ui_user_progress_activity_recent_activity_report', 'local_admindashboard'); ?></h2>
 
 <form method="get" class="admindash-filters admindash-card">
-    <div class="title">Filters</div>
-    <label class="mb-0" for="deptSelect">Select Department</label>
+    <div class="title"><?php echo get_string('ui_user_progress_activity_filters', 'local_admindashboard'); ?></div>
+    <label class="mb-0" for="deptSelect"><?php echo get_string('ui_user_progress_activity_select_department', 'local_admindashboard'); ?></label>
     <select id="deptSelect" name="department" class="form-select" style="max-width:320px">
         <option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
         <?php foreach ($meta['departments'] as $dept): ?>
@@ -57,7 +57,7 @@ foreach ($rows as $r) {
         <?php endforeach; ?>
     </select>
 
-    <button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+    <button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_user_progress_activity_apply', 'local_admindashboard'); ?></button>
 </form>
 
 <?php

@@ -29,12 +29,12 @@ $perpage = 25;
 $meta = local_admindashboard_get_meta($courseid);
 ?>
 
-<h2 class="mb-3">User Progress Report</h2>
+<h2 class="mb-3"><?php echo get_string('ui_user_progress_user_progress_report', 'local_admindashboard'); ?></h2>
 
 <form method="get" class="admindash-filters admindash-card">
-    <div class="title">Filters</div>
+    <div class="title"><?php echo get_string('ui_user_progress_filters', 'local_admindashboard'); ?></div>
 
-    <label class="mb-0" for="courseSelect">Select Course</label>
+    <label class="mb-0" for="courseSelect"><?php echo get_string('ui_user_progress_select_course', 'local_admindashboard'); ?></label>
     <select id="courseSelect" name="courseid" class="form-select" style="max-width:320px">
         <option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>All Courses</option>
         <?php foreach ($meta['courses'] as $course): ?>
@@ -44,7 +44,7 @@ $meta = local_admindashboard_get_meta($courseid);
         <?php endforeach; ?>
     </select>
 
-    <label class="mb-0" for="deptSelect" style="margin-left:12px">Select Department</label>
+    <label class="mb-0" for="deptSelect" style="margin-left:12px"><?php echo get_string('ui_user_progress_select_department', 'local_admindashboard'); ?></label>
     <select id="deptSelect" name="department" class="form-select" style="max-width:320px">
         <option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
         <?php foreach ($meta['departments'] as $dept): ?>
@@ -54,10 +54,10 @@ $meta = local_admindashboard_get_meta($courseid);
         <?php endforeach; ?>
     </select>
 
-    <label class="mb-0" for="qInput" style="margin-left:12px">Search</label>
+    <label class="mb-0" for="qInput" style="margin-left:12px"><?php echo get_string('ui_user_progress_search', 'local_admindashboard'); ?></label>
     <input id="qInput" name="q" class="form-control" style="max-width:280px" value="<?php echo s($q); ?>" placeholder="Name or email…" />
 
-    <button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+    <button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_user_progress_apply', 'local_admindashboard'); ?></button>
 </form>
 
 <?php

@@ -139,9 +139,9 @@ local_admindashboard_render_workspace_header(
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_renewal_readiness_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="courseSelect">Course</label>
+	<label class="mb-0" for="courseSelect"><?php echo get_string('ui_renewal_readiness_course', 'local_admindashboard'); ?></label>
 	<select id="courseSelect" name="courseid" class="form-select" style="max-width:320px">
 		<option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>All Courses</option>
 		<?php foreach ($meta['courses'] as $course): ?>
@@ -151,7 +151,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="deptSelect">Department</label>
+	<label class="mb-0" for="deptSelect"><?php echo get_string('ui_renewal_readiness_department', 'local_admindashboard'); ?></label>
 	<select id="deptSelect" name="department" class="form-select" style="max-width:320px">
 		<option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
 		<?php foreach ($meta['departments'] as $dept): ?>
@@ -161,57 +161,57 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_renewal_readiness_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/renewal_readiness.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Ready Now</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_renewal_readiness_ready_now', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $summary['ready']; ?></div>
-		<div class="admindash-module-stat__meta">Certificates in the renewal-ready window with recent learner activity.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_renewal_readiness_certificates_in_the_renewal_ready_window_with_recent_learner_activity', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Watch Window</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_renewal_readiness_watch_window', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $summary['watch']; ?></div>
-		<div class="admindash-module-stat__meta">Certificates approaching renewal but not yet urgent.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_renewal_readiness_certificates_approaching_renewal_but_not_yet_urgent', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">At Risk</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_renewal_readiness_at_risk', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $summary['risk']; ?></div>
-		<div class="admindash-module-stat__meta">Old certificates or low-activity learners likely to miss renewal without intervention.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_renewal_readiness_old_certificates_or_low_activity_learners_likely_to_miss_renewa_653524fc', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Data Gaps</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_renewal_readiness_data_gaps', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $summary['datagap']; ?></div>
-		<div class="admindash-module-stat__meta">Certificates without usable issue dates, so readiness has to be reviewed manually.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_renewal_readiness_certificates_without_usable_issue_dates_so_readiness_has_to_be__de889d16', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Renewal Candidate Queue</h5>
-			<p class="admindash-admin-note mb-0">This queue is an operational proxy based on certificate age and recent activity, not a formal expiry engine.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_renewal_readiness_renewal_candidate_queue', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_renewal_readiness_this_queue_is_an_operational_proxy_based_on_certificate_age_and_d1f7e71a', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Learner</th>
-					<th>Department</th>
-					<th>Course</th>
-					<th>Source</th>
-					<th>Issue Age</th>
-					<th>Last Access</th>
-					<th>Status</th>
+					<th><?php echo get_string('ui_renewal_readiness_learner', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_renewal_readiness_department', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_renewal_readiness_course', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_renewal_readiness_source', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_renewal_readiness_issue_age', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_renewal_readiness_last_access', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_renewal_readiness_status', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($rows)): ?>
 					<tr>
-						<td colspan="7" class="text-center py-4">No renewal readiness rows were returned for the current filters.</td>
+						<td colspan="7" class="text-center py-4"><?php echo get_string('ui_renewal_readiness_no_renewal_readiness_rows_were_returned_for_the_current_filters', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach (array_slice($rows, 0, 40) as $row): ?>

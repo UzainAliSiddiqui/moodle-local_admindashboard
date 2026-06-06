@@ -92,38 +92,38 @@ local_admindashboard_render_workspace_header(
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Categories</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_create_course_categories', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $totalcategories; ?></div>
-		<div class="admindash-module-stat__meta">Available course categories you can route new courses into.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_create_course_available_course_categories_you_can_route_new_courses_into', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Formats</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_create_course_formats', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo count($formatrows); ?></div>
-		<div class="admindash-module-stat__meta">Most common course formats currently in use across the platform.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_create_course_most_common_course_formats_currently_in_use_across_the_platform', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Cohorts</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_create_course_cohorts', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $totalcohorts; ?></div>
-		<div class="admindash-module-stat__meta">Audience groups available for enrolment and rollout planning.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_create_course_audience_groups_available_for_enrolment_and_rollout_planning', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Template Candidates</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_create_course_template_candidates', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo count($templatecandidates); ?></div>
-		<div class="admindash-module-stat__meta">Existing structured courses that can guide repeatable builds.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_create_course_existing_structured_courses_that_can_guide_repeatable_builds', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Top Categories</h5>
-			<span class="admindash-admin-note">Where most builds live</span>
+			<h5 class="mb-0"><?php echo get_string('ui_create_course_top_categories', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_create_course_where_most_builds_live', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php foreach ($categoryrows as $row): ?>
 				<li>
 					<span class="admindash-admin-list__label"><?php echo s($row->name); ?></span>
-					<span class="admindash-admin-list__value"><?php echo (int)$row->coursecount; ?> courses</span>
+					<span class="admindash-admin-list__value"><?php echo (int)$row->coursecount; ?> <?php echo get_string('ui_create_course_courses', 'local_admindashboard'); ?></span>
 				</li>
 			<?php endforeach; ?>
 		</ul>
@@ -132,14 +132,14 @@ local_admindashboard_render_workspace_header(
 	<div class="admindash-admin-stack">
 		<div class="admindash-card admindash-admin-panel">
 			<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-				<h5 class="mb-0">Popular Formats</h5>
-				<span class="admindash-admin-note">Current platform defaults</span>
+				<h5 class="mb-0"><?php echo get_string('ui_create_course_popular_formats', 'local_admindashboard'); ?></h5>
+				<span class="admindash-admin-note"><?php echo get_string('ui_create_course_current_platform_defaults', 'local_admindashboard'); ?></span>
 			</div>
 			<ul class="admindash-admin-list is-tight">
 				<?php foreach ($formatrows as $row): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s($row->formatname); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)$row->coursecount; ?> courses</span>
+						<span class="admindash-admin-list__value"><?php echo (int)$row->coursecount; ?> <?php echo get_string('ui_create_course_courses', 'local_admindashboard'); ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>
@@ -147,20 +147,20 @@ local_admindashboard_render_workspace_header(
 
 		<div class="admindash-card admindash-admin-panel mt-3">
 			<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-				<h5 class="mb-0">Reusable Course Candidates</h5>
-				<span class="admindash-admin-note">Structured existing builds</span>
+				<h5 class="mb-0"><?php echo get_string('ui_create_course_reusable_course_candidates', 'local_admindashboard'); ?></h5>
+				<span class="admindash-admin-note"><?php echo get_string('ui_create_course_structured_existing_builds', 'local_admindashboard'); ?></span>
 			</div>
 			<?php if (!empty($templatecandidates)): ?>
 				<ul class="admindash-admin-list is-tight">
 					<?php foreach ($templatecandidates as $row): ?>
 						<li>
 							<span class="admindash-admin-list__label"><?php echo s($row->fullname); ?></span>
-							<span class="admindash-admin-list__value"><?php echo s($row->formatname); ?> · <?php echo (int)$row->modulecount; ?> modules</span>
+							<span class="admindash-admin-list__value"><?php echo s($row->formatname); ?> · <?php echo (int)$row->modulecount; ?> <?php echo get_string('ui_create_course_modules', 'local_admindashboard'); ?></span>
 						</li>
 					<?php endforeach; ?>
 				</ul>
 			<?php else: ?>
-				<p class="admindash-admin-note mb-0">No strong template candidates were found yet.</p>
+				<p class="admindash-admin-note mb-0"><?php echo get_string('ui_create_course_no_strong_template_candidates_were_found_yet', 'local_admindashboard'); ?></p>
 			<?php endif; ?>
 		</div>
 	</div>

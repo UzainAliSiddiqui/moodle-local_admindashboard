@@ -231,9 +231,9 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_announcements_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="announcementCategory">Category</label>
+	<label class="mb-0" for="announcementCategory"><?php echo get_string('ui_announcements_category', 'local_admindashboard'); ?></label>
 	<select id="announcementCategory" name="categoryid" class="form-select" style="max-width:300px">
 		<option value="0" <?php echo $resolvedcategoryid === 0 ? 'selected' : ''; ?>>All categories</option>
 		<?php foreach ($categoryoptions as $option): ?>
@@ -243,7 +243,7 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="announcementStatus">Status</label>
+	<label class="mb-0" for="announcementStatus"><?php echo get_string('ui_announcements_status', 'local_admindashboard'); ?></label>
 	<select id="announcementStatus" name="status" class="form-select" style="max-width:240px">
 		<?php foreach ($statusoptions as $value => $label): ?>
 			<option value="<?php echo s($value); ?>" <?php echo $status === $value ? 'selected' : ''; ?>>
@@ -252,61 +252,61 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="announcementSearch">Search</label>
+	<label class="mb-0" for="announcementSearch"><?php echo get_string('ui_announcements_search', 'local_admindashboard'); ?></label>
 	<input id="announcementSearch" name="q" class="form-control" style="max-width:280px" value="<?php echo s($q); ?>" placeholder="Discussion, course, or category" />
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_announcements_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/announcements.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Announcement Channels</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_announcements_announcement_channels', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->forumcount ?? 0); ?></div>
-		<div class="admindash-module-stat__meta"><?php echo (int)($summary->coursecount ?? 0); ?> courses currently exposing forum-based announcement spaces.</div>
+		<div class="admindash-module-stat__meta"><?php echo (int)($summary->coursecount ?? 0); ?> <?php echo get_string('ui_announcements_courses_currently_exposing_forum_based_announcement_spaces', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Live Threads</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_announcements_live_threads', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->livethreads ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Announcements that are currently within their visible publishing window.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_announcements_announcements_that_are_currently_within_their_visible_publishing_window', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Scheduled Queue</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_announcements_scheduled_queue', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->scheduledthreads ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Announcement discussions configured to appear later.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_announcements_announcement_discussions_configured_to_appear_later', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Reply Volume</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_announcements_reply_volume', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->totalreplies ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Replies inside the currently filtered announcement discussion set.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_announcements_replies_inside_the_currently_filtered_announcement_discussion_set', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Announcement Queue</h5>
-			<p class="admindash-admin-note mb-0">Recent announcement discussions ordered by pin state and latest activity.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_announcements_announcement_queue', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_announcements_recent_announcement_discussions_ordered_by_pin_state_and_latest_activity', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Announcement</th>
-					<th>Course</th>
-					<th>Category</th>
-					<th>Status</th>
-					<th>Visibility Window</th>
-					<th>Replies</th>
-					<th>Owner</th>
-					<th>Action</th>
+					<th><?php echo get_string('ui_announcements_announcement', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_announcements_course', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_announcements_category', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_announcements_status', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_announcements_visibility_window', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_announcements_replies', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_announcements_owner', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_announcements_action', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($rows)): ?>
 					<tr>
-						<td colspan="8" class="text-center py-4">No announcement discussions matched the current filters.</td>
+						<td colspan="8" class="text-center py-4"><?php echo get_string('ui_announcements_no_announcement_discussions_matched_the_current_filters', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach ($rows as $row): ?>
@@ -355,8 +355,8 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Announcement Lanes</h5>
-			<span class="admindash-admin-note">Operational split</span>
+			<h5 class="mb-0"><?php echo get_string('ui_announcements_announcement_lanes', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_announcements_operational_split', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php foreach ($lanes as $lane): ?>
@@ -370,20 +370,20 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Category Coverage</h5>
-			<span class="admindash-admin-note">Top segments</span>
+			<h5 class="mb-0"><?php echo get_string('ui_announcements_category_coverage', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_announcements_top_segments', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php if (empty($categorybreakdown)): ?>
 				<li>
-					<span class="admindash-admin-list__label">No categories</span>
-					<span class="admindash-admin-list__value">There are no announcement categories in the current filter scope.</span>
+					<span class="admindash-admin-list__label"><?php echo get_string('ui_announcements_no_categories', 'local_admindashboard'); ?></span>
+					<span class="admindash-admin-list__value"><?php echo get_string('ui_announcements_there_are_no_announcement_categories_in_the_current_filter_scope', 'local_admindashboard'); ?></span>
 				</li>
 			<?php else: ?>
 				<?php foreach ($categorybreakdown as $segment): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s($segment->name); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)$segment->coursecount; ?> courses · <?php echo (int)$segment->forumcount; ?> channels · <?php echo (int)$segment->discussioncount; ?> discussions</span>
+						<span class="admindash-admin-list__value"><?php echo (int)$segment->coursecount; ?> <?php echo get_string('ui_announcements_courses', 'local_admindashboard'); ?> <?php echo (int)$segment->forumcount; ?> <?php echo get_string('ui_announcements_channels', 'local_admindashboard'); ?> <?php echo (int)$segment->discussioncount; ?> <?php echo get_string('ui_announcements_discussions', 'local_admindashboard'); ?></span>
 					</li>
 				<?php endforeach; ?>
 			<?php endif; ?>

@@ -23,6 +23,7 @@ require_once(__DIR__ . '/metricslib.php');
 require_login();
 $PAGE->set_context(context_system::instance());
 local_admindashboard_require_view_access();
+require_sesskey();
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');

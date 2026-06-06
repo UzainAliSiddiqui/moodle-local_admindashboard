@@ -312,9 +312,9 @@ local_admindashboard_render_workspace_header(
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_direct_messaging_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="messagingCourse">Course</label>
+	<label class="mb-0" for="messagingCourse"><?php echo get_string('ui_direct_messaging_course', 'local_admindashboard'); ?></label>
 	<select id="messagingCourse" name="courseid" class="form-select" style="max-width:320px">
 		<option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>Auto-select course</option>
 		<?php foreach ($courseoptions as $course): ?>
@@ -324,7 +324,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="messagingType">Conversation Type</label>
+	<label class="mb-0" for="messagingType"><?php echo get_string('ui_direct_messaging_conversation_type', 'local_admindashboard'); ?></label>
 	<select id="messagingType" name="convtype" class="form-select" style="max-width:240px">
 		<?php foreach ($typeoptions as $value => $label): ?>
 			<option value="<?php echo s($value); ?>" <?php echo $convtype === $value ? 'selected' : ''; ?>>
@@ -333,7 +333,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="messagingState">State</label>
+	<label class="mb-0" for="messagingState"><?php echo get_string('ui_direct_messaging_state', 'local_admindashboard'); ?></label>
 	<select id="messagingState" name="state" class="form-select" style="max-width:220px">
 		<?php foreach ($stateoptions as $value => $label): ?>
 			<option value="<?php echo s($value); ?>" <?php echo $state === $value ? 'selected' : ''; ?>>
@@ -342,31 +342,31 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="messagingSearch">Search</label>
+	<label class="mb-0" for="messagingSearch"><?php echo get_string('ui_direct_messaging_search', 'local_admindashboard'); ?></label>
 	<input id="messagingSearch" name="q" class="form-control" style="max-width:280px" value="<?php echo s($q); ?>" placeholder="Conversation name or message text" />
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_direct_messaging_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/direct_messaging.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Conversations</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_direct_messaging_conversations', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->conversationcount ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Individual, group, and self conversations currently in the active view.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_direct_messaging_individual_group_and_self_conversations_currently_in_the_active_view', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Unread Messages</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_direct_messaging_unread_messages', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->unreadmessages ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Messages from other participants that still have no read or delete action for this user.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_direct_messaging_messages_from_other_participants_that_still_have_no_read_or_del_d34ea370', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Unread Notifications</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_direct_messaging_unread_notifications', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $unreadnotifications; ?></div>
-		<div class="admindash-module-stat__meta">Event notifications still waiting in the notification stream.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_direct_messaging_event_notifications_still_waiting_in_the_notification_stream', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Outreach Candidates</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_direct_messaging_outreach_candidates', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $atriskcount; ?></div>
 		<div class="admindash-module-stat__meta"><?php echo $resolvedcourseid > 0 ? 'At-risk learners from the selected course ready for direct follow-up.' : 'Select a course to surface at-risk outreach candidates.'; ?></div>
 	</div>
@@ -375,28 +375,28 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Conversation Queue</h5>
-			<p class="admindash-admin-note mb-0">Conversation posture for the current operator, ordered by unread work and recent activity.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_direct_messaging_conversation_queue', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_direct_messaging_conversation_posture_for_the_current_operator_ordered_by_unread_25dc9823', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Conversation</th>
-					<th>Type</th>
-					<th>Participants</th>
-					<th>Unread</th>
-					<th>Muted</th>
-					<th>Messages</th>
-					<th>Last Activity</th>
-					<th>Action</th>
+					<th><?php echo get_string('ui_direct_messaging_conversation', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_direct_messaging_type', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_direct_messaging_participants', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_direct_messaging_unread', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_direct_messaging_muted', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_direct_messaging_messages', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_direct_messaging_last_activity', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_direct_messaging_action', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($rows)): ?>
 					<tr>
-						<td colspan="8" class="text-center py-4">No conversations matched the current filters.</td>
+						<td colspan="8" class="text-center py-4"><?php echo get_string('ui_direct_messaging_no_conversations_matched_the_current_filters', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach ($rows as $row): ?>
@@ -445,20 +445,20 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Pending Requests</h5>
-			<span class="admindash-admin-note">Contact posture</span>
+			<h5 class="mb-0"><?php echo get_string('ui_direct_messaging_pending_requests', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_direct_messaging_contact_posture', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php if (empty($incomingrequests)): ?>
 				<li>
-					<span class="admindash-admin-list__label">No pending requests</span>
-					<span class="admindash-admin-list__value">There are no incoming contact requests waiting for review.</span>
+					<span class="admindash-admin-list__label"><?php echo get_string('ui_direct_messaging_no_pending_requests', 'local_admindashboard'); ?></span>
+					<span class="admindash-admin-list__value"><?php echo get_string('ui_direct_messaging_there_are_no_incoming_contact_requests_waiting_for_review', 'local_admindashboard'); ?></span>
 				</li>
 			<?php else: ?>
 				<?php foreach ($incomingrequests as $request): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s(trim((string)$request->firstname . ' ' . (string)$request->lastname)); ?></span>
-						<span class="admindash-admin-list__value">Requested <?php echo s(userdate((int)$request->timecreated)); ?></span>
+						<span class="admindash-admin-list__value"><?php echo get_string('ui_direct_messaging_requested', 'local_admindashboard'); ?> <?php echo s(userdate((int)$request->timecreated)); ?></span>
 					</li>
 				<?php endforeach; ?>
 			<?php endif; ?>
@@ -467,20 +467,20 @@ local_admindashboard_render_workspace_header(
 
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Blocked Users</h5>
-			<span class="admindash-admin-note">Visibility constraints</span>
+			<h5 class="mb-0"><?php echo get_string('ui_direct_messaging_blocked_users', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_direct_messaging_visibility_constraints', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php if (empty($blockedusers)): ?>
 				<li>
-					<span class="admindash-admin-list__label">No blocked users</span>
-					<span class="admindash-admin-list__value">No users are currently blocked in this messaging account.</span>
+					<span class="admindash-admin-list__label"><?php echo get_string('ui_direct_messaging_no_blocked_users', 'local_admindashboard'); ?></span>
+					<span class="admindash-admin-list__value"><?php echo get_string('ui_direct_messaging_no_users_are_currently_blocked_in_this_messaging_account', 'local_admindashboard'); ?></span>
 				</li>
 			<?php else: ?>
 				<?php foreach ($blockedusers as $blocked): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s(trim((string)$blocked->firstname . ' ' . (string)$blocked->lastname)); ?></span>
-						<span class="admindash-admin-list__value">Blocked <?php echo !empty($blocked->timecreated) ? s(userdate((int)$blocked->timecreated)) : 'previously'; ?></span>
+						<span class="admindash-admin-list__value"><?php echo get_string('ui_direct_messaging_blocked', 'local_admindashboard'); ?> <?php echo !empty($blocked->timecreated) ? s(userdate((int)$blocked->timecreated)) : 'previously'; ?></span>
 					</li>
 				<?php endforeach; ?>
 			<?php endif; ?>
@@ -489,20 +489,20 @@ local_admindashboard_render_workspace_header(
 
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Outreach Candidates</h5>
-			<span class="admindash-admin-note">Course-aware follow-up</span>
+			<h5 class="mb-0"><?php echo get_string('ui_direct_messaging_outreach_candidates', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_direct_messaging_course_aware_follow_up', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php if (empty($atriskrows)): ?>
 				<li>
-					<span class="admindash-admin-list__label">No at-risk users</span>
+					<span class="admindash-admin-list__label"><?php echo get_string('ui_direct_messaging_no_at_risk_users', 'local_admindashboard'); ?></span>
 					<span class="admindash-admin-list__value"><?php echo $resolvedcourseid > 0 ? 'No at-risk participants were returned for the selected course.' : 'Select a course to load at-risk participants.'; ?></span>
 				</li>
 			<?php else: ?>
 				<?php foreach ($atriskrows as $row): ?>
 					<li>
 						<span class="admindash-admin-list__label"><a href="<?php echo new moodle_url('/user/profile.php', ['id' => (int)($row['userid'] ?? 0)]); ?>"><?php echo s((string)($row['name'] ?? 'Unknown user')); ?></a></span>
-						<span class="admindash-admin-list__value">Risk <?php echo (int)($row['risk_score'] ?? 0); ?>/3 · <?php echo s((string)($row['department'] ?? 'Unassigned')); ?><?php echo !empty($row['reasons'][0]) ? ' · ' . s((string)$row['reasons'][0]) : ''; ?></span>
+						<span class="admindash-admin-list__value"><?php echo get_string('ui_direct_messaging_risk', 'local_admindashboard'); ?> <?php echo (int)($row['risk_score'] ?? 0); ?><?php echo get_string('ui_direct_messaging_3', 'local_admindashboard'); ?> <?php echo s((string)($row['department'] ?? 'Unassigned')); ?><?php echo !empty($row['reasons'][0]) ? ' · ' . s((string)$row['reasons'][0]) : ''; ?></span>
 					</li>
 				<?php endforeach; ?>
 			<?php endif; ?>

@@ -174,9 +174,9 @@ local_admindashboard_render_workspace_header(
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_mandatory_training_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="mandatoryCourse">Course</label>
+	<label class="mb-0" for="mandatoryCourse"><?php echo get_string('ui_mandatory_training_course', 'local_admindashboard'); ?></label>
 	<select id="mandatoryCourse" name="courseid" class="form-select" style="max-width:320px">
 		<option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>All Courses</option>
 		<?php foreach ($meta['courses'] as $course): ?>
@@ -186,7 +186,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="mandatoryDepartment">Department</label>
+	<label class="mb-0" for="mandatoryDepartment"><?php echo get_string('ui_mandatory_training_department', 'local_admindashboard'); ?></label>
 	<select id="mandatoryDepartment" name="department" class="form-select" style="max-width:320px">
 		<option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
 		<?php foreach ($meta['departments'] as $dept): ?>
@@ -196,7 +196,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="mandatoryStatus">Status</label>
+	<label class="mb-0" for="mandatoryStatus"><?php echo get_string('ui_mandatory_training_status', 'local_admindashboard'); ?></label>
 	<select id="mandatoryStatus" name="status" class="form-select" style="max-width:240px">
 		<?php foreach ($statusoptions as $value => $label): ?>
 			<option value="<?php echo s($value); ?>" <?php echo $status === $value ? 'selected' : ''; ?>>
@@ -205,33 +205,33 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="mandatorySearch">Search</label>
+	<label class="mb-0" for="mandatorySearch"><?php echo get_string('ui_mandatory_training_search', 'local_admindashboard'); ?></label>
 	<input id="mandatorySearch" name="q" class="form-control" style="max-width:280px" value="<?php echo s($q); ?>" placeholder="Course or learner name" />
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_mandatory_training_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/mandatory_training.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Tracks</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_mandatory_training_tracks', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $summary['tracks']; ?></div>
-		<div class="admindash-module-stat__meta">Visible completion-enabled courses currently treated as mandatory-learning tracks.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_mandatory_training_visible_completion_enabled_courses_currently_treated_as_mandato_e74b74e4', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Completed</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_mandatory_training_completed', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $summary['completed']; ?></div>
-		<div class="admindash-module-stat__meta">Learner completions already recorded within the filtered mandatory scope.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_mandatory_training_learner_completions_already_recorded_within_the_filtered_mandatory_scope', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Incomplete</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_mandatory_training_incomplete', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $summary['incomplete']; ?></div>
-		<div class="admindash-module-stat__meta">Learners still incomplete across the tracked mandatory courses.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_mandatory_training_learners_still_incomplete_across_the_tracked_mandatory_courses', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Overdue</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_mandatory_training_overdue', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $summary['overdue']; ?></div>
-		<div class="admindash-module-stat__meta">Learners still incomplete after the course end date has already passed.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_mandatory_training_learners_still_incomplete_after_the_course_end_date_has_already_passed', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
@@ -239,21 +239,21 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Track Pressure</h5>
-			<span class="admindash-admin-note">Where to focus</span>
+			<h5 class="mb-0"><?php echo get_string('ui_mandatory_training_track_pressure', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_mandatory_training_where_to_focus', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php if (empty($courserows)): ?>
 				<li>
-					<span class="admindash-admin-list__label">No tracks in scope</span>
-					<span class="admindash-admin-list__value">No visible completion-enabled courses matched the active filter scope.</span>
+					<span class="admindash-admin-list__label"><?php echo get_string('ui_mandatory_training_no_tracks_in_scope', 'local_admindashboard'); ?></span>
+					<span class="admindash-admin-list__value"><?php echo get_string('ui_mandatory_training_no_visible_completion_enabled_courses_matched_the_active_filter_scope', 'local_admindashboard'); ?></span>
 				</li>
 			<?php else: ?>
 				<?php foreach ($courserows as $row): ?>
 					<?php $rate = (int)$row->enrolledcount > 0 ? (int)round(((int)$row->completedcount / (int)$row->enrolledcount) * 100) : 0; ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s($row->fullname); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)$row->completedcount; ?>/<?php echo (int)$row->enrolledcount; ?> complete · <?php echo $rate; ?>% · <?php echo (int)$row->overduecount; ?> overdue</span>
+						<span class="admindash-admin-list__value"><?php echo (int)$row->completedcount; ?>/<?php echo (int)$row->enrolledcount; ?> <?php echo get_string('ui_mandatory_training_complete', 'local_admindashboard'); ?> <?php echo $rate; ?>% · <?php echo (int)$row->overduecount; ?> <?php echo get_string('ui_mandatory_training_overdue', 'local_admindashboard'); ?></span>
 					</li>
 				<?php endforeach; ?>
 			<?php endif; ?>
@@ -262,20 +262,20 @@ local_admindashboard_render_workspace_header(
 
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Selected Course Risk</h5>
-			<span class="admindash-admin-note">Engagement overlay</span>
+			<h5 class="mb-0"><?php echo get_string('ui_mandatory_training_selected_course_risk', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_mandatory_training_engagement_overlay', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php if (empty($atriskrows)): ?>
 				<li>
-					<span class="admindash-admin-list__label">No at-risk learners</span>
+					<span class="admindash-admin-list__label"><?php echo get_string('ui_mandatory_training_no_at_risk_learners', 'local_admindashboard'); ?></span>
 					<span class="admindash-admin-list__value"><?php echo $resolvedcourseid > 0 ? 'No at-risk learners were returned for the selected course.' : 'Select a course to load risk context.'; ?></span>
 				</li>
 			<?php else: ?>
 				<?php foreach ($atriskrows as $row): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s((string)($row['name'] ?? 'Unknown user')); ?></span>
-						<span class="admindash-admin-list__value">Risk <?php echo (int)($row['risk_score'] ?? 0); ?>/3 · <?php echo s((string)($row['department'] ?? 'Unassigned')); ?></span>
+						<span class="admindash-admin-list__value"><?php echo get_string('ui_mandatory_training_risk', 'local_admindashboard'); ?> <?php echo (int)($row['risk_score'] ?? 0); ?><?php echo get_string('ui_mandatory_training_3', 'local_admindashboard'); ?> <?php echo s((string)($row['department'] ?? 'Unassigned')); ?></span>
 					</li>
 				<?php endforeach; ?>
 			<?php endif; ?>
@@ -286,26 +286,26 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Learner Attention Queue</h5>
-			<p class="admindash-admin-note mb-0">Completion-driven queue for direct follow-up, filtered by learner state and course scope.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_mandatory_training_learner_attention_queue', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_mandatory_training_completion_driven_queue_for_direct_follow_up_filtered_by_learne_8739994e', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Learner</th>
-					<th>Department</th>
-					<th>Course</th>
-					<th>Last Access</th>
-					<th>Completion</th>
-					<th>Status</th>
+					<th><?php echo get_string('ui_mandatory_training_learner', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_mandatory_training_department', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_mandatory_training_course', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_mandatory_training_last_access', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_mandatory_training_completion', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_mandatory_training_status', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($learnerrows)): ?>
 					<tr>
-						<td colspan="6" class="text-center py-4">No learner rows matched the current filters.</td>
+						<td colspan="6" class="text-center py-4"><?php echo get_string('ui_mandatory_training_no_learner_rows_matched_the_current_filters', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach ($learnerrows as $row): ?>

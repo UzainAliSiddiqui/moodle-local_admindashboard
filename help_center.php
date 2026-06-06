@@ -172,9 +172,9 @@ local_admindashboard_render_workspace_header(
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_help_center_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="courseSelect">Course</label>
+	<label class="mb-0" for="courseSelect"><?php echo get_string('ui_help_center_course', 'local_admindashboard'); ?></label>
 	<select id="courseSelect" name="courseid" class="form-select" style="max-width:320px">
 		<option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>Auto-select course</option>
 		<?php foreach ($courseoptions as $course): ?>
@@ -184,7 +184,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="topicSelect">Topic</label>
+	<label class="mb-0" for="topicSelect"><?php echo get_string('ui_help_center_topic', 'local_admindashboard'); ?></label>
 	<select id="topicSelect" name="topic" class="form-select" style="max-width:240px">
 		<?php foreach ($topicoptions as $value => $label): ?>
 			<option value="<?php echo s($value); ?>" <?php echo $topic === $value ? 'selected' : ''; ?>>
@@ -193,59 +193,59 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="helpSearch">Search</label>
+	<label class="mb-0" for="helpSearch"><?php echo get_string('ui_help_center_search', 'local_admindashboard'); ?></label>
 	<input id="helpSearch" name="q" class="form-control" style="max-width:280px" value="<?php echo s($q); ?>" placeholder="Topic or issue keyword" />
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_help_center_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/help_center.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Knowledge Topics</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_help_center_knowledge_topics', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo count($filteredtopics); ?></div>
-		<div class="admindash-module-stat__meta">Support playbooks currently matching the active filters.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_help_center_support_playbooks_currently_matching_the_active_filters', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Access Issues</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_help_center_access_issues', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $accessblockers; ?></div>
-		<div class="admindash-module-stat__meta">Suspended, unconfirmed, and no-login accounts that commonly trigger help demand.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_help_center_suspended_unconfirmed_and_no_login_accounts_that_commonly_trigg_4ccf5f3d', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Profile Gaps</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_help_center_profile_gaps', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $profilegaps; ?></div>
-		<div class="admindash-module-stat__meta">Records missing routing data such as department or email.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_help_center_records_missing_routing_data_such_as_department_or_email', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Learning Help Signals</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_help_center_learning_help_signals', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $atriskcount; ?></div>
-		<div class="admindash-module-stat__meta">At-risk learners from the selected course used as a proactive support indicator.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_help_center_at_risk_learners_from_the_selected_course_used_as_a_proactive_s_b17aecff', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Help Topics</h5>
-			<p class="admindash-admin-note mb-0">Each topic combines a real live signal, a short support playbook summary, and a direct operational route.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_help_center_help_topics', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_help_center_each_topic_combines_a_real_live_signal_a_short_support_playbook_4b3405a8', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Topic</th>
-					<th>Signal</th>
-					<th>Audience</th>
-					<th>Playbook Summary</th>
-					<th>Live Context</th>
-					<th>Action</th>
+					<th><?php echo get_string('ui_help_center_topic', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_help_center_signal', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_help_center_audience', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_help_center_playbook_summary', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_help_center_live_context', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_help_center_action', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($filteredtopics)): ?>
 					<tr>
-						<td colspan="6" class="text-center py-4">No help topics matched the current filters.</td>
+						<td colspan="6" class="text-center py-4"><?php echo get_string('ui_help_center_no_help_topics_matched_the_current_filters', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach ($filteredtopics as $item): ?>
@@ -272,20 +272,20 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Learning Blocker Snapshot</h5>
-			<span class="admindash-admin-note">Selected course</span>
+			<h5 class="mb-0"><?php echo get_string('ui_help_center_learning_blocker_snapshot', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_help_center_selected_course', 'local_admindashboard'); ?></span>
 		</div>
 		<?php if (!empty($atriskrows)): ?>
 			<ul class="admindash-admin-list">
 				<?php foreach ($atriskrows as $row): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s((string)($row['name'] ?? 'Learner')); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)($row['risk_score'] ?? 0); ?> risk · <?php echo s(trim((string)($row['department'] ?? '')) !== '' ? (string)$row['department'] : 'Unassigned'); ?></span>
+						<span class="admindash-admin-list__value"><?php echo (int)($row['risk_score'] ?? 0); ?> <?php echo get_string('ui_help_center_risk', 'local_admindashboard'); ?> <?php echo s(trim((string)($row['department'] ?? '')) !== '' ? (string)$row['department'] : 'Unassigned'); ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php else: ?>
-			<p class="admindash-admin-note mb-0">No at-risk learner rows were returned for the current course scope.</p>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_help_center_no_at_risk_learner_rows_were_returned_for_the_current_course_scope', 'local_admindashboard'); ?></p>
 		<?php endif; ?>
 	</div>
 </div>

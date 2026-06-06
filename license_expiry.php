@@ -161,9 +161,9 @@ local_admindashboard_render_workspace_header(
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_license_expiry_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="expiryCourse">Course</label>
+	<label class="mb-0" for="expiryCourse"><?php echo get_string('ui_license_expiry_course', 'local_admindashboard'); ?></label>
 	<select id="expiryCourse" name="courseid" class="form-select" style="max-width:320px">
 		<option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>All Courses</option>
 		<?php foreach ($meta['courses'] as $course): ?>
@@ -173,7 +173,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="expiryDepartment">Department</label>
+	<label class="mb-0" for="expiryDepartment"><?php echo get_string('ui_license_expiry_department', 'local_admindashboard'); ?></label>
 	<select id="expiryDepartment" name="department" class="form-select" style="max-width:320px">
 		<option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
 		<?php foreach ($meta['departments'] as $dept): ?>
@@ -183,7 +183,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="expiryStatus">Window</label>
+	<label class="mb-0" for="expiryStatus"><?php echo get_string('ui_license_expiry_window', 'local_admindashboard'); ?></label>
 	<select id="expiryStatus" name="status" class="form-select" style="max-width:240px">
 		<?php foreach ($statusoptions as $value => $label): ?>
 			<option value="<?php echo s($value); ?>" <?php echo $status === $value ? 'selected' : ''; ?>>
@@ -192,60 +192,60 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="expirySearch">Search</label>
+	<label class="mb-0" for="expirySearch"><?php echo get_string('ui_license_expiry_search', 'local_admindashboard'); ?></label>
 	<input id="expirySearch" name="q" class="form-control" style="max-width:280px" value="<?php echo s($q); ?>" placeholder="Course or learner name" />
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_license_expiry_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/license_expiry.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Expired Proxy</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_license_expiry_expired_proxy', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $summary['expired']; ?></div>
-		<div class="admindash-module-stat__meta">Records with certificate issue dates at least 365 days old.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_license_expiry_records_with_certificate_issue_dates_at_least_365_days_old', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Due Soon</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_license_expiry_due_soon', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $summary['due']; ?></div>
-		<div class="admindash-module-stat__meta">Records 300-364 days old and approaching renewal follow-up.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_license_expiry_records_300_364_days_old_and_approaching_renewal_follow_up', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Watch Window</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_license_expiry_watch_window', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $summary['watch']; ?></div>
-		<div class="admindash-module-stat__meta">Records entering an early monitoring window before urgent outreach is needed.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_license_expiry_records_entering_an_early_monitoring_window_before_urgent_outre_88111149', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Data Gaps</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_license_expiry_data_gaps', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $summary['datagap']; ?></div>
-		<div class="admindash-module-stat__meta">Certificate-backed records with no usable issue timestamp.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_license_expiry_certificate_backed_records_with_no_usable_issue_timestamp', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Expiry Queue</h5>
-			<p class="admindash-admin-note mb-0">These rows are based on certificate issue age, not a formal expiry engine, so they should be treated as operational guidance.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_license_expiry_expiry_queue', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_license_expiry_these_rows_are_based_on_certificate_issue_age_not_a_formal_expi_9feab4d7', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Learner</th>
-					<th>Department</th>
-					<th>Course</th>
-					<th>Source</th>
-					<th>Issue Age</th>
-					<th>Last Access</th>
-					<th>Window</th>
+					<th><?php echo get_string('ui_license_expiry_learner', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_license_expiry_department', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_license_expiry_course', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_license_expiry_source', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_license_expiry_issue_age', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_license_expiry_last_access', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_license_expiry_window', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($rows)): ?>
 					<tr>
-						<td colspan="7" class="text-center py-4">No certificate expiry rows matched the current filters.</td>
+						<td colspan="7" class="text-center py-4"><?php echo get_string('ui_license_expiry_no_certificate_expiry_rows_matched_the_current_filters', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach (array_slice($rows, 0, 60) as $row): ?>

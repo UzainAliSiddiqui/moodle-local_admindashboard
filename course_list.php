@@ -192,12 +192,12 @@ local_admindashboard_render_workspace_header(
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_course_list_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="courseSearch">Search</label>
+	<label class="mb-0" for="courseSearch"><?php echo get_string('ui_course_list_search', 'local_admindashboard'); ?></label>
 	<input id="courseSearch" name="q" class="form-control" style="max-width:280px" value="<?php echo s($q); ?>" placeholder="Course name or shortname" />
 
-	<label class="mb-0" for="categorySelect">Category</label>
+	<label class="mb-0" for="categorySelect"><?php echo get_string('ui_course_list_category', 'local_admindashboard'); ?></label>
 	<select id="categorySelect" name="categoryid" class="form-select" style="max-width:260px">
 		<option value="0" <?php echo $categoryid === 0 ? 'selected' : ''; ?>>All categories</option>
 		<?php foreach ($categories as $category): ?>
@@ -207,7 +207,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="visibilitySelect">Visibility</label>
+	<label class="mb-0" for="visibilitySelect"><?php echo get_string('ui_course_list_visibility', 'local_admindashboard'); ?></label>
 	<select id="visibilitySelect" name="visibility" class="form-select" style="max-width:220px">
 		<?php foreach ($visibilityoptions as $value => $label): ?>
 			<option value="<?php echo s($value); ?>" <?php echo $visibility === $value ? 'selected' : ''; ?>>
@@ -216,7 +216,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="lifecycleSelect">Lifecycle</label>
+	<label class="mb-0" for="lifecycleSelect"><?php echo get_string('ui_course_list_lifecycle', 'local_admindashboard'); ?></label>
 	<select id="lifecycleSelect" name="lifecycle" class="form-select" style="max-width:220px">
 		<?php foreach ($lifecycleoptions as $value => $label): ?>
 			<option value="<?php echo s($value); ?>" <?php echo $lifecycle === $value ? 'selected' : ''; ?>>
@@ -225,50 +225,50 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_course_list_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/course_list.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Courses</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_course_list_courses', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->totalcourses ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Catalog rows matched by the current course filters.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_course_list_catalog_rows_matched_by_the_current_course_filters', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Visible</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_course_list_visible', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->visiblecourses ?? 0); ?></div>
-		<div class="admindash-module-stat__meta"><?php echo (int)($summary->hiddencourses ?? 0); ?> hidden courses remain in the filtered set.</div>
+		<div class="admindash-module-stat__meta"><?php echo (int)($summary->hiddencourses ?? 0); ?> <?php echo get_string('ui_course_list_hidden_courses_remain_in_the_filtered_set', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Running Now</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_course_list_running_now', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->runningcourses ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Courses currently inside their configured schedule window.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_course_list_courses_currently_inside_their_configured_schedule_window', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Avg Modules</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_course_list_avg_modules', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)round((float)($summary->avgmodules ?? 0)); ?></div>
-		<div class="admindash-module-stat__meta">Average non-label activity count across the filtered catalog.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_course_list_average_non_label_activity_count_across_the_filtered_catalog', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Category Distribution</h5>
-			<span class="admindash-admin-note">Top groups</span>
+			<h5 class="mb-0"><?php echo get_string('ui_course_list_category_distribution', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_course_list_top_groups', 'local_admindashboard'); ?></span>
 		</div>
 		<?php if (!empty($categoryrows)): ?>
 			<ul class="admindash-admin-list">
 				<?php foreach ($categoryrows as $row): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s($row->categoryname); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)$row->coursecount; ?> courses</span>
+						<span class="admindash-admin-list__value"><?php echo (int)$row->coursecount; ?> <?php echo get_string('ui_course_list_courses', 'local_admindashboard'); ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php else: ?>
-			<p class="admindash-admin-note mb-0">No categories were returned for the current filters.</p>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_course_list_no_categories_were_returned_for_the_current_filters', 'local_admindashboard'); ?></p>
 		<?php endif; ?>
 	</div>
 </div>
@@ -276,28 +276,28 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Course Inventory</h5>
-			<p class="admindash-admin-note mb-0">Showing <?php echo $total > 0 ? (($page * $perpage) + 1) : 0; ?>-<?php echo min((($page + 1) * $perpage), $total); ?> of <?php echo $total; ?> matching courses.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_course_list_course_inventory', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_course_list_showing', 'local_admindashboard'); ?> <?php echo $total > 0 ? (($page * $perpage) + 1) : 0; ?>-<?php echo min((($page + 1) * $perpage), $total); ?> <?php echo get_string('ui_course_list_of', 'local_admindashboard'); ?> <?php echo $total; ?> <?php echo get_string('ui_course_list_matching_courses', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Course</th>
-					<th>Category</th>
-					<th>Format</th>
-					<th>Modules</th>
-					<th>Learners</th>
-					<th>Schedule</th>
-					<th>Signals</th>
-					<th>Actions</th>
+					<th><?php echo get_string('ui_course_list_course', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_list_category', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_list_format', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_list_modules', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_list_learners', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_list_schedule', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_list_signals', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_list_actions', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($courses)): ?>
 					<tr>
-						<td colspan="8" class="text-center py-4">No courses found for the current filters.</td>
+						<td colspan="8" class="text-center py-4"><?php echo get_string('ui_course_list_no_courses_found_for_the_current_filters', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach ($courses as $course): ?>
@@ -337,12 +337,12 @@ local_admindashboard_render_workspace_header(
 							<td>
 								<div class="admindash-admin-user">
 									<a href="<?php echo new moodle_url('/course/view.php', ['id' => (int)$course->id]); ?>" class="admindash-admin-user__name"><?php echo s($course->fullname); ?></a>
-									<div class="admindash-admin-note"><?php echo s($course->shortname); ?> · <?php echo (int)$course->sectioncount; ?> sections</div>
+									<div class="admindash-admin-note"><?php echo s($course->shortname); ?> · <?php echo (int)$course->sectioncount; ?> <?php echo get_string('ui_course_list_sections', 'local_admindashboard'); ?></div>
 								</div>
 							</td>
 							<td><?php echo s($course->categoryname); ?></td>
 							<td><?php echo s($course->formatname); ?></td>
-							<td><?php echo (int)$course->modulecount; ?> total · <?php echo (int)$course->trackablecount; ?> tracked</td>
+							<td><?php echo (int)$course->modulecount; ?> <?php echo get_string('ui_course_list_total', 'local_admindashboard'); ?> <?php echo (int)$course->trackablecount; ?> <?php echo get_string('ui_course_list_tracked', 'local_admindashboard'); ?></td>
 							<td><?php echo (int)$course->learnercount; ?></td>
 							<td><?php echo s($schedule); ?></td>
 							<td><div class="admindash-admin-badges"><?php echo implode('', $signals); ?></div></td>

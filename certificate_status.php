@@ -132,9 +132,9 @@ local_admindashboard_render_workspace_header(
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_certificate_status_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="courseSelect">Course</label>
+	<label class="mb-0" for="courseSelect"><?php echo get_string('ui_certificate_status_course', 'local_admindashboard'); ?></label>
 	<select id="courseSelect" name="courseid" class="form-select" style="max-width:320px">
 		<option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>All Courses</option>
 		<?php foreach ($meta['courses'] as $course): ?>
@@ -144,7 +144,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="deptSelect">Department</label>
+	<label class="mb-0" for="deptSelect"><?php echo get_string('ui_certificate_status_department', 'local_admindashboard'); ?></label>
 	<select id="deptSelect" name="department" class="form-select" style="max-width:320px">
 		<option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
 		<?php foreach ($meta['departments'] as $dept): ?>
@@ -154,31 +154,31 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="statusSearch">Search</label>
+	<label class="mb-0" for="statusSearch"><?php echo get_string('ui_certificate_status_search', 'local_admindashboard'); ?></label>
 	<input id="statusSearch" name="q" class="form-control" style="max-width:280px" value="<?php echo s($q); ?>" placeholder="Course or learner name" />
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_certificate_status_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/certificate_status.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Issues</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_certificate_status_issues', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->totalissues ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Certificate issues returned by installed certificate plugins for the current scope.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_certificate_status_certificate_issues_returned_by_installed_certificate_plugins_fo_0a49a8aa', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Users Covered</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_certificate_status_users_covered', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->userscovered ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Distinct learners who already hold at least one certificate in the filtered scope.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_certificate_status_distinct_learners_who_already_hold_at_least_one_certificate_in__9ad95c4e', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Courses Covered</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_certificate_status_courses_covered', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->coursescovered ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Courses currently issuing certificates through supported plugins.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_certificate_status_courses_currently_issuing_certificates_through_supported_plugins', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Recent 90d</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_certificate_status_recent_90d', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->recentissues ?? 0); ?></div>
 		<div class="admindash-module-stat__meta"><?php echo $certunion['hastimestamps'] ? 'Issues created in the last 90 days.' : 'Issue timestamps are not available from every detected certificate source.'; ?></div>
 	</div>
@@ -187,20 +187,20 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Issue Sources</h5>
-			<span class="admindash-admin-note">Plugin mix</span>
+			<h5 class="mb-0"><?php echo get_string('ui_certificate_status_issue_sources', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_certificate_status_plugin_mix', 'local_admindashboard'); ?></span>
 		</div>
 		<?php if (!empty($sourcerows)): ?>
 			<ul class="admindash-admin-list">
 				<?php foreach ($sourcerows as $row): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s($row->source); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)$row->issuecount; ?> issues</span>
+						<span class="admindash-admin-list__value"><?php echo (int)$row->issuecount; ?> <?php echo get_string('ui_certificate_status_issues', 'local_admindashboard'); ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php else: ?>
-			<p class="admindash-admin-note mb-0">No certificate issue data was detected from installed plugins.</p>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_certificate_status_no_certificate_issue_data_was_detected_from_installed_plugins', 'local_admindashboard'); ?></p>
 		<?php endif; ?>
 	</div>
 </div>
@@ -208,43 +208,43 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Courses with Certification Activity</h5>
-			<span class="admindash-admin-note">Top issuers</span>
+			<h5 class="mb-0"><?php echo get_string('ui_certificate_status_courses_with_certification_activity', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_certificate_status_top_issuers', 'local_admindashboard'); ?></span>
 		</div>
 		<?php if (!empty($courserows)): ?>
 			<ul class="admindash-admin-list">
 				<?php foreach ($courserows as $row): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s($row->coursename); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)$row->issuecount; ?> issues · <?php echo (int)$row->userscovered; ?> users<?php echo ((int)$row->latestissuedat > 0) ? ' · latest ' . s(userdate((int)$row->latestissuedat, '%d %b %Y')) : ''; ?></span>
+						<span class="admindash-admin-list__value"><?php echo (int)$row->issuecount; ?> <?php echo get_string('ui_certificate_status_issues', 'local_admindashboard'); ?> <?php echo (int)$row->userscovered; ?> <?php echo get_string('ui_certificate_status_users', 'local_admindashboard'); ?><?php echo ((int)$row->latestissuedat > 0) ? ' · latest ' . s(userdate((int)$row->latestissuedat, '%d %b %Y')) : ''; ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php else: ?>
-			<p class="admindash-admin-note mb-0">No certificate-enabled courses were returned for the current filters.</p>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_certificate_status_no_certificate_enabled_courses_were_returned_for_the_current_filters', 'local_admindashboard'); ?></p>
 		<?php endif; ?>
 	</div>
 
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Recent Issue Feed</h5>
-			<span class="admindash-admin-note">Latest 25 records</span>
+			<h5 class="mb-0"><?php echo get_string('ui_certificate_status_recent_issue_feed', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_certificate_status_latest_25_records', 'local_admindashboard'); ?></span>
 		</div>
 		<div class="admindash-tablewrap">
 			<table class="table table-striped table-hover admindash-admin-table">
 				<thead>
 					<tr>
-						<th>Learner</th>
-						<th>Department</th>
-						<th>Course</th>
-						<th>Source</th>
-						<th>Issued</th>
+						<th><?php echo get_string('ui_certificate_status_learner', 'local_admindashboard'); ?></th>
+						<th><?php echo get_string('ui_certificate_status_department', 'local_admindashboard'); ?></th>
+						<th><?php echo get_string('ui_certificate_status_course', 'local_admindashboard'); ?></th>
+						<th><?php echo get_string('ui_certificate_status_source', 'local_admindashboard'); ?></th>
+						<th><?php echo get_string('ui_certificate_status_issued', 'local_admindashboard'); ?></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php if (empty($issuerows)): ?>
 						<tr>
-							<td colspan="5" class="text-center py-4">No certificate issues were returned.</td>
+							<td colspan="5" class="text-center py-4"><?php echo get_string('ui_certificate_status_no_certificate_issues_were_returned', 'local_admindashboard'); ?></td>
 						</tr>
 					<?php else: ?>
 						<?php foreach ($issuerows as $row): ?>

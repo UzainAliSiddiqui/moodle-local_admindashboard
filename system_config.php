@@ -179,49 +179,49 @@ local_admindashboard_render_workspace_header(
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Core Config Keys</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_system_config_core_config_keys', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $coreconfigcount; ?></div>
-		<div class="admindash-module-stat__meta">Rows in Moodle's core config table, representing site-level stored settings.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_system_config_rows_in_moodle_s_core_config_table_representing_site_level_stor_4cf92a8b', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Plugin Overrides</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_system_config_plugin_overrides', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $pluginoverridecount; ?></div>
-		<div class="admindash-module-stat__meta">Plugin-specific configuration keys currently stored in config_plugins.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_system_config_plugin_specific_configuration_keys_currently_stored_in_config_plugins', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Access Channels</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_system_config_access_channels', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $authcount + $enrolcount; ?></div>
-		<div class="admindash-module-stat__meta"><?php echo $authcount; ?> auth plugins and <?php echo $enrolcount; ?> enrol plugins are enabled right now.</div>
+		<div class="admindash-module-stat__meta"><?php echo $authcount; ?> <?php echo get_string('ui_system_config_auth_plugins_and', 'local_admindashboard'); ?> <?php echo $enrolcount; ?> <?php echo get_string('ui_system_config_enrol_plugins_are_enabled_right_now', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Scheduled Tasks</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_system_config_scheduled_tasks', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $totalscheduledtasks; ?></div>
-		<div class="admindash-module-stat__meta"><?php echo $customisedscheduledtasks; ?> customised and <?php echo $disabledscheduledtasks; ?> disabled tasks currently detected.</div>
+		<div class="admindash-module-stat__meta"><?php echo $customisedscheduledtasks; ?> <?php echo get_string('ui_system_config_customised_and', 'local_admindashboard'); ?> <?php echo $disabledscheduledtasks; ?> <?php echo get_string('ui_system_config_disabled_tasks_currently_detected', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Current Posture</h5>
-			<span class="admindash-admin-note">Operational snapshot</span>
+			<h5 class="mb-0"><?php echo get_string('ui_system_config_current_posture', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_system_config_operational_snapshot', 'local_admindashboard'); ?></span>
 		</div>
 		<div class="admindash-admin-badges mb-3"><?php echo implode('', $posturebadges); ?></div>
 		<ul class="admindash-admin-list">
 			<li>
-				<span class="admindash-admin-list__label">Site URL</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_system_config_site_url', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo s($CFG->wwwroot); ?></span>
 			</li>
 			<li>
-				<span class="admindash-admin-list__label">Theme / language</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_system_config_theme_language', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo s($themevalue); ?> / <?php echo s($langvalue); ?></span>
 			</li>
 			<li>
-				<span class="admindash-admin-list__label">Support contacts</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_system_config_support_contacts', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo s($supportemail !== '' ? $supportemail : 'Missing support email'); ?><?php echo $noreplyaddress !== '' ? ' / ' . s($noreplyaddress) : ''; ?></span>
 			</li>
 			<li>
-				<span class="admindash-admin-list__label">API surface</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_system_config_api_surface', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo $enablewebservices ? 'Web services enabled' : 'Web services disabled'; ?><?php echo $enablemobilewebservice ? ' / mobile enabled' : ''; ?></span>
 			</li>
 		</ul>
@@ -231,19 +231,19 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Configuration Domains</h5>
-			<p class="admindash-admin-note mb-0">Each row points to a controlled admin area and explains why it matters operationally.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_system_config_configuration_domains', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_system_config_each_row_points_to_a_controlled_admin_area_and_explains_why_it__8a8c7de0', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Domain</th>
-					<th>Signal</th>
-					<th>Current Snapshot</th>
-					<th>Why It Matters</th>
-					<th>Action</th>
+					<th><?php echo get_string('ui_system_config_domain', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_system_config_signal', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_system_config_current_snapshot', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_system_config_why_it_matters', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_system_config_action', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -268,8 +268,8 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Plugin Mix</h5>
-			<span class="admindash-admin-note">Runtime footprint</span>
+			<h5 class="mb-0"><?php echo get_string('ui_system_config_plugin_mix', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_system_config_runtime_footprint', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php foreach ($pluginmix as $row): ?>

@@ -29,12 +29,12 @@ $userid = optional_param('userid', 0, PARAM_INT); // user.id (participant)
 $meta = local_admindashboard_get_meta($courseid);
 ?>
 
-<h2 class="mb-3">Progress Ticks Report</h2>
+<h2 class="mb-3"><?php echo get_string('ui_progress_ticks_report_progress_ticks_report', 'local_admindashboard'); ?></h2>
 
 <form method="get" class="admindash-filters admindash-card">
-    <div class="title">Filters</div>
+    <div class="title"><?php echo get_string('ui_progress_ticks_report_filters', 'local_admindashboard'); ?></div>
 
-    <label class="mb-0" for="courseSelect">Select Course</label>
+    <label class="mb-0" for="courseSelect"><?php echo get_string('ui_progress_ticks_report_select_course', 'local_admindashboard'); ?></label>
     <select id="courseSelect" name="courseid" class="form-select" style="max-width:360px">
         <option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>Select a course…</option>
         <?php foreach ($meta['courses'] as $course): ?>
@@ -44,7 +44,7 @@ $meta = local_admindashboard_get_meta($courseid);
         <?php endforeach; ?>
     </select>
 
-    <label class="mb-0" for="deptSelect" style="margin-left:12px">Select Department</label>
+    <label class="mb-0" for="deptSelect" style="margin-left:12px"><?php echo get_string('ui_progress_ticks_report_select_department', 'local_admindashboard'); ?></label>
     <select id="deptSelect" name="department" class="form-select" style="max-width:320px">
         <option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
         <?php foreach ($meta['departments'] as $dept): ?>
@@ -102,10 +102,10 @@ $meta = local_admindashboard_get_meta($courseid);
     }
     ?>
 
-    <label class="mb-0" for="participantSelect" style="margin-left:12px">Participant</label>
+    <label class="mb-0" for="participantSelect" style="margin-left:12px"><?php echo get_string('ui_progress_ticks_report_participant', 'local_admindashboard'); ?></label>
     <select id="participantSelect" name="userid" class="form-select" style="max-width:360px">
         <?php if ($courseid <= 0): ?>
-            <option value="0" selected>Select a course first…</option>
+            <option value="0" selected><?php echo get_string('ui_progress_ticks_report_select_a_course_first', 'local_admindashboard'); ?></option>
         <?php else: ?>
             <option value="0" <?php echo $userid === 0 ? 'selected' : ''; ?>>All Participants</option>
             <?php foreach ($participantsopts as $opt): ?>
@@ -116,7 +116,7 @@ $meta = local_admindashboard_get_meta($courseid);
         <?php endif; ?>
     </select>
 
-    <label class="mb-0" for="sectionSelect" style="margin-left:12px">Select Module</label>
+    <label class="mb-0" for="sectionSelect" style="margin-left:12px"><?php echo get_string('ui_progress_ticks_report_select_module', 'local_admindashboard'); ?></label>
     <select id="sectionSelect" name="section" class="form-select" style="max-width:220px">
         <option value="0" <?php echo $sectionnum === 0 ? 'selected' : ''; ?>>All Modules</option>
         <?php foreach ($sectionsopts as $opt): ?>
@@ -126,7 +126,7 @@ $meta = local_admindashboard_get_meta($courseid);
         <?php endforeach; ?>
     </select>
 
-    <button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+    <button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_progress_ticks_report_apply', 'local_admindashboard'); ?></button>
 </form>
 
 <?php

@@ -111,64 +111,64 @@ $profilefields = $DB->get_records_sql(
 );
 ?>
 
-<h2 class="mb-3">Group &amp; Department Setup</h2>
+<h2 class="mb-3"><?php echo get_string('ui_group_department_setup_group_department_setup', 'local_admindashboard'); ?></h2>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Directory Search</div>
-	<label class="mb-0" for="groupSearch">Find group, department, or profile field</label>
+	<div class="title"><?php echo get_string('ui_group_department_setup_directory_search', 'local_admindashboard'); ?></div>
+	<label class="mb-0" for="groupSearch"><?php echo get_string('ui_group_department_setup_find_group_department_or_profile_field', 'local_admindashboard'); ?></label>
 	<input id="groupSearch" name="q" class="form-control" style="max-width:420px" value="<?php echo s($q); ?>" placeholder="Search department names, cohorts, or profile fields" />
-	<button type="submit" class="btn btn-primary">Apply</button>
+	<button type="submit" class="btn btn-primary"><?php echo get_string('ui_group_department_setup_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/group_department_setup.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Departments</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_group_department_setup_departments', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->totaldepartments ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Unique department values currently used on real user accounts.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_group_department_setup_unique_department_values_currently_used_on_real_user_accounts', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Unassigned Users</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_group_department_setup_unassigned_users', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->unassignedusers ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Accounts missing a department tag and likely affecting reporting.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_group_department_setup_accounts_missing_a_department_tag_and_likely_affecting_reporting', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Cohorts</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_group_department_setup_cohorts', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $totalcohorts; ?></div>
-		<div class="admindash-module-stat__meta">System cohorts available for enrolment and audience grouping.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_group_department_setup_system_cohorts_available_for_enrolment_and_audience_grouping', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Profile Fields</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_group_department_setup_profile_fields', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $profilefieldcount; ?></div>
-		<div class="admindash-module-stat__meta"><?php echo (int)($summary->active30users ?? 0); ?> active users in the last 30 days across the current directory.</div>
+		<div class="admindash-module-stat__meta"><?php echo (int)($summary->active30users ?? 0); ?> <?php echo get_string('ui_group_department_setup_active_users_in_the_last_30_days_across_the_current_directory', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
-		<h5 class="mb-3">Configuration Actions</h5>
+		<h5 class="mb-3"><?php echo get_string('ui_group_department_setup_configuration_actions', 'local_admindashboard'); ?></h5>
 		<div class="admindash-module-actions">
 			<a class="btn btn-primary" href="<?php echo new moodle_url('/user/profile/index.php'); ?>">Profile fields</a>
 			<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/cohort/index.php', ['contextid' => $systemcontextid]); ?>">Manage cohorts</a>
 			<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/manage_users.php'); ?>">Manage users</a>
 			<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/department_reports.php'); ?>">Department reports</a>
 		</div>
-		<p class="admindash-admin-note mb-0">This page gives you the reporting layer around taxonomy setup, while the linked core screens still handle the actual edit workflows.</p>
+		<p class="admindash-admin-note mb-0"><?php echo get_string('ui_group_department_setup_this_page_gives_you_the_reporting_layer_around_taxonomy_setup_w_a18ed082', 'local_admindashboard'); ?></p>
 	</div>
 
 	<div class="admindash-card admindash-admin-panel">
-		<h5 class="mb-3">Department Signals</h5>
+		<h5 class="mb-3"><?php echo get_string('ui_group_department_setup_department_signals', 'local_admindashboard'); ?></h5>
 		<?php if (!empty($departmentrows)): ?>
 			<ul class="admindash-admin-list">
 				<?php foreach (array_slice(array_values($departmentrows), 0, 8) as $departmentrow): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s($departmentrow->departmentlabel); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)$departmentrow->enabledusers; ?> enabled / <?php echo (int)$departmentrow->active30users; ?> active 30d</span>
+						<span class="admindash-admin-list__value"><?php echo (int)$departmentrow->enabledusers; ?> <?php echo get_string('ui_group_department_setup_enabled', 'local_admindashboard'); ?> <?php echo (int)$departmentrow->active30users; ?> <?php echo get_string('ui_group_department_setup_active_30d', 'local_admindashboard'); ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php else: ?>
-			<p class="admindash-admin-note mb-0">No departments matched the current search.</p>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_group_department_setup_no_departments_matched_the_current_search', 'local_admindashboard'); ?></p>
 		<?php endif; ?>
 	</div>
 </div>
@@ -176,23 +176,23 @@ $profilefields = $DB->get_records_sql(
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Department Directory</h5>
-			<span class="admindash-admin-note"><?php echo count($departmentrows); ?> rows</span>
+			<h5 class="mb-0"><?php echo get_string('ui_group_department_setup_department_directory', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo count($departmentrows); ?> <?php echo get_string('ui_group_department_setup_rows', 'local_admindashboard'); ?></span>
 		</div>
 		<div class="admindash-tablewrap">
 			<table class="table table-striped table-hover admindash-admin-table">
 				<thead>
 					<tr>
-						<th>Department</th>
-						<th>Total users</th>
-						<th>Enabled</th>
-						<th>Active in 30d</th>
+						<th><?php echo get_string('ui_group_department_setup_department', 'local_admindashboard'); ?></th>
+						<th><?php echo get_string('ui_group_department_setup_total_users', 'local_admindashboard'); ?></th>
+						<th><?php echo get_string('ui_group_department_setup_enabled', 'local_admindashboard'); ?></th>
+						<th><?php echo get_string('ui_group_department_setup_active_in_30d', 'local_admindashboard'); ?></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php if (empty($departmentrows)): ?>
 						<tr>
-							<td colspan="4" class="text-center py-4">No department records found.</td>
+							<td colspan="4" class="text-center py-4"><?php echo get_string('ui_group_department_setup_no_department_records_found', 'local_admindashboard'); ?></td>
 						</tr>
 					<?php else: ?>
 						<?php foreach ($departmentrows as $departmentrow): ?>
@@ -212,22 +212,22 @@ $profilefields = $DB->get_records_sql(
 	<div class="admindash-admin-stack">
 		<div class="admindash-card admindash-admin-panel">
 			<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-				<h5 class="mb-0">Cohorts</h5>
-				<span class="admindash-admin-note"><?php echo $totalcohorts; ?> total</span>
+				<h5 class="mb-0"><?php echo get_string('ui_group_department_setup_cohorts', 'local_admindashboard'); ?></h5>
+				<span class="admindash-admin-note"><?php echo $totalcohorts; ?> <?php echo get_string('ui_group_department_setup_total', 'local_admindashboard'); ?></span>
 			</div>
 			<div class="admindash-tablewrap">
 				<table class="table table-striped table-hover admindash-admin-table">
 					<thead>
 						<tr>
-							<th>Name</th>
-							<th>ID Number</th>
-							<th>Members</th>
+							<th><?php echo get_string('ui_group_department_setup_name', 'local_admindashboard'); ?></th>
+							<th><?php echo get_string('ui_group_department_setup_id_number', 'local_admindashboard'); ?></th>
+							<th><?php echo get_string('ui_group_department_setup_members', 'local_admindashboard'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php if (empty($cohortrows)): ?>
 							<tr>
-								<td colspan="3" class="text-center py-4">No cohorts matched the current search.</td>
+								<td colspan="3" class="text-center py-4"><?php echo get_string('ui_group_department_setup_no_cohorts_matched_the_current_search', 'local_admindashboard'); ?></td>
 							</tr>
 						<?php else: ?>
 							<?php foreach ($cohortrows as $cohortrow): ?>
@@ -245,23 +245,23 @@ $profilefields = $DB->get_records_sql(
 
 		<div class="admindash-card admindash-admin-panel mt-3">
 			<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-				<h5 class="mb-0">Custom Profile Fields</h5>
-				<span class="admindash-admin-note"><?php echo $profilefieldcount; ?> configured</span>
+				<h5 class="mb-0"><?php echo get_string('ui_group_department_setup_custom_profile_fields', 'local_admindashboard'); ?></h5>
+				<span class="admindash-admin-note"><?php echo $profilefieldcount; ?> <?php echo get_string('ui_group_department_setup_configured', 'local_admindashboard'); ?></span>
 			</div>
 			<div class="admindash-tablewrap">
 				<table class="table table-striped table-hover admindash-admin-table">
 					<thead>
 						<tr>
-							<th>Name</th>
-							<th>Shortname</th>
-							<th>Type</th>
-							<th>Required</th>
+							<th><?php echo get_string('ui_group_department_setup_name', 'local_admindashboard'); ?></th>
+							<th><?php echo get_string('ui_group_department_setup_shortname', 'local_admindashboard'); ?></th>
+							<th><?php echo get_string('ui_group_department_setup_type', 'local_admindashboard'); ?></th>
+							<th><?php echo get_string('ui_group_department_setup_required', 'local_admindashboard'); ?></th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php if (empty($profilefields)): ?>
 							<tr>
-								<td colspan="4" class="text-center py-4">No custom profile fields are configured.</td>
+								<td colspan="4" class="text-center py-4"><?php echo get_string('ui_group_department_setup_no_custom_profile_fields_are_configured', 'local_admindashboard'); ?></td>
 							</tr>
 						<?php else: ?>
 							<?php foreach ($profilefields as $field): ?>

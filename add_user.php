@@ -106,32 +106,32 @@ local_admindashboard_render_workspace_header(
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Departments Ready</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_add_user_departments_ready', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $deptcount; ?></div>
-		<div class="admindash-module-stat__meta">Available department values for immediate user mapping.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_add_user_available_department_values_for_immediate_user_mapping', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Roles Available</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_add_user_roles_available', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $totroles; ?></div>
-		<div class="admindash-module-stat__meta">Assignable operational roles currently configured in the LMS.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_add_user_assignable_operational_roles_currently_configured_in_the_lms', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Required Profile Fields</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_add_user_required_profile_fields', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $requiredcount; ?></div>
-		<div class="admindash-module-stat__meta">Custom fields that should be satisfied during onboarding.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_add_user_custom_fields_that_should_be_satisfied_during_onboarding', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Cohorts Available</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_add_user_cohorts_available', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $totcohorts; ?></div>
-		<div class="admindash-module-stat__meta">System cohorts available for immediate audience placement.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_add_user_system_cohorts_available_for_immediate_audience_placement', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Required Profile Fields</h5>
-			<span class="admindash-admin-note"><?php echo $requiredcount; ?> required</span>
+			<h5 class="mb-0"><?php echo get_string('ui_add_user_required_profile_fields', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo $requiredcount; ?> <?php echo get_string('ui_add_user_required', 'local_admindashboard'); ?></span>
 		</div>
 		<?php if (!empty($requiredfields)): ?>
 			<div class="admindash-admin-list">
@@ -143,54 +143,54 @@ local_admindashboard_render_workspace_header(
 				<?php endforeach; ?>
 			</div>
 		<?php else: ?>
-			<p class="admindash-admin-note mb-0">No required custom profile fields are configured right now.</p>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_add_user_no_required_custom_profile_fields_are_configured_right_now', 'local_admindashboard'); ?></p>
 		<?php endif; ?>
 	</div>
 
 	<div class="admindash-admin-stack">
 		<div class="admindash-card admindash-admin-panel">
 			<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-				<h5 class="mb-0">Role Defaults to Review</h5>
-				<span class="admindash-admin-note">Top assignments</span>
+				<h5 class="mb-0"><?php echo get_string('ui_add_user_role_defaults_to_review', 'local_admindashboard'); ?></h5>
+				<span class="admindash-admin-note"><?php echo get_string('ui_add_user_top_assignments', 'local_admindashboard'); ?></span>
 			</div>
 			<?php if (!empty($roles)): ?>
 				<ul class="admindash-admin-list">
 					<?php foreach ($roles as $role): ?>
 						<li>
 							<span class="admindash-admin-list__label"><?php echo s(trim((string)($role->name ?: $role->shortname))); ?></span>
-							<span class="admindash-admin-list__value"><?php echo (int)$role->assignmentcount; ?> assignments</span>
+							<span class="admindash-admin-list__value"><?php echo (int)$role->assignmentcount; ?> <?php echo get_string('ui_add_user_assignments', 'local_admindashboard'); ?></span>
 						</li>
 					<?php endforeach; ?>
 				</ul>
 			<?php else: ?>
-				<p class="admindash-admin-note mb-0">No assignable roles were returned.</p>
+				<p class="admindash-admin-note mb-0"><?php echo get_string('ui_add_user_no_assignable_roles_were_returned', 'local_admindashboard'); ?></p>
 			<?php endif; ?>
 		</div>
 
 		<div class="admindash-card admindash-admin-panel mt-3">
 			<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-				<h5 class="mb-0">Placement Readiness</h5>
-				<span class="admindash-admin-note">Top destinations</span>
+				<h5 class="mb-0"><?php echo get_string('ui_add_user_placement_readiness', 'local_admindashboard'); ?></h5>
+				<span class="admindash-admin-note"><?php echo get_string('ui_add_user_top_destinations', 'local_admindashboard'); ?></span>
 			</div>
 			<div class="admindash-admin-split-grid">
 				<div>
-					<div class="admindash-callout-panel__eyebrow">Departments</div>
+					<div class="admindash-callout-panel__eyebrow"><?php echo get_string('ui_add_user_departments', 'local_admindashboard'); ?></div>
 					<ul class="admindash-admin-list is-tight">
 						<?php foreach ($departmentrows as $departmentrow): ?>
 							<li>
 								<span class="admindash-admin-list__label"><?php echo s($departmentrow->departmentlabel); ?></span>
-								<span class="admindash-admin-list__value"><?php echo (int)$departmentrow->usercount; ?> users</span>
+								<span class="admindash-admin-list__value"><?php echo (int)$departmentrow->usercount; ?> <?php echo get_string('ui_add_user_users', 'local_admindashboard'); ?></span>
 							</li>
 						<?php endforeach; ?>
 					</ul>
 				</div>
 				<div>
-					<div class="admindash-callout-panel__eyebrow">Cohorts</div>
+					<div class="admindash-callout-panel__eyebrow"><?php echo get_string('ui_add_user_cohorts', 'local_admindashboard'); ?></div>
 					<ul class="admindash-admin-list is-tight">
 						<?php foreach ($cohortrows as $cohortrow): ?>
 							<li>
 								<span class="admindash-admin-list__label"><?php echo s($cohortrow->name); ?></span>
-								<span class="admindash-admin-list__value"><?php echo (int)$cohortrow->membercount; ?> members</span>
+								<span class="admindash-admin-list__value"><?php echo (int)$cohortrow->membercount; ?> <?php echo get_string('ui_add_user_members', 'local_admindashboard'); ?></span>
 							</li>
 						<?php endforeach; ?>
 					</ul>

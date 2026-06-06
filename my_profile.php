@@ -181,32 +181,32 @@ local_admindashboard_render_workspace_header(
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Profile Readiness</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_my_profile_profile_readiness', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $profilereadiness; ?>%</div>
-		<div class="admindash-module-stat__meta">Based on key identity and routing fields for this account.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_my_profile_based_on_key_identity_and_routing_fields_for_this_account', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Assigned Roles</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_my_profile_assigned_roles', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo count($roles); ?></div>
-		<div class="admindash-module-stat__meta">Non-default roles currently shaping your access footprint.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_my_profile_non_default_roles_currently_shaping_your_access_footprint', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Course Reach</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_my_profile_course_reach', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $enrolledcourses; ?></div>
-		<div class="admindash-module-stat__meta"><?php echo $courserolecount; ?> distinct course-role contexts currently tied to this user.</div>
+		<div class="admindash-module-stat__meta"><?php echo $courserolecount; ?> <?php echo get_string('ui_my_profile_distinct_course_role_contexts_currently_tied_to_this_user', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Notification Channels</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_my_profile_notification_channels', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $messagechannelcount; ?></div>
-		<div class="admindash-module-stat__meta">Enabled message processor plugins available to deliver notices and replies.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_my_profile_enabled_message_processor_plugins_available_to_deliver_notices__ea2d7c86', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Identity Snapshot</h5>
-			<span class="admindash-admin-note">Live account view</span>
+			<h5 class="mb-0"><?php echo get_string('ui_my_profile_identity_snapshot', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_my_profile_live_account_view', 'local_admindashboard'); ?></span>
 		</div>
 		<div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">
 			<div><?php echo $OUTPUT->user_picture($currentuser, ['size' => 120, 'link' => false]); ?></div>
@@ -216,15 +216,15 @@ local_admindashboard_render_workspace_header(
 				<div class="admindash-admin-badges mb-3"><?php echo implode('', $profilebadges); ?></div>
 				<ul class="admindash-admin-list">
 					<li>
-						<span class="admindash-admin-list__label">Department</span>
+						<span class="admindash-admin-list__label"><?php echo get_string('ui_my_profile_department', 'local_admindashboard'); ?></span>
 						<span class="admindash-admin-list__value"><?php echo s(trim((string)$currentuser->department) !== '' ? (string)$currentuser->department : 'Unassigned'); ?></span>
 					</li>
 					<li>
-						<span class="admindash-admin-list__label">City / country</span>
+						<span class="admindash-admin-list__label"><?php echo get_string('ui_my_profile_city_country', 'local_admindashboard'); ?></span>
 						<span class="admindash-admin-list__value"><?php echo s(trim((string)$currentuser->city) !== '' ? (string)$currentuser->city : 'No city'); ?> / <?php echo s(trim((string)$currentuser->country) !== '' ? (string)$currentuser->country : 'No country'); ?></span>
 					</li>
 					<li>
-						<span class="admindash-admin-list__label">Last access</span>
+						<span class="admindash-admin-list__label"><?php echo get_string('ui_my_profile_last_access', 'local_admindashboard'); ?></span>
 						<span class="admindash-admin-list__value"><?php echo (int)$currentuser->lastaccess > 0 ? s(userdate((int)$currentuser->lastaccess)) : 'No recorded access'; ?></span>
 					</li>
 				</ul>
@@ -236,7 +236,7 @@ local_admindashboard_render_workspace_header(
 
 <?php if ($profiletext !== ''): ?>
 	<div class="admindash-card admindash-admin-panel mt-3">
-		<h5 class="mb-2">Profile Note</h5>
+		<h5 class="mb-2"><?php echo get_string('ui_my_profile_profile_note', 'local_admindashboard'); ?></h5>
 		<p class="admindash-admin-note mb-0"><?php echo s($profiletext); ?></p>
 	</div>
 <?php endif; ?>
@@ -244,19 +244,19 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Profile Domains</h5>
-			<p class="admindash-admin-note mb-0">Each domain explains one part of your account footprint and points to the right self-service route.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_my_profile_profile_domains', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_my_profile_each_domain_explains_one_part_of_your_account_footprint_and_poi_d76c22ce', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Domain</th>
-					<th>Status</th>
-					<th>Current Snapshot</th>
-					<th>Why It Matters</th>
-					<th>Action</th>
+					<th><?php echo get_string('ui_my_profile_domain', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_my_profile_status', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_my_profile_current_snapshot', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_my_profile_why_it_matters', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_my_profile_action', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -281,8 +281,8 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Role Footprint</h5>
-			<span class="admindash-admin-note">Access context</span>
+			<h5 class="mb-0"><?php echo get_string('ui_my_profile_role_footprint', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_my_profile_access_context', 'local_admindashboard'); ?></span>
 		</div>
 		<?php if (!empty($roles)): ?>
 			<div class="admindash-admin-badges">
@@ -291,7 +291,7 @@ local_admindashboard_render_workspace_header(
 				<?php endforeach; ?>
 			</div>
 		<?php else: ?>
-			<p class="admindash-admin-note mb-0">No non-default role assignments were detected for this user.</p>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_my_profile_no_non_default_role_assignments_were_detected_for_this_user', 'local_admindashboard'); ?></p>
 		<?php endif; ?>
 	</div>
 

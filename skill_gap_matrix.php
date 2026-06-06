@@ -207,9 +207,9 @@ local_admindashboard_render_workspace_header(
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_skill_gap_matrix_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="courseSelect">Course</label>
+	<label class="mb-0" for="courseSelect"><?php echo get_string('ui_skill_gap_matrix_course', 'local_admindashboard'); ?></label>
 	<select id="courseSelect" name="courseid" class="form-select" style="max-width:320px">
 		<option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>All Courses</option>
 		<?php foreach ($meta['courses'] as $course): ?>
@@ -219,7 +219,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="deptSelect">Department</label>
+	<label class="mb-0" for="deptSelect"><?php echo get_string('ui_skill_gap_matrix_department', 'local_admindashboard'); ?></label>
 	<select id="deptSelect" name="department" class="form-select" style="max-width:320px">
 		<option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
 		<?php foreach ($meta['departments'] as $dept): ?>
@@ -229,25 +229,25 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_skill_gap_matrix_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/skill_gap_matrix.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Tracks in View</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_skill_gap_matrix_tracks_in_view', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $totaltracks; ?></div>
-		<div class="admindash-module-stat__meta">Courses currently acting as skill-track proxies inside the selected scope.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_skill_gap_matrix_courses_currently_acting_as_skill_track_proxies_inside_the_sele_c8f0196b', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Certified Coverage</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_skill_gap_matrix_certified_coverage', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $totalcertified; ?></div>
-		<div class="admindash-module-stat__meta">Certification-backed learner coverage across the visible tracks.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_skill_gap_matrix_certification_backed_learner_coverage_across_the_visible_tracks', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Gap Proxy</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_skill_gap_matrix_gap_proxy', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $overallgap; ?></div>
-		<div class="admindash-module-stat__meta">Learner volume not yet covered by completion or certification signals.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_skill_gap_matrix_learner_volume_not_yet_covered_by_completion_or_certification_signals', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
 		<div class="admindash-module-stat__label"><?php echo $competencyavailable ? 'Competencies' : 'Framework Signals'; ?></div>
@@ -260,7 +260,7 @@ local_admindashboard_render_workspace_header(
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
 			<h5 class="mb-0"><?php echo $competencyavailable ? 'Department Skill Gaps' : 'Department Coverage Proxy'; ?></h5>
-			<span class="admindash-admin-note">Top departments</span>
+			<span class="admindash-admin-note"><?php echo get_string('ui_skill_gap_matrix_top_departments', 'local_admindashboard'); ?></span>
 		</div>
 		<?php $gaprows = $competencyavailable ? $departmentgaprows : $deptproxyrows; ?>
 		<?php if (!empty($gaprows)): ?>
@@ -273,12 +273,12 @@ local_admindashboard_render_workspace_header(
 					?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s($row->departmentlabel); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)$row->learnercount; ?> learners · <?php echo s($label); ?></span>
+						<span class="admindash-admin-list__value"><?php echo (int)$row->learnercount; ?> <?php echo get_string('ui_skill_gap_matrix_learners', 'local_admindashboard'); ?> <?php echo s($label); ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php else: ?>
-			<p class="admindash-admin-note mb-0">No department-level gap data was returned for the current filters.</p>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_skill_gap_matrix_no_department_level_gap_data_was_returned_for_the_current_filters', 'local_admindashboard'); ?></p>
 		<?php endif; ?>
 	</div>
 </div>
@@ -286,28 +286,28 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Skill Track Matrix</h5>
-			<p class="admindash-admin-note mb-0">This table uses visible courses as the skill-track layer, then overlays completion, certificate, and competency signals.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_skill_gap_matrix_skill_track_matrix', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_skill_gap_matrix_this_table_uses_visible_courses_as_the_skill_track_layer_then_o_57a25fb3', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Track</th>
-					<th>Learners</th>
-					<th>Completed</th>
-					<th>Certified</th>
-					<th>Competencies</th>
-					<th>Gap</th>
-					<th>Readiness</th>
-					<th>Actions</th>
+					<th><?php echo get_string('ui_skill_gap_matrix_track', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_skill_gap_matrix_learners', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_skill_gap_matrix_completed', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_skill_gap_matrix_certified', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_skill_gap_matrix_competencies', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_skill_gap_matrix_gap', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_skill_gap_matrix_readiness', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_skill_gap_matrix_actions', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($skillproxyrows)): ?>
 					<tr>
-						<td colspan="8" class="text-center py-4">No skill-track rows were found for the current scope.</td>
+						<td colspan="8" class="text-center py-4"><?php echo get_string('ui_skill_gap_matrix_no_skill_track_rows_were_found_for_the_current_scope', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach ($skillproxyrows as $row): ?>
@@ -327,7 +327,7 @@ local_admindashboard_render_workspace_header(
 							<td>
 								<div class="admindash-admin-user">
 									<a href="<?php echo new moodle_url('/course/view.php', ['id' => $row['id']]); ?>" class="admindash-admin-user__name"><?php echo s($row['fullname']); ?></a>
-									<div class="admindash-admin-note">Course-backed skill track</div>
+									<div class="admindash-admin-note"><?php echo get_string('ui_skill_gap_matrix_course_backed_skill_track', 'local_admindashboard'); ?></div>
 								</div>
 							</td>
 							<td><?php echo $row['learners']; ?></td>

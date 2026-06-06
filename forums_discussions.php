@@ -284,9 +284,9 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_forums_discussions_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="discussionCategory">Category</label>
+	<label class="mb-0" for="discussionCategory"><?php echo get_string('ui_forums_discussions_category', 'local_admindashboard'); ?></label>
 	<select id="discussionCategory" name="categoryid" class="form-select" style="max-width:300px">
 		<option value="0" <?php echo $resolvedcategoryid === 0 ? 'selected' : ''; ?>>All categories</option>
 		<?php foreach ($categoryoptions as $option): ?>
@@ -296,7 +296,7 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="discussionType">Forum Type</label>
+	<label class="mb-0" for="discussionType"><?php echo get_string('ui_forums_discussions_forum_type', 'local_admindashboard'); ?></label>
 	<select id="discussionType" name="forumtype" class="form-select" style="max-width:260px">
 		<?php foreach ($typeoptions as $value => $label): ?>
 			<option value="<?php echo s($value); ?>" <?php echo $forumtype === $value ? 'selected' : ''; ?>>
@@ -305,7 +305,7 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="discussionHealth">Health</label>
+	<label class="mb-0" for="discussionHealth"><?php echo get_string('ui_forums_discussions_health', 'local_admindashboard'); ?></label>
 	<select id="discussionHealth" name="health" class="form-select" style="max-width:240px">
 		<?php foreach ($healthoptions as $value => $label): ?>
 			<option value="<?php echo s($value); ?>" <?php echo $health === $value ? 'selected' : ''; ?>>
@@ -314,61 +314,61 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="discussionSearch">Search</label>
+	<label class="mb-0" for="discussionSearch"><?php echo get_string('ui_forums_discussions_search', 'local_admindashboard'); ?></label>
 	<input id="discussionSearch" name="q" class="form-control" style="max-width:280px" value="<?php echo s($q); ?>" placeholder="Discussion, forum, or course" />
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_forums_discussions_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/forums_discussions.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Forum Spaces</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_forums_discussions_forum_spaces', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->forumcount ?? 0); ?></div>
-		<div class="admindash-module-stat__meta"><?php echo (int)($summary->coursecount ?? 0); ?> courses currently contribute discussion spaces in this scope.</div>
+		<div class="admindash-module-stat__meta"><?php echo (int)($summary->coursecount ?? 0); ?> <?php echo get_string('ui_forums_discussions_courses_currently_contribute_discussion_spaces_in_this_scope', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Open Discussions</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_forums_discussions_open_discussions', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->discussioncount ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Discussion threads currently matching the active filters.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_forums_discussions_discussion_threads_currently_matching_the_active_filters', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Needs Response</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_forums_discussions_needs_response', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->unansweredcount ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Threads older than 48 hours where nobody has replied yet.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_forums_discussions_threads_older_than_48_hours_where_nobody_has_replied_yet', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Stale Threads</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_forums_discussions_stale_threads', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->stalecount ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Threads with no recent activity over the last 14 days.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_forums_discussions_threads_with_no_recent_activity_over_the_last_14_days', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Discussion Queue</h5>
-			<p class="admindash-admin-note mb-0">Recent discussions ordered by pin state and latest modification, with health states derived from activity and reply posture.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_forums_discussions_discussion_queue', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_forums_discussions_recent_discussions_ordered_by_pin_state_and_latest_modification_5890bf1f', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Discussion</th>
-					<th>Forum</th>
-					<th>Course</th>
-					<th>Status</th>
-					<th>Replies</th>
-					<th>Last Activity</th>
-					<th>Started By</th>
-					<th>Action</th>
+					<th><?php echo get_string('ui_forums_discussions_discussion', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_forums_discussions_forum', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_forums_discussions_course', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_forums_discussions_status', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_forums_discussions_replies', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_forums_discussions_last_activity', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_forums_discussions_started_by', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_forums_discussions_action', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($rows)): ?>
 					<tr>
-						<td colspan="8" class="text-center py-4">No discussions matched the current filters.</td>
+						<td colspan="8" class="text-center py-4"><?php echo get_string('ui_forums_discussions_no_discussions_matched_the_current_filters', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach ($rows as $row): ?>
@@ -413,7 +413,7 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 							<td>
 								<?php echo s(userdate((int)$row->timemodified)); ?>
 								<?php if ((int)$row->timelocked > 0): ?>
-									<div class="admindash-admin-note">Locks <?php echo s(userdate((int)$row->timelocked)); ?></div>
+									<div class="admindash-admin-note"><?php echo get_string('ui_forums_discussions_locks', 'local_admindashboard'); ?> <?php echo s(userdate((int)$row->timelocked)); ?></div>
 								<?php endif; ?>
 							</td>
 							<td><?php echo s($starter !== '' ? $starter : 'Unknown user'); ?></td>
@@ -433,8 +433,8 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Health Lanes</h5>
-			<span class="admindash-admin-note">Operational split</span>
+			<h5 class="mb-0"><?php echo get_string('ui_forums_discussions_health_lanes', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_forums_discussions_operational_split', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php foreach ($lanes as $lane): ?>
@@ -448,20 +448,20 @@ $resolvedcategoryid = array_key_exists($categoryid, $categoryoptions) ? $categor
 
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Forum Health</h5>
-			<span class="admindash-admin-note">Top spaces</span>
+			<h5 class="mb-0"><?php echo get_string('ui_forums_discussions_forum_health', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_forums_discussions_top_spaces', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php if (empty($forumhealth)): ?>
 				<li>
-					<span class="admindash-admin-list__label">No forums</span>
-					<span class="admindash-admin-list__value">There are no collaborative forums in the current filter scope.</span>
+					<span class="admindash-admin-list__label"><?php echo get_string('ui_forums_discussions_no_forums', 'local_admindashboard'); ?></span>
+					<span class="admindash-admin-list__value"><?php echo get_string('ui_forums_discussions_there_are_no_collaborative_forums_in_the_current_filter_scope', 'local_admindashboard'); ?></span>
 				</li>
 			<?php else: ?>
 				<?php foreach ($forumhealth as $space): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s($space->name); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)$space->discussioncount; ?> discussions · <?php echo (int)$space->unansweredcount; ?> unanswered · <?php echo (int)$space->stalecount; ?> stale · last active <?php echo s(userdate((int)$space->lastactivity)); ?></span>
+						<span class="admindash-admin-list__value"><?php echo (int)$space->discussioncount; ?> <?php echo get_string('ui_forums_discussions_discussions', 'local_admindashboard'); ?> <?php echo (int)$space->unansweredcount; ?> <?php echo get_string('ui_forums_discussions_unanswered', 'local_admindashboard'); ?> <?php echo (int)$space->stalecount; ?> <?php echo get_string('ui_forums_discussions_stale_last_active', 'local_admindashboard'); ?> <?php echo s(userdate((int)$space->lastactivity)); ?></span>
 					</li>
 				<?php endforeach; ?>
 			<?php endif; ?>

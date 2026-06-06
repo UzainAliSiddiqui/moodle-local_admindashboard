@@ -2530,7 +2530,7 @@ function local_admindashboard_get_live_feed_rows(int $courseid, string $departme
     $genderjoin = '';
     $genderfieldid = local_admindashboard_get_gender_field_id();
     if ($genderfieldid > 0) {
-        $genderselect = 'COALESCE(uig.data, "") AS genderdata';
+        $genderselect = "COALESCE(uig.data, '') AS genderdata";
         $genderjoin = ' LEFT JOIN {user_info_data} uig ON uig.userid = u.id AND uig.fieldid = :livefeedgenderfieldid';
         $params['livefeedgenderfieldid'] = $genderfieldid;
     }

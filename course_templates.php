@@ -123,12 +123,12 @@ local_admindashboard_render_workspace_header(
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Template Search</div>
+	<div class="title"><?php echo get_string('ui_course_templates_template_search', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="templateSearch">Search</label>
+	<label class="mb-0" for="templateSearch"><?php echo get_string('ui_course_templates_search', 'local_admindashboard'); ?></label>
 	<input id="templateSearch" name="q" class="form-control" style="max-width:280px" value="<?php echo s($q); ?>" placeholder="Course name, shortname, or format" />
 
-	<label class="mb-0" for="templateCategorySelect">Category</label>
+	<label class="mb-0" for="templateCategorySelect"><?php echo get_string('ui_course_templates_category', 'local_admindashboard'); ?></label>
 	<select id="templateCategorySelect" name="categoryid" class="form-select" style="max-width:260px">
 		<option value="0" <?php echo $categoryid === 0 ? 'selected' : ''; ?>>All categories</option>
 		<?php foreach ($categories as $category): ?>
@@ -138,44 +138,44 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_course_templates_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/course_templates.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Candidates</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_course_templates_candidates', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $templatecount; ?></div>
-		<div class="admindash-module-stat__meta">Courses currently surfaced as template candidates inside the selected scope.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_course_templates_courses_currently_surfaced_as_template_candidates_inside_the_se_fc707ddd', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Completion Ready</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_course_templates_completion_ready', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $completionready; ?></div>
-		<div class="admindash-module-stat__meta">Courses with at least one tracked activity, making them easier to operationalize.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_course_templates_courses_with_at_least_one_tracked_activity_making_them_easier_t_8a049845', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Reusable Structures</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_course_templates_reusable_structures', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $reusable; ?></div>
-		<div class="admindash-module-stat__meta">Courses with enough sections and modules to act as solid blueprint candidates.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_course_templates_courses_with_enough_sections_and_modules_to_act_as_solid_bluepr_bf73e1df', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Formats Seen</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_course_templates_formats_seen', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo count($formatrows); ?></div>
-		<div class="admindash-module-stat__meta">Course formats represented in the current template search results.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_course_templates_course_formats_represented_in_the_current_template_search_results', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Format Mix</h5>
-			<span class="admindash-admin-note">Patterns by build style</span>
+			<h5 class="mb-0"><?php echo get_string('ui_course_templates_format_mix', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_course_templates_patterns_by_build_style', 'local_admindashboard'); ?></span>
 		</div>
 		<ul class="admindash-admin-list">
 			<?php foreach ($formatrows as $row): ?>
 				<li>
 					<span class="admindash-admin-list__label"><?php echo s($row->formatname); ?></span>
-					<span class="admindash-admin-list__value"><?php echo (int)$row->coursecount; ?> courses</span>
+					<span class="admindash-admin-list__value"><?php echo (int)$row->coursecount; ?> <?php echo get_string('ui_course_templates_courses', 'local_admindashboard'); ?></span>
 				</li>
 			<?php endforeach; ?>
 		</ul>
@@ -185,27 +185,27 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Template Candidate Board</h5>
-			<p class="admindash-admin-note mb-0">Use this table to identify courses that can be standardized into reusable build patterns.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_course_templates_template_candidate_board', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_course_templates_use_this_table_to_identify_courses_that_can_be_standardized_int_1aace3fc', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Course</th>
-					<th>Category</th>
-					<th>Format</th>
-					<th>Structure</th>
-					<th>Learners</th>
-					<th>Signals</th>
-					<th>Actions</th>
+					<th><?php echo get_string('ui_course_templates_course', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_templates_category', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_templates_format', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_templates_structure', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_templates_learners', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_templates_signals', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_course_templates_actions', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($templatecourses)): ?>
 					<tr>
-						<td colspan="7" class="text-center py-4">No course candidates matched the current template filters.</td>
+						<td colspan="7" class="text-center py-4"><?php echo get_string('ui_course_templates_no_course_candidates_matched_the_current_template_filters', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach ($templatecourses as $course): ?>
@@ -233,7 +233,7 @@ local_admindashboard_render_workspace_header(
 							</td>
 							<td><?php echo s($course->categoryname); ?></td>
 							<td><?php echo s($course->formatname); ?></td>
-							<td><?php echo (int)$course->sectioncount; ?> sections · <?php echo (int)$course->modulecount; ?> modules · <?php echo (int)$course->trackablecount; ?> tracked</td>
+							<td><?php echo (int)$course->sectioncount; ?> <?php echo get_string('ui_course_templates_sections', 'local_admindashboard'); ?> <?php echo (int)$course->modulecount; ?> <?php echo get_string('ui_course_templates_modules', 'local_admindashboard'); ?> <?php echo (int)$course->trackablecount; ?> <?php echo get_string('ui_course_templates_tracked', 'local_admindashboard'); ?></td>
 							<td><?php echo (int)$course->learnercount; ?></td>
 							<td><div class="admindash-admin-badges"><?php echo implode('', $signals); ?></div></td>
 							<td>

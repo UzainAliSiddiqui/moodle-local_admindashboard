@@ -21,7 +21,7 @@ local_admindashboard_setup_page('/local/admindashboard/course_analytics.php', 'C
 local_admindashboard_render_header('courseanalytics.overview');
 ?>
 
-<h2 class="mb-3">Course Analytics</h2>
+<h2 class="mb-3"><?php echo get_string('ui_course_analytics_course_analytics', 'local_admindashboard'); ?></h2>
 
 <?php
 $courseid = optional_param('courseid', 0, PARAM_INT);
@@ -32,8 +32,8 @@ $metrics = local_admindashboard_get_metrics($courseid, $department);
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-    <div class="title">Filters</div>
-    <label class="mb-0" for="courseSelect">Select Course</label>
+    <div class="title"><?php echo get_string('ui_course_analytics_filters', 'local_admindashboard'); ?></div>
+    <label class="mb-0" for="courseSelect"><?php echo get_string('ui_course_analytics_select_course', 'local_admindashboard'); ?></label>
     <select id="courseSelect" name="courseid" class="form-select" style="max-width:320px">
         <option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>All Courses</option>
         <?php foreach ($meta['courses'] as $course): ?>
@@ -43,7 +43,7 @@ $metrics = local_admindashboard_get_metrics($courseid, $department);
         <?php endforeach; ?>
     </select>
 
-    <label class="mb-0" for="deptSelect" style="margin-left:12px">Select Department</label>
+    <label class="mb-0" for="deptSelect" style="margin-left:12px"><?php echo get_string('ui_course_analytics_select_department', 'local_admindashboard'); ?></label>
     <select id="deptSelect" name="department" class="form-select" style="max-width:320px">
         <option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
         <?php foreach ($meta['departments'] as $dept): ?>
@@ -53,46 +53,46 @@ $metrics = local_admindashboard_get_metrics($courseid, $department);
         <?php endforeach; ?>
     </select>
 
-    <button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+    <button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_course_analytics_apply', 'local_admindashboard'); ?></button>
 </form>
 
 <div class="admindash-kpis">
     <div class="admindash-card admindash-kpi k1">
-        <div class="label">Total Participants</div>
+        <div class="label"><?php echo get_string('ui_course_analytics_total_participants', 'local_admindashboard'); ?></div>
         <div class="value"><?php echo (int)$metrics['participants']; ?></div>
         <?php echo $OUTPUT->render_from_template('local_admindashboard/kpi_trend', $metrics['trends']['participants'] ?? []); ?>
     </div>
     <div class="admindash-card admindash-kpi k5">
-        <div class="label">Completion Rate</div>
+        <div class="label"><?php echo get_string('ui_course_analytics_completion_rate', 'local_admindashboard'); ?></div>
         <div class="value"><?php echo (int)$metrics['completion_rate']; ?>%</div>
     </div>
     <div class="admindash-card admindash-kpi k5">
-        <div class="label">Attempted</div>
+        <div class="label"><?php echo get_string('ui_course_analytics_attempted', 'local_admindashboard'); ?></div>
         <div class="value"><?php echo (int)($metrics['attempted'] ?? 0); ?></div>
         <?php echo $OUTPUT->render_from_template('local_admindashboard/kpi_trend', $metrics['trends']['attempted'] ?? []); ?>
     </div>
     <div class="admindash-card admindash-kpi k2">
-        <div class="label">Passed</div>
+        <div class="label"><?php echo get_string('ui_course_analytics_passed', 'local_admindashboard'); ?></div>
         <div class="value"><?php echo (int)($metrics['passed'] ?? 0); ?></div>
         <?php echo $OUTPUT->render_from_template('local_admindashboard/kpi_trend', $metrics['trends']['passed'] ?? []); ?>
     </div>
     <div class="admindash-card admindash-kpi k6">
-        <div class="label">Certified</div>
+        <div class="label"><?php echo get_string('ui_course_analytics_certified', 'local_admindashboard'); ?></div>
         <div class="value"><?php echo (int)($metrics['certified'] ?? 0); ?></div>
         <?php echo $OUTPUT->render_from_template('local_admindashboard/kpi_trend', $metrics['trends']['certified'] ?? []); ?>
     </div>
     <div class="admindash-card admindash-kpi k3">
-        <div class="label">Failed</div>
+        <div class="label"><?php echo get_string('ui_course_analytics_failed', 'local_admindashboard'); ?></div>
         <div class="value"><?php echo (int)$metrics['failed']; ?></div>
         <?php echo $OUTPUT->render_from_template('local_admindashboard/kpi_trend', $metrics['trends']['failed'] ?? []); ?>
     </div>
     <div class="admindash-card admindash-kpi k4">
-        <div class="label">Dropped Midway</div>
+        <div class="label"><?php echo get_string('ui_course_analytics_dropped_midway', 'local_admindashboard'); ?></div>
         <div class="value"><?php echo (int)$metrics['dropped_midway']; ?></div>
         <?php echo $OUTPUT->render_from_template('local_admindashboard/kpi_trend', $metrics['trends']['dropped_midway'] ?? []); ?>
     </div>
     <div class="admindash-card admindash-kpi k7">
-        <div class="label">Pending Modules</div>
+        <div class="label"><?php echo get_string('ui_course_analytics_pending_modules', 'local_admindashboard'); ?></div>
         <div class="value"><?php echo (int)$metrics['pending_modules']; ?></div>
     </div>
 </div>
@@ -102,7 +102,7 @@ $metrics = local_admindashboard_get_metrics($courseid, $department);
 <div class="admindash-card p-3 mt-3">
     <div class="admindash-heatmap-card__header">
         <div>
-            <h5 class="mb-1">Compliance Risk Heatmap</h5>
+            <h5 class="mb-1"><?php echo get_string('ui_course_analytics_compliance_risk_heatmap', 'local_admindashboard'); ?></h5>
             <div class="text-muted small">
                 <?php
                 $summary = $heatmap['summary'] ?? [];
@@ -113,9 +113,9 @@ $metrics = local_admindashboard_get_metrics($courseid, $department);
             </div>
         </div>
         <div class="admindash-heatmap-legend" aria-label="Compliance risk legend">
-            <span class="admindash-heatmap-legend__item is-healthy">Safe</span>
-            <span class="admindash-heatmap-legend__item is-warning">Watch</span>
-            <span class="admindash-heatmap-legend__item is-critical">Danger</span>
+            <span class="admindash-heatmap-legend__item is-healthy"><?php echo get_string('ui_course_analytics_safe', 'local_admindashboard'); ?></span>
+            <span class="admindash-heatmap-legend__item is-warning"><?php echo get_string('ui_course_analytics_watch', 'local_admindashboard'); ?></span>
+            <span class="admindash-heatmap-legend__item is-critical"><?php echo get_string('ui_course_analytics_danger', 'local_admindashboard'); ?></span>
         </div>
     </div>
 
@@ -125,7 +125,7 @@ $metrics = local_admindashboard_get_metrics($courseid, $department);
         <?php $heatmapcolumncount = max(1, count($heatmap['columns'] ?? [])); ?>
         <div class="admindash-heatmap" aria-live="polite">
             <div class="admindash-heatmap__grid" style="--admindash-heatmap-col-count:<?php echo (int)$heatmapcolumncount; ?>;">
-                <div class="admindash-heatmap__corner">Department</div>
+                <div class="admindash-heatmap__corner"><?php echo get_string('ui_course_analytics_department', 'local_admindashboard'); ?></div>
                 <div class="admindash-heatmap__columns">
                     <?php foreach (($heatmap['columns'] ?? []) as $column): ?>
                         <div class="admindash-heatmap__columnhead" title="<?php echo s((string)($column['name'] ?? '')); ?>">
@@ -161,7 +161,7 @@ $metrics = local_admindashboard_get_metrics($courseid, $department);
 <?php endif; ?>
 
 <div class="admindash-card bg-white p-3 mt-3">
-    <h5 class="mb-2">Reports</h5>
+    <h5 class="mb-2"><?php echo get_string('ui_course_analytics_reports', 'local_admindashboard'); ?></h5>
     <div class="d-flex gap-2 flex-wrap">
         <a class="btn btn-outline-primary" href="<?php echo (new moodle_url('/local/admindashboard/course_analytics.php')); ?>">Overview</a>
         <a class="btn btn-outline-primary" href="<?php echo (new moodle_url('/local/admindashboard/course_analytics_modules.php')); ?>">Modules Report</a>

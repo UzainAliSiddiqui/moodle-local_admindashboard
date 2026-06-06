@@ -1,5 +1,13 @@
 # Admin dashboard changes
 
+## 0.1.21 - 2026-06-06
+
+- Added session-key enforcement to dashboard data requests.
+- Moved visible plugin interface text into Moodle language strings.
+- Added a Moodle Plugin CI GitHub Actions workflow.
+- Fixed a PostgreSQL-compatible empty-string expression in live-feed analytics.
+- Revalidated PHP syntax, authentication ordering, language-key coverage, boilerplate headers, and XMLDB field definitions.
+
 ## 0.1.19 - 2026-05-28
 
 - Removed the legacy `before_standard_top_of_body_html` callback so Moodle 5 no longer warns during page rendering.

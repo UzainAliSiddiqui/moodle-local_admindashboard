@@ -227,50 +227,50 @@ local_admindashboard_render_workspace_header(
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Identity Surfaces</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_integrations_identity_surfaces', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $authcount; ?></div>
-		<div class="admindash-module-stat__meta"><?php echo $authpresentcount; ?> auth plugins are present on disk and <?php echo $authcount; ?> are enabled for sign-in.</div>
+		<div class="admindash-module-stat__meta"><?php echo $authpresentcount; ?> <?php echo get_string('ui_integrations_auth_plugins_are_present_on_disk_and', 'local_admindashboard'); ?> <?php echo $authcount; ?> <?php echo get_string('ui_integrations_are_enabled_for_sign_in', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Service Endpoints</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_integrations_service_endpoints', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $enabledexternalservicecount; ?></div>
-		<div class="admindash-module-stat__meta"><?php echo $externalservicecount; ?> total web services with <?php echo $restrictedexternalservicecount; ?> restricted-user services.</div>
+		<div class="admindash-module-stat__meta"><?php echo $externalservicecount; ?> <?php echo get_string('ui_integrations_total_web_services_with', 'local_admindashboard'); ?> <?php echo $restrictedexternalservicecount; ?> <?php echo get_string('ui_integrations_restricted_user_services', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Repository Instances</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_integrations_repository_instances', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $repositoryinstancecount; ?></div>
-		<div class="admindash-module-stat__meta"><?php echo $repositorycount; ?> repository plugins are enabled to back file-source connections.</div>
+		<div class="admindash-module-stat__meta"><?php echo $repositorycount; ?> <?php echo get_string('ui_integrations_repository_plugins_are_enabled_to_back_file_source_connections', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Message Channels</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_integrations_message_channels', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $messagecount; ?></div>
-		<div class="admindash-module-stat__meta"><?php echo $messagepresentcount; ?> message processor plugins are available in this Moodle build.</div>
+		<div class="admindash-module-stat__meta"><?php echo $messagepresentcount; ?> <?php echo get_string('ui_integrations_message_processor_plugins_are_available_in_this_moodle_build', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Integration Posture</h5>
-			<span class="admindash-admin-note">Current state</span>
+			<h5 class="mb-0"><?php echo get_string('ui_integrations_integration_posture', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_integrations_current_state', 'local_admindashboard'); ?></span>
 		</div>
 		<div class="admindash-admin-badges mb-3"><?php echo implode('', $integrationbadges); ?></div>
 		<ul class="admindash-admin-list">
 			<li>
-				<span class="admindash-admin-list__label">Enabled auth providers</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_integrations_enabled_auth_providers', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo s($pluginpreview($enabledauth)); ?></span>
 			</li>
 			<li>
-				<span class="admindash-admin-list__label">Enabled enrol connectors</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_integrations_enabled_enrol_connectors', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo s($pluginpreview($enabledenrol)); ?></span>
 			</li>
 			<li>
-				<span class="admindash-admin-list__label">API exposure</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_integrations_api_exposure', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo $enablewebservices ? 'Web services enabled' : 'Web services disabled'; ?><?php echo $enablemobilewebservice ? ' / mobile channel enabled' : ''; ?></span>
 			</li>
 			<li>
-				<span class="admindash-admin-list__label">Service user mappings</span>
-				<span class="admindash-admin-list__value"><?php echo $serviceuserlinkcount; ?> explicit external service user links</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_integrations_service_user_mappings', 'local_admindashboard'); ?></span>
+				<span class="admindash-admin-list__value"><?php echo $serviceuserlinkcount; ?> <?php echo get_string('ui_integrations_explicit_external_service_user_links', 'local_admindashboard'); ?></span>
 			</li>
 		</ul>
 	</div>
@@ -279,21 +279,21 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Integration Registry</h5>
-			<p class="admindash-admin-note mb-0">Each row summarizes a major integration surface, its current signal, and the most relevant admin destination.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_integrations_integration_registry', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_integrations_each_row_summarizes_a_major_integration_surface_its_current_sig_85578a6a', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Surface</th>
-					<th>Status</th>
-					<th>Active Footprint</th>
-					<th>Owner Lane</th>
-					<th>Current Signal</th>
-					<th>Risk Note</th>
-					<th>Action</th>
+					<th><?php echo get_string('ui_integrations_surface', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_integrations_status', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_integrations_active_footprint', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_integrations_owner_lane', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_integrations_current_signal', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_integrations_risk_note', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_integrations_action', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -320,8 +320,8 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">External Service Feed</h5>
-			<span class="admindash-admin-note">Top configured services</span>
+			<h5 class="mb-0"><?php echo get_string('ui_integrations_external_service_feed', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_integrations_top_configured_services', 'local_admindashboard'); ?></span>
 		</div>
 		<?php if (!empty($externalservices)): ?>
 			<ul class="admindash-admin-list">
@@ -347,7 +347,7 @@ local_admindashboard_render_workspace_header(
 				<?php endforeach; ?>
 			</ul>
 		<?php else: ?>
-			<p class="admindash-admin-note mb-0">No external service records were found in this environment.</p>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_integrations_no_external_service_records_were_found_in_this_environment', 'local_admindashboard'); ?></p>
 		<?php endif; ?>
 	</div>
 

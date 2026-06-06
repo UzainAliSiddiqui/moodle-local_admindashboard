@@ -21,27 +21,27 @@ local_admindashboard_render_header('dashboard');
 $sesskey = sesskey();
 ?>
 
-<h2 class="mb-3">Dashboard</h2>
+<h2 class="mb-3"><?php echo get_string('ui_dashboard_dashboard', 'local_admindashboard'); ?></h2>
 
 <div class="admindash-timer admindash-card" id="admindashTimerCard" aria-live="polite" aria-atomic="true" data-timer-state="loading">
     <div class="admindash-timer__copy">
-        <div class="admindash-timer__eyebrow" id="admindashTimerEyebrow">Upcoming</div>
-        <div class="admindash-timer__title" id="admindashTimerTitle">Loading&hellip;</div>
+        <div class="admindash-timer__eyebrow" id="admindashTimerEyebrow"><?php echo get_string('ui_dashboard_upcoming', 'local_admindashboard'); ?></div>
+        <div class="admindash-timer__title" id="admindashTimerTitle"><?php echo get_string('ui_dashboard_loading', 'local_admindashboard'); ?></div>
         <div class="admindash-timer__course" id="admindashTimerCourse" hidden></div>
         <div class="admindash-timer__meta" id="admindashTimerMeta"></div>
     </div>
     <div class="admindash-timer__countdown-wrap">
-        <div class="admindash-timer__countdown-label">Time Remaining</div>
-        <div class="admindash-timer__countdown" id="admindashTimerCountdown">&#8212;&#8212;</div>
+        <div class="admindash-timer__countdown-label"><?php echo get_string('ui_dashboard_time_remaining', 'local_admindashboard'); ?></div>
+        <div class="admindash-timer__countdown" id="admindashTimerCountdown"><?php echo get_string('ui_dashboard_text', 'local_admindashboard'); ?></div>
     </div>
     <div class="admindash-timer__status">
         <div class="admindash-timer__chip">
-            <span class="admindash-timer__chip-label">Type</span>
-            <strong id="admindashTimerMode">&mdash;</strong>
+            <span class="admindash-timer__chip-label"><?php echo get_string('ui_dashboard_type', 'local_admindashboard'); ?></span>
+            <strong id="admindashTimerMode"><?php echo get_string('ui_dashboard_text', 'local_admindashboard'); ?></strong>
         </div>
         <div class="admindash-timer__chip">
-            <span class="admindash-timer__chip-label" id="admindashTimerScopeLabel">On</span>
-            <strong id="admindashTimerScope">&mdash;</strong>
+            <span class="admindash-timer__chip-label" id="admindashTimerScopeLabel"><?php echo get_string('ui_dashboard_on', 'local_admindashboard'); ?></span>
+            <strong id="admindashTimerScope"><?php echo get_string('ui_dashboard_text', 'local_admindashboard'); ?></strong>
         </div>
     </div>
 </div>
@@ -51,90 +51,90 @@ $sesskey = sesskey();
         <span class="admindash-filters__icon" aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2.628 1.601C5.028 1.2 7.49 1 10 1s4.973.2 7.372.601a.75.75 0 0 1 .628.74v2.288a2.25 2.25 0 0 1-.659 1.59l-4.682 4.683a2.25 2.25 0 0 0-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 0 1 8 18.25v-5.757a2.25 2.25 0 0 0-.659-1.591L2.659 6.22A2.25 2.25 0 0 1 2 4.629V2.34a.75.75 0 0 1 .628-.74Z" clip-rule="evenodd"/></svg>
         </span>
-        <span class="admindash-filters__title">Filters</span>
+        <span class="admindash-filters__title"><?php echo get_string('ui_dashboard_filters', 'local_admindashboard'); ?></span>
         <span class="admindash-filters__badge" id="activeFilterBadge" aria-label="active filters count"></span>
     </div>
     <div class="admindash-filters__sep" aria-hidden="true"></div>
     <div class="admindash-filters__fields">
         <div class="admindash-filter-group">
-            <label class="admindash-filter-group__label" for="courseSelect">Course</label>
+            <label class="admindash-filter-group__label" for="courseSelect"><?php echo get_string('ui_dashboard_course', 'local_admindashboard'); ?></label>
             <select id="courseSelect" class="form-select admindash-filter-group__select">
-                <option value="0">All Courses</option>
+                <option value="0"><?php echo get_string('ui_dashboard_all_courses', 'local_admindashboard'); ?></option>
             </select>
         </div>
         <div class="admindash-filter-group">
-            <label class="admindash-filter-group__label" for="deptSelect">Department</label>
+            <label class="admindash-filter-group__label" for="deptSelect"><?php echo get_string('ui_dashboard_department', 'local_admindashboard'); ?></label>
             <select id="deptSelect" class="form-select admindash-filter-group__select">
-                <option value="">All Departments</option>
+                <option value=""><?php echo get_string('ui_dashboard_all_departments', 'local_admindashboard'); ?></option>
             </select>
         </div>
         <div class="admindash-filter-group">
-            <label class="admindash-filter-group__label" for="moduleSelect">Module</label>
+            <label class="admindash-filter-group__label" for="moduleSelect"><?php echo get_string('ui_dashboard_module', 'local_admindashboard'); ?></label>
             <select id="moduleSelect" class="form-select admindash-filter-group__select">
-                <option value="0">All Modules</option>
+                <option value="0"><?php echo get_string('ui_dashboard_all_modules', 'local_admindashboard'); ?></option>
             </select>
         </div>
     </div>
     <button class="admindash-filters__reset" id="filterResetBtn" title="Clear all filters" style="display:none" type="button">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M5.28 4.22a.75.75 0 0 0-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 1 0 1.06 1.06L8 9.06l2.72 2.72a.75.75 0 1 0 1.06-1.06L9.06 8l2.72-2.72a.75.75 0 0 0-1.06-1.06L8 6.94 5.28 4.22Z"/></svg>
-        Reset
+        <?php echo get_string('ui_dashboard_reset', 'local_admindashboard'); ?>
     </button>
 </div>
 
-<!-- ── Platform Overview Stats ─────────────────────────────────────────── -->
+<!-- -- Platform Overview Stats ------------------------------------------- -->
 <div class="admindash-stat-row" id="platformStatRow">
     <div class="admindash-stat s1">
         <span class="admindash-stat__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M7 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM14.5 9a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM1.615 16.428a1.224 1.224 0 0 1-.569-1.175 6.002 6.002 0 0 1 11.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 0 1 7 18a9.953 9.953 0 0 1-5.385-1.572ZM14.5 16h-.106c.07-.297.088-.611.048-.933a7.47 7.47 0 0 0-1.588-3.755 4.502 4.502 0 0 1 5.874 2.636.818.818 0 0 1-.36.98A7.465 7.465 0 0 1 14.5 16Z"/></svg></span>
         <div class="admindash-stat__body">
-            <div class="admindash-stat__value" id="statTotalStudents">—</div>
-            <div class="admindash-stat__label" id="statTotalStudentsLabel">Total Learners</div>
+            <div class="admindash-stat__value" id="statTotalStudents">-</div>
+            <div class="admindash-stat__label" id="statTotalStudentsLabel"><?php echo get_string('ui_dashboard_total_learners', 'local_admindashboard'); ?></div>
         </div>
     </div>
     <div class="admindash-stat s2">
         <span class="admindash-stat__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 0 0-.788 0l-7 3a1 1 0 0 0 0 1.84L5.25 8.051a.999.999 0 0 1 .356-.257l4-1.714a1 1 0 1 1 .788 1.838L7.667 9.088l1.94.831a1 1 0 0 0 .787 0l7-3a1 1 0 0 0 0-1.838l-7-3ZM3.31 9.397 5 10.12v4.102a8.969 8.969 0 0 0-1.05-.174 1 1 0 0 1-.89-.89 11.115 11.115 0 0 1 .25-3.762ZM9.3 16.573A9.026 9.026 0 0 0 10 17a9.026 9.026 0 0 0 .7-.427V12.5L10 12l-.7.5v4.073Zm4.39-2.477a8.989 8.989 0 0 1-1.05.175 1 1 0 0 1-.89-.89 11.115 11.115 0 0 1 .25-3.762l1.69.723v3.754Z"/></svg></span>
         <div class="admindash-stat__body">
-            <div class="admindash-stat__value" id="statActiveCourses">—</div>
-            <div class="admindash-stat__label" id="statActiveCoursesLabel">Total Courses</div>
+            <div class="admindash-stat__value" id="statActiveCourses">-</div>
+            <div class="admindash-stat__label" id="statActiveCoursesLabel"><?php echo get_string('ui_dashboard_total_courses', 'local_admindashboard'); ?></div>
         </div>
     </div>
     <div class="admindash-stat s3">
         <span class="admindash-stat__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg></span>
         <div class="admindash-stat__body">
-            <div class="admindash-stat__value" id="statCompletionRate">—</div>
-            <div class="admindash-stat__label" id="statCompletionRateLabel">Completion Rate</div>
+            <div class="admindash-stat__value" id="statCompletionRate">-</div>
+            <div class="admindash-stat__label" id="statCompletionRateLabel"><?php echo get_string('ui_dashboard_completion_rate', 'local_admindashboard'); ?></div>
         </div>
     </div>
     <div class="admindash-stat s4">
         <span class="admindash-stat__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" clip-rule="evenodd"/></svg></span>
         <div class="admindash-stat__body">
-            <div class="admindash-stat__value" id="statPendingModules">—</div>
-            <div class="admindash-stat__label" id="statPendingModulesLabel">Modules Pending</div>
+            <div class="admindash-stat__value" id="statPendingModules">-</div>
+            <div class="admindash-stat__label" id="statPendingModulesLabel"><?php echo get_string('ui_dashboard_modules_pending', 'local_admindashboard'); ?></div>
         </div>
     </div>
     <div class="admindash-stat s5">
         <span class="admindash-stat__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.983 1.907a.75.75 0 0 0-1.292-.657l-8.5 9.5A.75.75 0 0 0 2.75 12h6.572l-1.305 6.093a.75.75 0 0 0 1.292.657l8.5-9.5A.75.75 0 0 0 17.25 8h-6.572l1.305-6.093Z"/></svg></span>
         <div class="admindash-stat__body">
-            <div class="admindash-stat__value" id="statActiveUsers">—</div>
-            <div class="admindash-stat__label">Active (last 7 days)</div>
+            <div class="admindash-stat__value" id="statActiveUsers">-</div>
+            <div class="admindash-stat__label"><?php echo get_string('ui_dashboard_active_last_7_days', 'local_admindashboard'); ?></div>
         </div>
     </div>
     <div class="admindash-stat s6">
         <span class="admindash-stat__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M5.75 3a.75.75 0 0 0-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 0 0 .75-.75V3.75A.75.75 0 0 0 7.25 3h-1.5ZM12.75 3a.75.75 0 0 0-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 0 0 .75-.75V3.75a.75.75 0 0 0-.75-.75h-1.5Z"/></svg></span>
         <div class="admindash-stat__body">
-            <div class="admindash-stat__value" id="statInactiveUsers">—</div>
-            <div class="admindash-stat__label">Not Active (7 days)</div>
+            <div class="admindash-stat__value" id="statInactiveUsers">-</div>
+            <div class="admindash-stat__label"><?php echo get_string('ui_dashboard_not_active_7_days', 'local_admindashboard'); ?></div>
         </div>
     </div>
 </div>
 
 <div class="admindash-kpi-section-head">
-    <span class="admindash-kpi-section-head__label" id="kpiSectionLabel">Outcome KPIs</span>
+    <span class="admindash-kpi-section-head__label" id="kpiSectionLabel"><?php echo get_string('ui_dashboard_outcome_kpis', 'local_admindashboard'); ?></span>
 </div>
 
 <div class="admindash-kpis" id="kpiCardsGrid">
     <div class="admindash-card admindash-kpi k1" id="kpiParticipantsCard" data-kpi-metric="participants" data-kpi-label="Total Enrollment" role="button" tabindex="0" aria-label="Open Total Enrollment user list" style="order:1">
         <div class="admindash-kpi__head">
-            <div class="label" id="kpiParticipantsLabel">Total Enrollment</div>
+            <div class="label" id="kpiParticipantsLabel"><?php echo get_string('ui_dashboard_total_enrollment', 'local_admindashboard'); ?></div>
             <span class="admindash-kpi__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M7 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM14.5 9a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM1.615 16.428a1.224 1.224 0 0 1-.569-1.175 6.002 6.002 0 0 1 11.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 0 1 7 18a9.953 9.953 0 0 1-5.385-1.572ZM14.5 16h-.106c.07-.297.088-.611.048-.933a7.47 7.47 0 0 0-1.588-3.755 4.502 4.502 0 0 1 5.874 2.636.818.818 0 0 1-.36.98A7.465 7.465 0 0 1 14.5 16Z"/></svg></span>
         </div>
         <div class="value" id="kpiParticipants">...</div>
@@ -142,7 +142,7 @@ $sesskey = sesskey();
     </div>
     <div class="admindash-card admindash-kpi k8" id="kpiTotalEnrollmentsCard" data-kpi-metric="total_enrollments" data-kpi-label="Current Total Enrollment" role="button" tabindex="0" aria-label="Open Current Total Enrollment list" style="order:3">
         <div class="admindash-kpi__head">
-            <div class="label" id="kpiTotalEnrollmentsLabel">Current Total Enrollment</div>
+            <div class="label" id="kpiTotalEnrollmentsLabel"><?php echo get_string('ui_dashboard_current_total_enrollment', 'local_admindashboard'); ?></div>
             <span class="admindash-kpi__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M4.75 3A2.75 2.75 0 0 0 2 5.75v8.5A2.75 2.75 0 0 0 4.75 17h10.5A2.75 2.75 0 0 0 18 14.25v-8.5A2.75 2.75 0 0 0 15.25 3H4.75ZM4 14.25V9h12v5.25c0 .414.336.75.75.75h.75A2.75 2.75 0 0 1 15.25 17H4.75A2.75 2.75 0 0 1 2 14.25v-.75c0-.414.336-.75.75-.75H4Zm0-6.5V5.75c0-.414.336-.75.75-.75h10.5c.414 0 .75.336.75.75V7H4Z"/></svg></span>
         </div>
         <div class="value" id="kpiTotalEnrollments">...</div>
@@ -151,7 +151,7 @@ $sesskey = sesskey();
     </div>
     <div class="admindash-card admindash-kpi k5" id="kpiAttemptedCard" data-kpi-metric="attempted" data-kpi-label="Attempted" role="button" tabindex="0" aria-label="Open Attempted user list" style="display:none;order:4">
         <div class="admindash-kpi__head">
-            <div class="label" id="kpiAttemptedLabel">Attempted</div>
+            <div class="label" id="kpiAttemptedLabel"><?php echo get_string('ui_dashboard_attempted', 'local_admindashboard'); ?></div>
             <span class="admindash-kpi__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 10a8 8 0 1 1 16 0 8 8 0 0 1-16 0Zm6.39-2.908a.75.75 0 0 1 .766.027l3.5 2.25a.75.75 0 0 1 0 1.262l-3.5 2.25A.75.75 0 0 1 8 12.25v-4.5a.75.75 0 0 1 .39-.658Z" clip-rule="evenodd"/></svg></span>
         </div>
         <div class="value" id="kpiAttempted">...</div>
@@ -160,7 +160,7 @@ $sesskey = sesskey();
     </div>
     <div class="admindash-card admindash-kpi k2" id="kpiPassedCard" data-kpi-metric="passed" data-kpi-label="Passed" role="button" tabindex="0" aria-label="Open Passed user list" style="order:6">
         <div class="admindash-kpi__head">
-            <div class="label" id="kpiPassedLabel">Passed</div>
+            <div class="label" id="kpiPassedLabel"><?php echo get_string('ui_dashboard_passed', 'local_admindashboard'); ?></div>
             <span class="admindash-kpi__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg></span>
         </div>
         <div class="value" id="kpiPassed">...</div>
@@ -169,7 +169,7 @@ $sesskey = sesskey();
     </div>
     <div class="admindash-card admindash-kpi k6" id="kpiCertifiedCard" data-kpi-metric="certified" data-kpi-label="Certificates Issued" role="button" tabindex="0" aria-label="Open Certificates Issued user list" style="order:7">
         <div class="admindash-kpi__head">
-            <div class="label" id="kpiCertifiedLabel">Certificates Issued</div>
+            <div class="label" id="kpiCertifiedLabel"><?php echo get_string('ui_dashboard_certificates_issued', 'local_admindashboard'); ?></div>
             <span class="admindash-kpi__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 0 0-.788 0l-7 3a1 1 0 0 0 0 1.84L5.25 8.051a.999.999 0 0 1 .356-.257l4-1.714a1 1 0 1 1 .788 1.838L7.667 9.088l1.94.831a1 1 0 0 0 .787 0l7-3a1 1 0 0 0 0-1.838l-7-3ZM3.31 9.397 5 10.12v4.102a8.969 8.969 0 0 0-1.05-.174 1 1 0 0 1-.89-.89 11.115 11.115 0 0 1 .25-3.762ZM9.3 16.573A9.026 9.026 0 0 0 10 17a9.026 9.026 0 0 0 .7-.427V12.5L10 12l-.7.5v4.073Zm4.39-2.477a8.989 8.989 0 0 1-1.05.175 1 1 0 0 1-.89-.89 11.115 11.115 0 0 1 .25-3.762l1.69.723v3.754Z"/></svg></span>
         </div>
         <div class="value" id="kpiCertified">...</div>
@@ -178,7 +178,7 @@ $sesskey = sesskey();
     </div>
     <div class="admindash-card admindash-kpi k3" id="kpiFailedCard" data-kpi-metric="failed" data-kpi-label="Failed" role="button" tabindex="0" aria-label="Open Failed user list" style="order:8">
         <div class="admindash-kpi__head">
-            <div class="label">Failed</div>
+            <div class="label"><?php echo get_string('ui_dashboard_failed', 'local_admindashboard'); ?></div>
             <span class="admindash-kpi__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd"/></svg></span>
         </div>
         <div class="value" id="kpiFailed">...</div>
@@ -187,7 +187,7 @@ $sesskey = sesskey();
     </div>
     <div class="admindash-card admindash-kpi k4" id="kpiDroppedCard" data-kpi-metric="not_attempted" data-kpi-label="Not Attempted" role="button" tabindex="0" aria-label="Open Not Attempted user list" style="order:5">
         <div class="admindash-kpi__head">
-            <div class="label" id="kpiDroppedLabel">Not Attempted</div>
+            <div class="label" id="kpiDroppedLabel"><?php echo get_string('ui_dashboard_not_attempted', 'local_admindashboard'); ?></div>
             <span class="admindash-kpi__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm-.75-11.25a.75.75 0 0 0-1.5 0v4.59L5.8 9.22a.75.75 0 0 0-1.1 1.02l3.25 3.5a.75.75 0 0 0 1.1 0l3.25-3.5a.75.75 0 1 0-1.1-1.02l-1.95 2.1V6.75Z" clip-rule="evenodd"/></svg></span>
         </div>
         <div class="value" id="kpiDropped">...</div>
@@ -196,7 +196,7 @@ $sesskey = sesskey();
     </div>
     <div class="admindash-card admindash-kpi k7" id="kpiResignedCard" data-kpi-metric="resigned_midcourse" data-kpi-label="Resigned Midway" role="button" tabindex="0" aria-label="Open Resigned Midway user list" style="order:2">
         <div class="admindash-kpi__head">
-            <div class="label" id="kpiResignedLabel">Resigned Midway</div>
+            <div class="label" id="kpiResignedLabel"><?php echo get_string('ui_dashboard_resigned_midway', 'local_admindashboard'); ?></div>
             <span class="admindash-kpi__ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM2.046 15.253c-.058.468.172.92.57 1.175A9.953 9.953 0 0 0 8 18c1.982 0 3.83-.574 5.384-1.572.398-.254.628-.707.57-1.175a6.001 6.001 0 0 0-11.908 0ZM14.5 8a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1 0-1.5h4Z"/></svg></span>
         </div>
         <div class="value" id="kpiResigned">0</div>
@@ -208,33 +208,33 @@ $sesskey = sesskey();
 <div id="kpiPieCard" class="admindash-card p-2 bg-white admindash-kpi-pie-card">
     <div class="d-flex align-items-start justify-content-between" style="gap:12px">
         <div>
-            <h5 class="mb-1">KPI Distribution</h5>
-            <div class="text-muted small">Breakdown of current KPI values for selected filters.</div>
+            <h5 class="mb-1"><?php echo get_string('ui_dashboard_kpi_distribution', 'local_admindashboard'); ?></h5>
+            <div class="text-muted small"><?php echo get_string('ui_dashboard_breakdown_of_current_kpi_values_for_selected_filters', 'local_admindashboard'); ?></div>
         </div>
     </div>
     <div class="admindash-kpi-pie-card__charts" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:10px;align-items:stretch;width:100%">
         <div class="admindash-kpi-pie-card__chart-panel" style="min-width:0;overflow:hidden">
-            <div class="admindash-kpi-pie-card__chart-title">All KPI Mix</div>
+            <div class="admindash-kpi-pie-card__chart-title"><?php echo get_string('ui_dashboard_all_kpi_mix', 'local_admindashboard'); ?></div>
             <div class="admindash-kpi-pie-card__canvas-wrap">
                 <canvas id="kpiPieChart" height="140"></canvas>
             </div>
         </div>
         <div class="admindash-kpi-pie-card__chart-panel" style="min-width:0;overflow:hidden">
-            <div class="admindash-kpi-pie-card__chart-title">Passed vs Failed</div>
+            <div class="admindash-kpi-pie-card__chart-title"><?php echo get_string('ui_dashboard_passed_vs_failed', 'local_admindashboard'); ?></div>
             <div class="admindash-kpi-pie-card__canvas-wrap">
                 <canvas id="kpiPassFailPieChart" height="140"></canvas>
             </div>
-            <div id="kpiPassFailPieEmptyMsg" class="text-muted small" style="display:none;margin-top:6px">No pass/fail data yet for the selected filters.</div>
+            <div id="kpiPassFailPieEmptyMsg" class="text-muted small" style="display:none;margin-top:6px"><?php echo get_string('ui_dashboard_no_pass_fail_data_yet_for_the_selected_filters', 'local_admindashboard'); ?></div>
         </div>
         <div class="admindash-kpi-pie-card__chart-panel" style="min-width:0;overflow:hidden">
-            <div class="admindash-kpi-pie-card__chart-title">Enrollment Status</div>
+            <div class="admindash-kpi-pie-card__chart-title"><?php echo get_string('ui_dashboard_enrollment_status', 'local_admindashboard'); ?></div>
             <div class="admindash-kpi-pie-card__canvas-wrap">
                 <canvas id="kpiEnrollmentStatusPieChart" height="140"></canvas>
             </div>
-            <div id="kpiEnrollmentStatusPieEmptyMsg" class="text-muted small" style="display:none;margin-top:6px">No enrollment status data yet for the selected filters.</div>
+            <div id="kpiEnrollmentStatusPieEmptyMsg" class="text-muted small" style="display:none;margin-top:6px"><?php echo get_string('ui_dashboard_no_enrollment_status_data_yet_for_the_selected_filters', 'local_admindashboard'); ?></div>
         </div>
     </div>
-    <div id="kpiPieEmptyMsg" class="text-muted small" style="display:none;margin-top:6px">No KPI data yet for the selected filters.</div>
+    <div id="kpiPieEmptyMsg" class="text-muted small" style="display:none;margin-top:6px"><?php echo get_string('ui_dashboard_no_kpi_data_yet_for_the_selected_filters', 'local_admindashboard'); ?></div>
 </div>
 
 <div class="modal fade" id="kpiUsersModal" tabindex="-1" aria-labelledby="kpiUsersModalLabel" aria-hidden="true">
@@ -242,8 +242,8 @@ $sesskey = sesskey();
         <div class="modal-content">
             <div class="modal-header">
                 <div>
-                    <h5 class="modal-title" id="kpiUsersModalLabel">KPI Users</h5>
-                    <div class="text-muted small" id="kpiUsersModalMeta">Loading…</div>
+                    <h5 class="modal-title" id="kpiUsersModalLabel"><?php echo get_string('ui_dashboard_kpi_users', 'local_admindashboard'); ?></h5>
+                    <div class="text-muted small" id="kpiUsersModalMeta"><?php echo get_string('ui_dashboard_loading', 'local_admindashboard'); ?></div>
                 </div>
                 <button type="button" class="btn-close" data-admindash-close-modal="1" aria-label="Close"></button>
             </div>
@@ -252,22 +252,22 @@ $sesskey = sesskey();
                     <input type="search" class="form-control" id="kpiUsersSearch" placeholder="Search by name, department, or clinic" aria-label="Search KPI users">
                     <div class="admindash-modal-search__meta text-muted small" id="kpiUsersSearchMeta"></div>
                 </div>
-                <div id="kpiUsersModalEmpty" class="alert alert-light border" style="display:none;margin-bottom:16px">No users found for the selected KPI.</div>
+                <div id="kpiUsersModalEmpty" class="alert alert-light border" style="display:none;margin-bottom:16px"><?php echo get_string('ui_dashboard_no_users_found_for_the_selected_kpi', 'local_admindashboard'); ?></div>
                 <div class="table-responsive">
                     <table class="table table-striped table-hover align-middle mb-0" id="kpiUsersTable">
                         <thead>
                             <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Department</th>
-                                <th scope="col">Clinic Name</th>
-                                <th scope="col" id="kpiUsersThEnrol" class="admindash-kpi-users-col-enrol" style="display:none">Course / Enrolment</th>
+                                <th scope="col"><?php echo get_string('ui_dashboard_name', 'local_admindashboard'); ?></th>
+                                <th scope="col"><?php echo get_string('ui_dashboard_department', 'local_admindashboard'); ?></th>
+                                <th scope="col"><?php echo get_string('ui_dashboard_clinic_name', 'local_admindashboard'); ?></th>
+                                <th scope="col" id="kpiUsersThEnrol" class="admindash-kpi-users-col-enrol" style="display:none"><?php echo get_string('ui_dashboard_course_enrolment', 'local_admindashboard'); ?></th>
                             </tr>
                         </thead>
                         <tbody id="kpiUsersTableBody">
                             <tr>
                                 <td colspan="4" class="text-center py-4">
                                     <div class="spinner-border text-primary" role="status" aria-hidden="true"></div>
-                                    <div class="mt-2 text-muted small">Loading users…</div>
+                                    <div class="mt-2 text-muted small"><?php echo get_string('ui_dashboard_loading_users', 'local_admindashboard'); ?></div>
                                 </td>
                             </tr>
                         </tbody>
@@ -276,7 +276,7 @@ $sesskey = sesskey();
             </div>
             <div class="modal-footer admindash-modal-footer">
                 <div class="admindash-modal-footer__status text-muted small" id="kpiReminderStatus"></div>
-                <button type="button" class="btn btn-primary" id="kpiReminderButton" style="display:none">Send Reminder to All</button>
+                <button type="button" class="btn btn-primary" id="kpiReminderButton" style="display:none"><?php echo get_string('ui_dashboard_send_reminder_to_all', 'local_admindashboard'); ?></button>
             </div>
         </div>
     </div>
@@ -286,38 +286,38 @@ $sesskey = sesskey();
     <div class="admindash-charts__column admindash-charts__column--left">
         <div class="admindash-card p-2 bg-white">
             <div class="d-flex align-items-center justify-content-between" style="gap:12px">
-                <h5 class="mb-2" id="barChartTitle">Course Completion by Department</h5>
+                <h5 class="mb-2" id="barChartTitle"><?php echo get_string('ui_dashboard_course_completion_by_department', 'local_admindashboard'); ?></h5>
                 <select id="barMetricSelect" class="form-select" style="max-width:190px">
-                    <option value="completion">Completion %</option>
-                    <option value="pass">Pass %</option>
-                    <option value="fail">Fail %</option>
-                    <option value="notattempted">Not Attempted %</option>
+                    <option value="completion"><?php echo get_string('ui_dashboard_completion', 'local_admindashboard'); ?></option>
+                    <option value="pass"><?php echo get_string('ui_dashboard_pass', 'local_admindashboard'); ?></option>
+                    <option value="fail"><?php echo get_string('ui_dashboard_fail', 'local_admindashboard'); ?></option>
+                    <option value="notattempted"><?php echo get_string('ui_dashboard_not_attempted', 'local_admindashboard'); ?></option>
                 </select>
             </div>
             <canvas id="barChart" height="120"></canvas>
-            <div id="barEmptyMsg" class="text-muted small" style="display:none;margin-top:6px">No data yet for the selected filters.</div>
+            <div id="barEmptyMsg" class="text-muted small" style="display:none;margin-top:6px"><?php echo get_string('ui_dashboard_no_data_yet_for_the_selected_filters', 'local_admindashboard'); ?></div>
         </div>
         <div class="admindash-widget-grid" style="align-items:start">
             <div id="liveFeedCard" class="admindash-card p-2 bg-white admindash-widget-card" style="min-height:0;height:auto;max-height:none">
                 <div class="admindash-widget-card__header">
                     <div>
-                        <h5 class="mb-1">Live Feed</h5>
-                        <div class="text-muted small">Latest user actions across the selected course and filters.</div>
+                        <h5 class="mb-1"><?php echo get_string('ui_dashboard_live_feed', 'local_admindashboard'); ?></h5>
+                        <div class="text-muted small"><?php echo get_string('ui_dashboard_latest_user_actions_across_the_selected_course_and_filters', 'local_admindashboard'); ?></div>
                     </div>
                 </div>
                 <div id="activityFeedWrap" class="admindash-livefeed">
-                    <div class="admindash-widget-empty">Loading live feed…</div>
+                    <div class="admindash-widget-empty"><?php echo get_string('ui_dashboard_loading_live_feed', 'local_admindashboard'); ?></div>
                 </div>
             </div>
             <div id="courseCompletionCard" class="admindash-card p-2 bg-white admindash-widget-card" style="min-height:0;overflow:hidden">
                 <div class="admindash-widget-card__header">
                     <div>
-                        <h5 class="mb-1">Course Completion</h5>
-                        <div class="text-muted small" id="courseProgressMeta">All courses sorted by status. Running courses appear first.</div>
+                        <h5 class="mb-1"><?php echo get_string('ui_dashboard_course_completion', 'local_admindashboard'); ?></h5>
+                        <div class="text-muted small" id="courseProgressMeta"><?php echo get_string('ui_dashboard_all_courses_sorted_by_status_running_courses_appear_first', 'local_admindashboard'); ?></div>
                     </div>
                 </div>
                 <div id="courseProgressWrap" class="admindash-courseprogress" style="min-height:0;overflow-y:scroll">
-                    <div class="admindash-widget-empty">Loading course completion…</div>
+                    <div class="admindash-widget-empty"><?php echo get_string('ui_dashboard_loading_course_completion', 'local_admindashboard'); ?></div>
                 </div>
             </div>
         </div>
@@ -327,74 +327,74 @@ $sesskey = sesskey();
         <div id="coursesOverviewCard" class="admindash-card p-2 bg-white admindash-overview-leaders">
             <div class="admindash-overview-leaders__header">
                 <div class="admindash-overview-leaders__heading">
-                    <h5 class="mb-1">Overall Course Leaders</h5>
-                    <div class="text-muted small">Compare top participants and clinics across selected courses.</div>
+                    <h5 class="mb-1"><?php echo get_string('ui_dashboard_overall_course_leaders', 'local_admindashboard'); ?></h5>
+                    <div class="text-muted small"><?php echo get_string('ui_dashboard_compare_top_participants_and_clinics_across_selected_courses', 'local_admindashboard'); ?></div>
                 </div>
                 <div class="admindash-segmented" role="group" aria-label="Overall course leader view">
-                    <button type="button" class="admindash-segmented__button is-active" data-overview-leader-mode="participants">Participants</button>
-                    <button type="button" class="admindash-segmented__button" data-overview-leader-mode="clinics">Clinics</button>
+                    <button type="button" class="admindash-segmented__button is-active" data-overview-leader-mode="participants"><?php echo get_string('ui_dashboard_participants', 'local_admindashboard'); ?></button>
+                    <button type="button" class="admindash-segmented__button" data-overview-leader-mode="clinics"><?php echo get_string('ui_dashboard_clinics', 'local_admindashboard'); ?></button>
                 </div>
             </div>
             <div class="admindash-overview-leaders__toolbar">
                 <div class="admindash-overview-leaders__field">
-                    <label class="admindash-overview-leaders__label" for="overviewCourseLeaderSelect">Courses</label>
+                    <label class="admindash-overview-leaders__label" for="overviewCourseLeaderSelect"><?php echo get_string('ui_dashboard_courses', 'local_admindashboard'); ?></label>
                     <div class="admindash-multiselect" id="overviewCourseLeaderPicker">
                         <button type="button" class="admindash-multiselect__button" id="overviewCourseLeaderDropdownBtn" aria-expanded="false" aria-controls="overviewCourseLeaderMenu">
-                            <span id="overviewCourseLeaderDropdownText">Loading courses...</span>
+                            <span id="overviewCourseLeaderDropdownText"><?php echo get_string('ui_dashboard_loading_courses', 'local_admindashboard'); ?></span>
                             <span class="admindash-multiselect__chevron" aria-hidden="true"></span>
                         </button>
                         <div class="admindash-multiselect__menu" id="overviewCourseLeaderMenu" hidden>
                             <div class="admindash-multiselect__actions">
-                                <button type="button" data-overview-course-action="all">Select all</button>
-                                <button type="button" data-overview-course-action="clear">Clear</button>
+                                <button type="button" data-overview-course-action="all"><?php echo get_string('ui_dashboard_select_all', 'local_admindashboard'); ?></button>
+                                <button type="button" data-overview-course-action="clear"><?php echo get_string('ui_dashboard_clear', 'local_admindashboard'); ?></button>
                             </div>
                             <div class="admindash-multiselect__options" id="overviewCourseLeaderOptions"></div>
                         </div>
                     </div>
                     <select id="overviewCourseLeaderSelect" class="admindash-overview-leaders__select-native" multiple aria-hidden="true" tabindex="-1"></select>
-                    <div class="admindash-overview-leaders__hint">Leave empty to rank all active courses.</div>
+                    <div class="admindash-overview-leaders__hint"><?php echo get_string('ui_dashboard_leave_empty_to_rank_all_active_courses', 'local_admindashboard'); ?></div>
                 </div>
                 <div class="admindash-overview-leaders__summary" id="coursesOverviewSummary" aria-live="polite">
-                    <div class="admindash-overview-leaders__summary-value">All</div>
-                    <div class="admindash-overview-leaders__summary-label">courses selected</div>
+                    <div class="admindash-overview-leaders__summary-value"><?php echo get_string('ui_dashboard_all', 'local_admindashboard'); ?></div>
+                    <div class="admindash-overview-leaders__summary-label"><?php echo get_string('ui_dashboard_courses_selected', 'local_admindashboard'); ?></div>
                 </div>
             </div>
             <div class="admindash-overview-leaders__legend" aria-hidden="true">
-                <span class="admindash-overview-leaders__legend-item is-strong">70%+</span>
-                <span class="admindash-overview-leaders__legend-item is-steady">40-69%</span>
-                <span class="admindash-overview-leaders__legend-item is-watch">Below 40%</span>
+                <span class="admindash-overview-leaders__legend-item is-strong"><?php echo get_string('ui_dashboard_70', 'local_admindashboard'); ?></span>
+                <span class="admindash-overview-leaders__legend-item is-steady"><?php echo get_string('ui_dashboard_40_69', 'local_admindashboard'); ?></span>
+                <span class="admindash-overview-leaders__legend-item is-watch"><?php echo get_string('ui_dashboard_below_40', 'local_admindashboard'); ?></span>
             </div>
             <div id="coursesOverviewWrap" class="admindash-overview-leaders__board">
                 <div id="coursesOverviewTop" class="admindash-overview-leaders__top"></div>
                 <div id="coursesOverviewRest" class="admindash-overview-leaders__rest"></div>
             </div>
-            <div id="coursesOverviewEmpty" class="admindash-overview-leaders__empty" style="display:none">No course leader data available yet.</div>
+            <div id="coursesOverviewEmpty" class="admindash-overview-leaders__empty" style="display:none"><?php echo get_string('ui_dashboard_no_course_leader_data_available_yet', 'local_admindashboard'); ?></div>
         </div>
         <div id="performanceCard" class="admindash-card p-2 bg-white">
             <div class="d-flex align-items-center justify-content-between" style="gap:12px">
                 <div>
-                    <h5 class="mb-1">Participant Performance (Leaders)</h5>
-                    <div class="text-muted small">Switch between top participants and clinic-level leaders.</div>
+                    <h5 class="mb-1"><?php echo get_string('ui_dashboard_participant_performance_leaders', 'local_admindashboard'); ?></h5>
+                    <div class="text-muted small"><?php echo get_string('ui_dashboard_switch_between_top_participants_and_clinic_level_leaders', 'local_admindashboard'); ?></div>
                 </div>
                 <div class="admindash-segmented" role="group" aria-label="Participant performance view">
-                    <button type="button" class="admindash-segmented__button is-active" data-performance-mode="participants">Participants</button>
-                    <button type="button" class="admindash-segmented__button" data-performance-mode="clinics">Clinics</button>
+                    <button type="button" class="admindash-segmented__button is-active" data-performance-mode="participants"><?php echo get_string('ui_dashboard_participants', 'local_admindashboard'); ?></button>
+                    <button type="button" class="admindash-segmented__button" data-performance-mode="clinics"><?php echo get_string('ui_dashboard_clinics', 'local_admindashboard'); ?></button>
                 </div>
             </div>
             <canvas id="performanceChart" height="160"></canvas>
-            <div id="performanceEmptyMsg" class="text-muted small" style="display:none;margin-top:6px">Select a course to view leading participants.</div>
+            <div id="performanceEmptyMsg" class="text-muted small" style="display:none;margin-top:6px"><?php echo get_string('ui_dashboard_select_a_course_to_view_leading_participants', 'local_admindashboard'); ?></div>
         </div>
         <div class="admindash-card p-2 bg-white admindash-chart-card admindash-chart-card--content">
-            <h5 class="mb-2" id="trendChartTitle">Content Engagement (30 days)</h5>
+            <h5 class="mb-2" id="trendChartTitle"><?php echo get_string('ui_dashboard_content_engagement_30_days', 'local_admindashboard'); ?></h5>
             <canvas id="enrolChart" height="120"></canvas>
-            <div id="enrolEmptyMsg" class="text-muted small" style="display:none;margin-top:6px">No data yet for the selected filters.</div>
+            <div id="enrolEmptyMsg" class="text-muted small" style="display:none;margin-top:6px"><?php echo get_string('ui_dashboard_no_data_yet_for_the_selected_filters', 'local_admindashboard'); ?></div>
         </div>
         <div id="skillGapCard" class="admindash-card p-2 bg-white admindash-chart-card admindash-chart-card--radar">
-            <h5 class="mb-2">Skill Gap Analysis</h5>
+            <h5 class="mb-2"><?php echo get_string('ui_dashboard_skill_gap_analysis', 'local_admindashboard'); ?></h5>
             <div class="admindash-chart-card__canvas-wrap">
                 <canvas id="skillGapChart" height="120"></canvas>
             </div>
-            <div id="skillGapEmptyMsg" class="text-muted small" style="display:none;margin-top:6px">No skill data yet for the selected course.</div>
+            <div id="skillGapEmptyMsg" class="text-muted small" style="display:none;margin-top:6px"><?php echo get_string('ui_dashboard_no_skill_data_yet_for_the_selected_course', 'local_admindashboard'); ?></div>
         </div>
     </div>
 </div>
@@ -402,26 +402,26 @@ $sesskey = sesskey();
 <div id="atRiskSection" class="admindash-card admindash-risk-panel">
     <div class="admindash-risk-panel__header">
         <div>
-            <h5 class="mb-1">At-Risk Participants</h5>
-            <div id="atRiskMeta" class="text-muted small">Risk scan loading…</div>
+            <h5 class="mb-1"><?php echo get_string('ui_dashboard_at_risk_participants', 'local_admindashboard'); ?></h5>
+            <div id="atRiskMeta" class="text-muted small"><?php echo get_string('ui_dashboard_risk_scan_loading', 'local_admindashboard'); ?></div>
         </div>
-        <button type="button" class="btn btn-danger" id="atRiskReminderButton" style="display:none">Send Reminder to At-Risk</button>
+        <button type="button" class="btn btn-danger" id="atRiskReminderButton" style="display:none"><?php echo get_string('ui_dashboard_send_reminder_to_at_risk', 'local_admindashboard'); ?></button>
     </div>
-    <div id="atRiskEmptyMsg" class="alert alert-light border admindash-risk-empty" style="display:none">No participants currently match the at-risk rules for the selected filters.</div>
+    <div id="atRiskEmptyMsg" class="alert alert-light border admindash-risk-empty" style="display:none"><?php echo get_string('ui_dashboard_no_participants_currently_match_the_at_risk_rules_for_the_selec_7add22f7', 'local_admindashboard'); ?></div>
     <div id="atRiskReminderStatus" class="text-muted small admindash-risk-status"></div>
     <div class="table-responsive" id="atRiskTableWrap">
         <table class="table table-striped table-hover align-middle mb-0" id="atRiskTable">
             <thead>
                 <tr>
-                    <th scope="col">Participant</th>
-                    <th scope="col">Department</th>
-                    <th scope="col">Course</th>
-                    <th scope="col">Risk Signals</th>
+                    <th scope="col"><?php echo get_string('ui_dashboard_participant', 'local_admindashboard'); ?></th>
+                    <th scope="col"><?php echo get_string('ui_dashboard_department', 'local_admindashboard'); ?></th>
+                    <th scope="col"><?php echo get_string('ui_dashboard_course', 'local_admindashboard'); ?></th>
+                    <th scope="col"><?php echo get_string('ui_dashboard_risk_signals', 'local_admindashboard'); ?></th>
                 </tr>
             </thead>
             <tbody id="atRiskTableBody">
                 <tr>
-                    <td colspan="4" class="text-center py-4 text-muted small">Loading at-risk participants…</td>
+                    <td colspan="4" class="text-center py-4 text-muted small"><?php echo get_string('ui_dashboard_loading_at_risk_participants', 'local_admindashboard'); ?></td>
                 </tr>
             </tbody>
         </table>
@@ -433,8 +433,8 @@ $sesskey = sesskey();
         <div class="modal-content">
             <div class="modal-header">
                 <div>
-                    <h5 class="modal-title" id="atRiskDetailsModalLabel">At-Risk Details</h5>
-                    <div class="text-muted small" id="atRiskDetailsMeta">Participant risk summary</div>
+                    <h5 class="modal-title" id="atRiskDetailsModalLabel"><?php echo get_string('ui_dashboard_at_risk_details', 'local_admindashboard'); ?></h5>
+                    <div class="text-muted small" id="atRiskDetailsMeta"><?php echo get_string('ui_dashboard_participant_risk_summary', 'local_admindashboard'); ?></div>
                 </div>
                 <button type="button" class="btn-close" data-admindash-close-risk-modal="1" aria-label="Close"></button>
             </div>
@@ -581,7 +581,7 @@ function renderKpiTrend(slotId, trend) {
     }
 
     const cssClass = String(trend.css_class || 'is-flat');
-    const arrow = escapeHtml(trend.arrow || '→');
+    const arrow = escapeHtml(trend.arrow || '->');
     const displayValue = escapeHtml(trend.display_value || '0%');
     const comparisonLabel = escapeHtml(trend.comparison_label || 'vs previous 30 days');
 
@@ -905,7 +905,7 @@ function resetFeedbackAnalyzer(metaText) {
         meta.textContent = metaText || 'Select a course to load course-wide quantitative feedback and AI sentiment insights.';
     }
     if (badge) {
-        badge.textContent = feedbackInsightsState.loading ? 'Analyzing…' : 'Healthcare QA';
+        badge.textContent = feedbackInsightsState.loading ? 'Analyzing...' : 'Healthcare QA';
     }
 
     setFeedbackHidden('feedbackQuantEmpty', false);
@@ -1153,9 +1153,10 @@ async function loadFeedbackInsights(courseid) {
     feedbackInsightsState.lastCourseId = courseIdNumber;
     feedbackInsightsState.requestId += 1;
     const requestId = feedbackInsightsState.requestId;
-    resetFeedbackAnalyzer('Loading feedback insights and analyzing comments with Groq…');
+    resetFeedbackAnalyzer('Loading feedback insights and analyzing comments with Groq...');
 
     const url = new URL('data.php', window.location.href);
+    url.searchParams.set('sesskey', adminDashSesskey);
     url.searchParams.set('mode', 'feedback_insights');
     url.searchParams.set('courseid', String(courseIdNumber));
     url.searchParams.set('t', String(Date.now()));
@@ -1329,7 +1330,7 @@ function renderKpiModalTableRows(users) {
             } else if (cn) {
                 enrolCell = '<td class="admindash-kpi-enrol-cell">' + escapeHtml(cn) + '</td>';
             } else {
-                enrolCell = '<td class="admindash-kpi-enrol-cell text-muted">—</td>';
+                enrolCell = '<td class="admindash-kpi-enrol-cell text-muted">-</td>';
             }
         }
         return ''
@@ -1411,7 +1412,7 @@ function setKpiModalLoading(title, subtitle) {
         titleEl.textContent = title;
     }
     if (metaEl) {
-        metaEl.textContent = subtitle || 'Loading…';
+        metaEl.textContent = subtitle || 'Loading...';
     }
     const thEnrol = document.getElementById('kpiUsersThEnrol');
     if (thEnrol) {
@@ -1434,7 +1435,7 @@ function setKpiModalLoading(title, subtitle) {
             + '<tr>'
             + '<td colspan="' + colSpan + '" class="text-center py-4">'
             + '<div class="spinner-border text-primary" role="status" aria-hidden="true"></div>'
-            + '<div class="mt-2 text-muted small">Loading users…</div>'
+            + '<div class="mt-2 text-muted small">Loading users...</div>'
             + '</td>'
             + '</tr>';
     }
@@ -1482,7 +1483,7 @@ function formatTimerDuration(totalSeconds) {
     return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
 }
 
-// ─── Upcoming-event countdown ─────────────────────────────────────────────
+// --- Upcoming-event countdown ---------------------------------------------
 let upcomingEvent = { type: '', label: '', meta: '', target_ts: 0, date_formatted: '', course_name: '', tickId: null };
 
 function formatUpcomingCountdown(totalSeconds) {
@@ -1558,13 +1559,13 @@ function applyUpcomingEventToCard(ev) {
             : (ev.meta || '');
     }
     if (modeEl) {
-        modeEl.textContent = isQuiz ? 'Quiz' : isCourse ? 'New Course' : '—';
+        modeEl.textContent = isQuiz ? 'Quiz' : isCourse ? 'New Course' : '-';
     }
     if (scopeLabel) {
         scopeLabel.textContent = isCourse ? 'Starts' : 'On';
     }
     if (scopeEl) {
-        scopeEl.textContent = isNone ? '—' : (ev.date_formatted || '—');
+        scopeEl.textContent = isNone ? '-' : (ev.date_formatted || '-');
     }
     if (card) {
         card.setAttribute('data-timer-state', isNone ? 'none' : (ev.type || 'active'));
@@ -1576,6 +1577,7 @@ function applyUpcomingEventToCard(ev) {
 async function loadUpcomingEvent() {
     const courseId = String(document.getElementById('courseSelect')?.value || '0');
     const url = new URL('data.php', window.location.href);
+    url.searchParams.set('sesskey', adminDashSesskey);
     url.searchParams.set('mode', 'upcoming_event');
     url.searchParams.set('courseid', courseId);
     url.searchParams.set('_', String(Date.now()));
@@ -1587,9 +1589,9 @@ async function loadUpcomingEvent() {
         applyUpcomingEventToCard({ type: 'none', label: 'Unavailable', meta: '', target_ts: 0, date_formatted: '', course_name: '' });
     }
 }
-// ─── End upcoming-event countdown ─────────────────────────────────────────
+// --- End upcoming-event countdown -----------------------------------------
 
-// Live-feed background refresh timer (internal only — no longer drives the card DOM).
+// Live-feed background refresh timer (internal only - no longer drives the card DOM).
 function renderDashboardTimer() {
     // Kept for live-feed interval bookkeeping; card DOM is now managed by loadUpcomingEvent().
 }
@@ -1626,7 +1628,7 @@ function setReminderButtonState(state) {
     const hidden = state.hidden === true || !isReminderMetric(kpiModalState.metric);
     button.style.display = hidden ? 'none' : '';
     button.disabled = hidden || kpiModalState.loading || kpiModalState.count < 1;
-    button.textContent = kpiModalState.loading ? 'Sending…' : 'Send Reminder to All';
+    button.textContent = kpiModalState.loading ? 'Sending...' : 'Send Reminder to All';
     status.textContent = String(state.statusText || '');
 }
 
@@ -1649,7 +1651,7 @@ function sendKpiReminders() {
         label: buttonLabel,
         count: kpiModalState.count,
         loading: true,
-        statusText: 'Sending Moodle reminders…'
+        statusText: 'Sending Moodle reminders...'
     });
 
     const body = new URLSearchParams();
@@ -1720,7 +1722,7 @@ function setAtRiskReminderState(state) {
 
     button.style.display = canSend ? '' : 'none';
     button.disabled = !canSend || atRiskState.loading;
-    button.textContent = atRiskState.loading ? 'Sending…' : 'Send Reminder to At-Risk';
+    button.textContent = atRiskState.loading ? 'Sending...' : 'Send Reminder to At-Risk';
     status.textContent = String(state.statusText || '');
 }
 
@@ -1778,7 +1780,7 @@ function sendAtRiskReminders() {
         return;
     }
 
-    setAtRiskReminderState({loading: true, statusText: 'Sending at-risk reminders…'});
+    setAtRiskReminderState({loading: true, statusText: 'Sending at-risk reminders...'});
 
     const body = new URLSearchParams();
     body.set('sesskey', adminDashSesskey);
@@ -1829,7 +1831,7 @@ function openKpiUsersModal(metric, label) {
 
     kpiModalMetricKey = String(metric || '');
 
-    setKpiModalLoading(label + ' Users', 'Loading…');
+    setKpiModalLoading(label + ' Users', 'Loading...');
     modal.show();
 
     require(['core/ajax'], function(Ajax) {
@@ -2168,6 +2170,7 @@ function setupOverviewCourseDropdown() {
 
 async function loadMeta(courseid) {
     const url = new URL('data.php', window.location.href);
+    url.searchParams.set('sesskey', adminDashSesskey);
     url.searchParams.set('mode', 'meta');
     url.searchParams.set('courseid', String(courseid || 0));
     const res = await fetch(url.toString());
@@ -2212,6 +2215,7 @@ async function loadDashboardData() {
     const requestedBarMetric = document.getElementById('barMetricSelect').value;
 
     const url = new URL('data.php', window.location.href);
+    url.searchParams.set('sesskey', adminDashSesskey);
     url.searchParams.set('courseid', courseid);
     url.searchParams.set('department', department);
     url.searchParams.set('moduleid', moduleid);
@@ -2305,7 +2309,7 @@ async function loadDashboardData() {
     );
     document.getElementById('kpiDropped').textContent = numberFmt.format(notAttemptedCount);
 
-    // ── Platform stat row ──────────────────────────────────────────────────
+    // -- Platform stat row --------------------------------------------------
     (function updateStatRow() {
         var setS = function(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; };
         setS('statTotalStudents',  numberFmt.format(data.total_students  || 0));
@@ -2324,7 +2328,7 @@ async function loadDashboardData() {
         if (lbl) lbl.textContent = 'Course Outcome KPIs';
     })();
 
-    // ── KPI percentages ────────────────────────────────────────────────────
+    // -- KPI percentages ----------------------------------------------------
     function setKpiPctLines(elId, lines) {
         const el = document.getElementById(elId);
         if (!el) {
@@ -2392,7 +2396,7 @@ async function loadDashboardData() {
     setKpiOutcomePct('kpiCertifiedPct', data.certified);
     setKpiOutcomePct('kpiFailedPct', data.failed);
 
-    // ── Resigned Midway card (course filter only) ──────────────────────
+    // -- Resigned Midway card (course filter only) ----------------------
     const resignedCard = document.getElementById('kpiResignedCard');
     const resignedVal = Number(data.resigned_midcourse || 0);
     if (resignedCard) {
@@ -2579,6 +2583,7 @@ async function loadLiveFeed() {
         const courseid = document.getElementById('courseSelect').value;
         const department = document.getElementById('deptSelect').value;
         const url = new URL('data.php', window.location.href);
+    url.searchParams.set('sesskey', adminDashSesskey);
         url.searchParams.set('mode', 'live_feed');
         url.searchParams.set('courseid', courseid);
         url.searchParams.set('department', department);
@@ -2641,7 +2646,7 @@ function renderActivityFeed(rows, hasCourse) {
         const action = item.action || 'did something';
         const course = item.course || '';
         const timestamp = item.timestamp || '';
-        const meta = [course, timestamp].filter(Boolean).join(' • ');
+        const meta = [course, timestamp].filter(Boolean).join(' - ');
         return ''
             + '<div class="admindash-livefeed__item">'
             + '<div class="admindash-livefeed__avatar admindash-livefeed__avatar--' + escapeHtml(String(item.avatar || 'neutral')) + '">' + getLiveFeedAvatarMarkup(String(item.avatar || 'neutral')) + '</div>'
@@ -2822,10 +2827,10 @@ function renderAtRisk(rows, hasCourse, courseRunning) {
     if (!hasCourse) {
         // Overview mode: show network-wide top-10 from every running course.
         if (titleEl) {
-            titleEl.textContent = 'At-Risk — Network Wide';
+            titleEl.textContent = 'At-Risk - Network Wide';
         }
         if (!items.length) {
-            metaEl.textContent = 'Network health looks good — no participants flagged across active courses.';
+            metaEl.textContent = 'Network health looks good - no participants flagged across active courses.';
             emptyEl.textContent = 'Network Health Strong: 0 participants currently flagged as at-risk across active courses.';
             emptyEl.style.display = 'block';
             tableWrap.style.display = 'none';
@@ -2835,7 +2840,7 @@ function renderAtRisk(rows, hasCourse, courseRunning) {
         }
         emptyEl.style.display = 'none';
         tableWrap.style.display = 'block';
-        metaEl.textContent = `${items.length} participant${items.length === 1 ? '' : 's'} flagged across active courses — top ${items.length} by risk score.`;
+        metaEl.textContent = `${items.length} participant${items.length === 1 ? '' : 's'} flagged across active courses - top ${items.length} by risk score.`;
         setAtRiskReminderState({loading: false, statusText: ''});
     } else {
         // Filtered mode: course-specific at-risk.
@@ -3129,7 +3134,7 @@ function renderSkillGap(skillgap) {
     });
 }
 
-// ─── Executive Overview helpers ──────────────────────────────────────────────
+// --- Executive Overview helpers ----------------------------------------------
 
 function getActiveDashboardMode() {
     const courseId = String(document.getElementById('courseSelect')?.value || '0');
@@ -3174,7 +3179,7 @@ function switchDashboardMode(mode) {
     setVisible('kpiPieCard', !isOverview);
     setVisible('performanceCard', !isOverview);
 
-    // In overview mode always show Completion % in the bar chart — other
+    // In overview mode always show Completion % in the bar chart - other
     // metrics (Fail %, Pass %) need course-level grade data which is only
     // meaningful once a course is selected.
     if (isOverview) {
@@ -3344,6 +3349,7 @@ async function loadCoursesOverview() {
     const select = document.getElementById('overviewCourseLeaderSelect');
     const selectedCourseIds = select ? [...select.selectedOptions].map(option => option.value).filter(Boolean) : [];
     const url = new URL('data.php', window.location.href);
+    url.searchParams.set('sesskey', adminDashSesskey);
     url.searchParams.set('mode', 'multi_course_leaders');
     url.searchParams.set('department', dept);
     url.searchParams.set('courseids', selectedCourseIds.join(','));
@@ -3370,7 +3376,7 @@ async function loadCoursesOverview() {
     }
 }
 
-// ─── End Executive Overview helpers ──────────────────────────────────────────
+// --- End Executive Overview helpers ------------------------------------------
 
 async function init() {
     await loadInitialMeta();

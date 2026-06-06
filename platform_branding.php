@@ -142,22 +142,22 @@ local_admindashboard_render_workspace_header(
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Brand Assets</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_platform_branding_brand_assets', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo ($haslogo ? 1 : 0) + ($hascompactlogo ? 1 : 0); ?></div>
-		<div class="admindash-module-stat__meta">Detected primary and compact logo assets exposed by the active theme renderer.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_platform_branding_detected_primary_and_compact_logo_assets_exposed_by_the_active__e1a94a47', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Menu Customizations</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_platform_branding_menu_customizations', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $custommenucount + $customusermenucount; ?></div>
-		<div class="admindash-module-stat__meta"><?php echo $custommenucount; ?> top-menu lines and <?php echo $customusermenucount; ?> user-menu lines are currently customized.</div>
+		<div class="admindash-module-stat__meta"><?php echo $custommenucount; ?> <?php echo get_string('ui_platform_branding_top_menu_lines_and', 'local_admindashboard'); ?> <?php echo $customusermenucount; ?> <?php echo get_string('ui_platform_branding_user_menu_lines_are_currently_customized', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Language & Voice</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_platform_branding_language_voice', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo s($langvalue); ?></div>
-		<div class="admindash-module-stat__meta">Default site language currently setting the baseline tone for the UI and outbound communication.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_platform_branding_default_site_language_currently_setting_the_baseline_tone_for_t_41b0b2ff', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Mobile Styling</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_platform_branding_mobile_styling', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $hasmobilecss ? 'Custom' : 'Default'; ?></div>
 		<div class="admindash-module-stat__meta"><?php echo $hasmobilecss ? 'A mobile CSS URL is configured for the Moodle app experience.' : 'No mobile CSS URL is configured, so the app relies on default styling.'; ?></div>
 	</div>
@@ -166,25 +166,25 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Brand Snapshot</h5>
-			<span class="admindash-admin-note">Current state</span>
+			<h5 class="mb-0"><?php echo get_string('ui_platform_branding_brand_snapshot', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_platform_branding_current_state', 'local_admindashboard'); ?></span>
 		</div>
 		<div class="admindash-admin-badges mb-3"><?php echo implode('', $brandingbadges); ?></div>
 		<ul class="admindash-admin-list">
 			<li>
-				<span class="admindash-admin-list__label">Site identity</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_platform_branding_site_identity', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo s($sitename !== '' ? $sitename : 'Unnamed site'); ?> / <?php echo s($siteshortname !== '' ? $siteshortname : 'No shortname'); ?></span>
 			</li>
 			<li>
-				<span class="admindash-admin-list__label">Theme</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_platform_branding_theme', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo s($themevalue); ?></span>
 			</li>
 			<li>
-				<span class="admindash-admin-list__label">Support voice</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_platform_branding_support_voice', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo s($supportname !== '' ? $supportname : 'No support name'); ?><?php echo $supportemail !== '' ? ' / ' . s($supportemail) : ''; ?></span>
 			</li>
 			<li>
-				<span class="admindash-admin-list__label">Site summary</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_platform_branding_site_summary', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo s($sitesummary !== '' ? core_text::substr($sitesummary, 0, 120) . (core_text::strlen($sitesummary) > 120 ? '...' : '') : 'No summary configured'); ?></span>
 			</li>
 		</ul>
@@ -194,8 +194,8 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Brand Asset Preview</h5>
-			<span class="admindash-admin-note">Theme-rendered assets</span>
+			<h5 class="mb-0"><?php echo get_string('ui_platform_branding_brand_asset_preview', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_platform_branding_theme_rendered_assets', 'local_admindashboard'); ?></span>
 		</div>
 		<?php if ($haslogo || $hascompactlogo): ?>
 			<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:flex-start;min-height:140px">
@@ -211,7 +211,7 @@ local_admindashboard_render_workspace_header(
 				<?php endif; ?>
 			</div>
 		<?php else: ?>
-			<p class="admindash-admin-note mb-0">The active theme is not exposing a primary or compact logo through Moodle renderer APIs.</p>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_platform_branding_the_active_theme_is_not_exposing_a_primary_or_compact_logo_thro_02b44bf8', 'local_admindashboard'); ?></p>
 		<?php endif; ?>
 	</div>
 
@@ -220,19 +220,19 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Brand Control Matrix</h5>
-			<p class="admindash-admin-note mb-0">Each row shows which branding surface exists, what signal it exposes today, and where to manage it.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_platform_branding_brand_control_matrix', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_platform_branding_each_row_shows_which_branding_surface_exists_what_signal_it_exp_e635b27f', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Surface</th>
-					<th>Status</th>
-					<th>Current Snapshot</th>
-					<th>Why It Matters</th>
-					<th>Action</th>
+					<th><?php echo get_string('ui_platform_branding_surface', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_platform_branding_status', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_platform_branding_current_snapshot', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_platform_branding_why_it_matters', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_platform_branding_action', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>

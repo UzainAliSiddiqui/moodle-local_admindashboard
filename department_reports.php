@@ -21,7 +21,7 @@ local_admindashboard_setup_page('/local/admindashboard/department_reports.php', 
 local_admindashboard_render_header('reports.departmentcompletion');
 ?>
 
-<h2 class="mb-3">Department Completion Report</h2>
+<h2 class="mb-3"><?php echo get_string('ui_department_reports_department_completion_report', 'local_admindashboard'); ?></h2>
 
 <?php
 $courseid = optional_param('courseid', 0, PARAM_INT);
@@ -29,9 +29,9 @@ $meta = local_admindashboard_get_meta($courseid);
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-    <div class="title">Filters</div>
+    <div class="title"><?php echo get_string('ui_department_reports_filters', 'local_admindashboard'); ?></div>
 
-    <label class="mb-0" for="courseSelect">Select Course</label>
+    <label class="mb-0" for="courseSelect"><?php echo get_string('ui_department_reports_select_course', 'local_admindashboard'); ?></label>
     <select id="courseSelect" name="courseid" class="form-select" style="max-width:360px">
         <option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>All Courses</option>
         <?php foreach ($meta['courses'] as $course): ?>
@@ -41,7 +41,7 @@ $meta = local_admindashboard_get_meta($courseid);
         <?php endforeach; ?>
     </select>
 
-    <button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+    <button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_department_reports_apply', 'local_admindashboard'); ?></button>
 </form>
 
 <?php
@@ -114,7 +114,7 @@ echo html_writer::tag('div', html_writer::table($table), ['class' => 'mt-3']);
 ?>
 
 <div class="admindash-card bg-white p-3 mt-3">
-    <h5 class="mb-2">Reports</h5>
+    <h5 class="mb-2"><?php echo get_string('ui_department_reports_reports', 'local_admindashboard'); ?></h5>
     <div class="d-flex gap-2 flex-wrap">
         <a class="btn btn-outline-primary" href="<?php echo (new moodle_url('/local/admindashboard/department_reports.php')); ?>">Completion</a>
         <a class="btn btn-outline-primary" href="<?php echo (new moodle_url('/local/admindashboard/department_reports_engagement.php')); ?>">Engagement</a>

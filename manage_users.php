@@ -201,9 +201,9 @@ local_admindashboard_render_workspace_header(
 ?>
 
 <form method="get" class="admindash-filters admindash-card">
-	<div class="title">Filters</div>
+	<div class="title"><?php echo get_string('ui_manage_users_filters', 'local_admindashboard'); ?></div>
 
-	<label class="mb-0" for="deptSelect">Department</label>
+	<label class="mb-0" for="deptSelect"><?php echo get_string('ui_manage_users_department', 'local_admindashboard'); ?></label>
 	<select id="deptSelect" name="department" class="form-select" style="max-width:280px">
 		<option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
 		<?php foreach ($meta['departments'] as $dept): ?>
@@ -213,7 +213,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="roleSelect">Role</label>
+	<label class="mb-0" for="roleSelect"><?php echo get_string('ui_manage_users_role', 'local_admindashboard'); ?></label>
 	<select id="roleSelect" name="roleid" class="form-select" style="max-width:240px">
 		<option value="0" <?php echo $roleid === 0 ? 'selected' : ''; ?>>All Roles</option>
 		<?php foreach ($roles as $role): ?>
@@ -223,7 +223,7 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="statusSelect">Status</label>
+	<label class="mb-0" for="statusSelect"><?php echo get_string('ui_manage_users_status', 'local_admindashboard'); ?></label>
 	<select id="statusSelect" name="status" class="form-select" style="max-width:240px">
 		<?php foreach ($statusoptions as $value => $label): ?>
 			<option value="<?php echo s($value); ?>" <?php echo $status === $value ? 'selected' : ''; ?>>
@@ -232,50 +232,50 @@ local_admindashboard_render_workspace_header(
 		<?php endforeach; ?>
 	</select>
 
-	<label class="mb-0" for="searchInput">Search</label>
+	<label class="mb-0" for="searchInput"><?php echo get_string('ui_manage_users_search', 'local_admindashboard'); ?></label>
 	<input id="searchInput" name="q" class="form-control" style="max-width:280px" value="<?php echo s($q); ?>" placeholder="Name, username, or email" />
 
-	<button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+	<button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_manage_users_apply', 'local_admindashboard'); ?></button>
 	<a class="btn btn-outline-secondary" href="<?php echo new moodle_url('/local/admindashboard/manage_users.php'); ?>">Reset</a>
 </form>
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Accounts</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_manage_users_accounts', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->totalusers ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Users matched by the current filters.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_manage_users_users_matched_by_the_current_filters', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Enabled</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_manage_users_enabled', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->activeusers ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Accounts that are not suspended.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_manage_users_accounts_that_are_not_suspended', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Suspended</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_manage_users_suspended', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->suspendedusers ?? 0); ?></div>
-		<div class="admindash-module-stat__meta">Accounts currently blocked from access.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_manage_users_accounts_currently_blocked_from_access', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Needs Cleanup</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_manage_users_needs_cleanup', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo (int)($summary->missingdepartment ?? 0); ?></div>
-		<div class="admindash-module-stat__meta"><?php echo (int)($summary->neveraccess ?? 0); ?> never accessed and <?php echo (int)($summary->missingdepartment ?? 0); ?> missing department.</div>
+		<div class="admindash-module-stat__meta"><?php echo (int)($summary->neveraccess ?? 0); ?> <?php echo get_string('ui_manage_users_never_accessed_and', 'local_admindashboard'); ?> <?php echo (int)($summary->missingdepartment ?? 0); ?> <?php echo get_string('ui_manage_users_missing_department', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
-		<h5 class="mb-3">Department Distribution</h5>
+		<h5 class="mb-3"><?php echo get_string('ui_manage_users_department_distribution', 'local_admindashboard'); ?></h5>
 		<?php if (!empty($departmentrows)): ?>
 			<ul class="admindash-admin-list">
 				<?php foreach ($departmentrows as $deptrow): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s($deptrow->departmentlabel); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)$deptrow->usercount; ?> users</span>
+						<span class="admindash-admin-list__value"><?php echo (int)$deptrow->usercount; ?> <?php echo get_string('ui_manage_users_users', 'local_admindashboard'); ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php else: ?>
-			<p class="admindash-admin-note mb-0">No user records matched the current filters.</p>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_manage_users_no_user_records_matched_the_current_filters', 'local_admindashboard'); ?></p>
 		<?php endif; ?>
 	</div>
 </div>
@@ -283,8 +283,8 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">User Directory</h5>
-			<p class="admindash-admin-note mb-0">Showing <?php echo $total > 0 ? (($page * $perpage) + 1) : 0; ?>-<?php echo min((($page + 1) * $perpage), $total); ?> of <?php echo $total; ?> matching accounts.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_manage_users_user_directory', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_manage_users_showing', 'local_admindashboard'); ?> <?php echo $total > 0 ? (($page * $perpage) + 1) : 0; ?>-<?php echo min((($page + 1) * $perpage), $total); ?> <?php echo get_string('ui_manage_users_of', 'local_admindashboard'); ?> <?php echo $total; ?> <?php echo get_string('ui_manage_users_matching_accounts', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 
@@ -292,19 +292,19 @@ local_admindashboard_render_workspace_header(
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>User</th>
-					<th>Department</th>
-					<th>Roles</th>
-					<th>Last access</th>
-					<th>Enrolled courses</th>
-					<th>Status</th>
-					<th>Actions</th>
+					<th><?php echo get_string('ui_manage_users_user', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_manage_users_department', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_manage_users_roles', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_manage_users_last_access', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_manage_users_enrolled_courses', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_manage_users_status', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_manage_users_actions', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($rows)): ?>
 					<tr>
-						<td colspan="7" class="text-center py-4">No users found for the current filters.</td>
+						<td colspan="7" class="text-center py-4"><?php echo get_string('ui_manage_users_no_users_found_for_the_current_filters', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach ($rows as $row): ?>

@@ -134,49 +134,49 @@ local_admindashboard_render_workspace_header(
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Profile Readiness</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_account_settings_profile_readiness', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $profilereadiness; ?>%</div>
-		<div class="admindash-module-stat__meta">Based on email, department, city, and country fields for your account.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_account_settings_based_on_email_department_city_and_country_fields_for_your_account', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Notification Posture</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_account_settings_notification_posture', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo empty($currentuser->emailstop) ? 'Active' : 'Paused'; ?></div>
-		<div class="admindash-module-stat__meta"><?php echo s($mailformatlabel); ?> with <?php echo s($emaildeliverylabel); ?>.</div>
+		<div class="admindash-module-stat__meta"><?php echo s($mailformatlabel); ?> <?php echo get_string('ui_account_settings_with', 'local_admindashboard'); ?> <?php echo s($emaildeliverylabel); ?>.</div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Locale</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_account_settings_locale', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo s($displaylang); ?></div>
-		<div class="admindash-module-stat__meta"><?php echo s($displaytimezone); ?> is currently driving date and time rendering.</div>
+		<div class="admindash-module-stat__meta"><?php echo s($displaytimezone); ?> <?php echo get_string('ui_account_settings_is_currently_driving_date_and_time_rendering', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Messaging Channels</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_account_settings_messaging_channels', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $messagechannelcount; ?></div>
-		<div class="admindash-module-stat__meta">Enabled message processor plugins available to support notification delivery.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_account_settings_enabled_message_processor_plugins_available_to_support_notifica_79fadace', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 	<div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Current Account State</h5>
-			<span class="admindash-admin-note">Live snapshot</span>
+			<h5 class="mb-0"><?php echo get_string('ui_account_settings_current_account_state', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_account_settings_live_snapshot', 'local_admindashboard'); ?></span>
 		</div>
 		<div class="admindash-admin-badges mb-3"><?php echo implode('', $settingsbadges); ?></div>
 		<ul class="admindash-admin-list">
 			<li>
-				<span class="admindash-admin-list__label">Account</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_account_settings_account', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo s(trim(fullname($currentuser))); ?> / <?php echo s((string)$currentuser->username); ?></span>
 			</li>
 			<li>
-				<span class="admindash-admin-list__label">Department</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_account_settings_department', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo s(trim((string)$currentuser->department) !== '' ? (string)$currentuser->department : 'Unassigned'); ?></span>
 			</li>
 			<li>
-				<span class="admindash-admin-list__label">Email</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_account_settings_email', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo s(trim((string)$currentuser->email) !== '' ? (string)$currentuser->email : 'No email configured'); ?></span>
 			</li>
 			<li>
-				<span class="admindash-admin-list__label">Last access</span>
+				<span class="admindash-admin-list__label"><?php echo get_string('ui_account_settings_last_access', 'local_admindashboard'); ?></span>
 				<span class="admindash-admin-list__value"><?php echo (int)$currentuser->lastaccess > 0 ? s(userdate((int)$currentuser->lastaccess)) : 'No recorded access'; ?></span>
 			</li>
 		</ul>
@@ -186,19 +186,19 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Settings Domains</h5>
-			<p class="admindash-admin-note mb-0">Each row shows a settings area, its live status, and the best route to change it.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_account_settings_settings_domains', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_account_settings_each_row_shows_a_settings_area_its_live_status_and_the_best_rou_d486d9ba', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Domain</th>
-					<th>Status</th>
-					<th>Current Snapshot</th>
-					<th>Why It Matters</th>
-					<th>Action</th>
+					<th><?php echo get_string('ui_account_settings_domain', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_account_settings_status', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_account_settings_current_snapshot', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_account_settings_why_it_matters', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_account_settings_action', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>

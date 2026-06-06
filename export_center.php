@@ -36,12 +36,12 @@ $csvurl = new moodle_url('/local/admindashboard/export.php', $baseparams + ['for
 $pdfurl = new moodle_url('/local/admindashboard/export.php', $baseparams + ['format' => 'pdf']);
 ?>
 
-<h2 class="mb-3">Export Center</h2>
+<h2 class="mb-3"><?php echo get_string('ui_export_center_export_center', 'local_admindashboard'); ?></h2>
 
 <form method="get" class="admindash-filters admindash-card">
-    <div class="title">Filters</div>
+    <div class="title"><?php echo get_string('ui_export_center_filters', 'local_admindashboard'); ?></div>
 
-    <label class="mb-0" for="courseSelect">Select Course</label>
+    <label class="mb-0" for="courseSelect"><?php echo get_string('ui_export_center_select_course', 'local_admindashboard'); ?></label>
     <select id="courseSelect" name="courseid" class="form-select" style="max-width:320px">
         <option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>All Courses</option>
         <?php foreach ($meta['courses'] as $course): ?>
@@ -51,7 +51,7 @@ $pdfurl = new moodle_url('/local/admindashboard/export.php', $baseparams + ['for
         <?php endforeach; ?>
     </select>
 
-    <label class="mb-0" for="deptSelect" style="margin-left:12px">Select Department</label>
+    <label class="mb-0" for="deptSelect" style="margin-left:12px"><?php echo get_string('ui_export_center_select_department', 'local_admindashboard'); ?></label>
     <select id="deptSelect" name="department" class="form-select" style="max-width:320px">
         <option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
         <?php foreach ($meta['departments'] as $dept): ?>
@@ -61,11 +61,11 @@ $pdfurl = new moodle_url('/local/admindashboard/export.php', $baseparams + ['for
         <?php endforeach; ?>
     </select>
 
-    <button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+    <button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_export_center_apply', 'local_admindashboard'); ?></button>
 </form>
 
 <div class="admindash-card bg-white p-3 mt-3">
-    <h5 class="mb-3">Downloads</h5>
+    <h5 class="mb-3"><?php echo get_string('ui_export_center_downloads', 'local_admindashboard'); ?></h5>
     <div class="d-flex gap-2 flex-wrap">
         <a class="btn btn-outline-primary" href="<?php echo $csvurl; ?>">Download CSV</a>
         <a class="btn btn-outline-primary" href="<?php echo $pdfurl; ?>">Download PDF</a>
@@ -73,13 +73,13 @@ $pdfurl = new moodle_url('/local/admindashboard/export.php', $baseparams + ['for
 </div>
 
 <div class="admindash-card bg-white p-3 mt-3">
-    <h5 class="mb-3">Preview (Current Filters)</h5>
+    <h5 class="mb-3"><?php echo get_string('ui_export_center_preview_current_filters', 'local_admindashboard'); ?></h5>
     <div class="row g-3">
-        <div class="col-md-3"><b>Total Participants:</b> <?php echo (int)$metrics['participants']; ?></div>
-        <div class="col-md-3"><b>Passed:</b> <?php echo (int)($metrics['passed'] ?? 0); ?></div>
-        <div class="col-md-3"><b>Certified:</b> <?php echo (int)($metrics['certified'] ?? 0); ?></div>
-        <div class="col-md-3"><b>Failed:</b> <?php echo (int)$metrics['failed']; ?></div>
-        <div class="col-md-3"><b>Dropped Midway:</b> <?php echo (int)$metrics['dropped_midway']; ?></div>
+        <div class="col-md-3"><b><?php echo get_string('ui_export_center_total_participants', 'local_admindashboard'); ?></b> <?php echo (int)$metrics['participants']; ?></div>
+        <div class="col-md-3"><b><?php echo get_string('ui_export_center_passed', 'local_admindashboard'); ?></b> <?php echo (int)($metrics['passed'] ?? 0); ?></div>
+        <div class="col-md-3"><b><?php echo get_string('ui_export_center_certified', 'local_admindashboard'); ?></b> <?php echo (int)($metrics['certified'] ?? 0); ?></div>
+        <div class="col-md-3"><b><?php echo get_string('ui_export_center_failed', 'local_admindashboard'); ?></b> <?php echo (int)$metrics['failed']; ?></div>
+        <div class="col-md-3"><b><?php echo get_string('ui_export_center_dropped_midway', 'local_admindashboard'); ?></b> <?php echo (int)$metrics['dropped_midway']; ?></div>
     </div>
 </div>
 

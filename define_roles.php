@@ -94,44 +94,44 @@ local_admindashboard_render_workspace_header(
 
 <div class="admindash-kpis">
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Roles</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_define_roles_roles', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $totalroles; ?></div>
-		<div class="admindash-module-stat__meta">Roles visible in this governance view excluding the guest archetype.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_define_roles_roles_visible_in_this_governance_view_excluding_the_guest_archetype', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Custom Roles</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_define_roles_custom_roles', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $customroles; ?></div>
-		<div class="admindash-module-stat__meta">Roles without a built-in archetype and most likely to need documentation.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_define_roles_roles_without_a_built_in_archetype_and_most_likely_to_need_documentation', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Privileged Roles</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_define_roles_privileged_roles', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $privilegedroles; ?></div>
-		<div class="admindash-module-stat__meta">Manager, course-creator, or teaching-style roles that deserve periodic review.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_define_roles_manager_course_creator_or_teaching_style_roles_that_deserve_per_18dc4380', 'local_admindashboard'); ?></div>
 	</div>
 	<div class="admindash-card admindash-module-stat">
-		<div class="admindash-module-stat__label">Assignments</div>
+		<div class="admindash-module-stat__label"><?php echo get_string('ui_define_roles_assignments', 'local_admindashboard'); ?></div>
 		<div class="admindash-module-stat__value"><?php echo $totalassignments; ?></div>
-		<div class="admindash-module-stat__meta">Total visible role assignments across all returned roles.</div>
+		<div class="admindash-module-stat__meta"><?php echo get_string('ui_define_roles_total_visible_role_assignments_across_all_returned_roles', 'local_admindashboard'); ?></div>
 	</div>
 </div>
 
 <div class="admindash-widget-grid mt-3">
 	<div class="admindash-card admindash-admin-panel">
 		<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
-			<h5 class="mb-0">Context Coverage</h5>
-			<span class="admindash-admin-note">Where roles can be assigned</span>
+			<h5 class="mb-0"><?php echo get_string('ui_define_roles_context_coverage', 'local_admindashboard'); ?></h5>
+			<span class="admindash-admin-note"><?php echo get_string('ui_define_roles_where_roles_can_be_assigned', 'local_admindashboard'); ?></span>
 		</div>
 		<?php if (!empty($contextsummary)): ?>
 			<ul class="admindash-admin-list">
 				<?php foreach ($contextsummary as $row): ?>
 					<li>
 						<span class="admindash-admin-list__label"><?php echo s($contextmap[(int)$row->contextlevel] ?? ('Context ' . (int)$row->contextlevel)); ?></span>
-						<span class="admindash-admin-list__value"><?php echo (int)$row->rolecount; ?> roles</span>
+						<span class="admindash-admin-list__value"><?php echo (int)$row->rolecount; ?> <?php echo get_string('ui_define_roles_roles', 'local_admindashboard'); ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php else: ?>
-			<p class="admindash-admin-note mb-0">No role context level mappings were returned.</p>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_define_roles_no_role_context_level_mappings_were_returned', 'local_admindashboard'); ?></p>
 		<?php endif; ?>
 	</div>
 </div>
@@ -139,26 +139,26 @@ local_admindashboard_render_workspace_header(
 <div class="admindash-card admindash-admin-panel mt-3">
 	<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 		<div>
-			<h5 class="mb-1">Role Inventory</h5>
-			<p class="admindash-admin-note mb-0">Prioritized by assignment volume so operationally important roles surface first.</p>
+			<h5 class="mb-1"><?php echo get_string('ui_define_roles_role_inventory', 'local_admindashboard'); ?></h5>
+			<p class="admindash-admin-note mb-0"><?php echo get_string('ui_define_roles_prioritized_by_assignment_volume_so_operationally_important_rol_59afbcf1', 'local_admindashboard'); ?></p>
 		</div>
 	</div>
 	<div class="admindash-tablewrap">
 		<table class="table table-striped table-hover admindash-admin-table">
 			<thead>
 				<tr>
-					<th>Role</th>
-					<th>Archetype</th>
-					<th>Assignments</th>
-					<th>Contexts</th>
-					<th>Signals</th>
-					<th>Actions</th>
+					<th><?php echo get_string('ui_define_roles_role', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_define_roles_archetype', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_define_roles_assignments', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_define_roles_contexts', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_define_roles_signals', 'local_admindashboard'); ?></th>
+					<th><?php echo get_string('ui_define_roles_actions', 'local_admindashboard'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (empty($toproles) && empty($roles)): ?>
 					<tr>
-						<td colspan="6" class="text-center py-4">No roles were returned.</td>
+						<td colspan="6" class="text-center py-4"><?php echo get_string('ui_define_roles_no_roles_were_returned', 'local_admindashboard'); ?></td>
 					</tr>
 				<?php else: ?>
 					<?php foreach ($roles as $role): ?>
@@ -185,7 +185,7 @@ local_admindashboard_render_workspace_header(
 							</td>
 							<td><?php echo s($archetype); ?></td>
 							<td><?php echo (int)$role->assignmentcount; ?></td>
-							<td><?php echo (int)$role->contextcount; ?> levels</td>
+							<td><?php echo (int)$role->contextcount; ?> <?php echo get_string('ui_define_roles_levels', 'local_admindashboard'); ?></td>
 							<td><div class="admindash-admin-badges"><?php echo !empty($signals) ? implode('', $signals) : '<span class="admindash-admin-badge is-success">Standard</span>'; ?></div></td>
 							<td>
 								<div class="admindash-admin-actions-inline">

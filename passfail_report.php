@@ -21,6 +21,7 @@ local_admindashboard_setup_page('/local/admindashboard/passfail_report.php', 'Pa
 local_admindashboard_render_header('reports.passfail');
 
 $courseid = optional_param('courseid', 0, PARAM_INT);
+$sesskey = sesskey();
 $department = trim(optional_param('department', '', PARAM_TEXT));
 $moduleid = optional_param('moduleid', 0, PARAM_INT); // course_modules.id (quiz only)
 $statusfilter = strtolower(trim(optional_param('status', '', PARAM_ALPHA))); // passed|failed|notattempted
@@ -31,12 +32,12 @@ $perpage = 25;
 $meta = local_admindashboard_get_meta($courseid);
 ?>
 
-<h2 class="mb-3">Pass/Fail Report</h2>
+<h2 class="mb-3"><?php echo get_string('ui_passfail_report_pass_fail_report', 'local_admindashboard'); ?></h2>
 
 <form method="get" class="admindash-filters admindash-card">
-    <div class="title">Filters</div>
+    <div class="title"><?php echo get_string('ui_passfail_report_filters', 'local_admindashboard'); ?></div>
 
-    <label class="mb-0" for="courseSelect">Select Course</label>
+    <label class="mb-0" for="courseSelect"><?php echo get_string('ui_passfail_report_select_course', 'local_admindashboard'); ?></label>
     <select id="courseSelect" name="courseid" class="form-select" style="max-width:360px">
         <option value="0" <?php echo $courseid === 0 ? 'selected' : ''; ?>>Select a course…</option>
         <?php foreach ($meta['courses'] as $course): ?>
@@ -46,7 +47,7 @@ $meta = local_admindashboard_get_meta($courseid);
         <?php endforeach; ?>
     </select>
 
-    <label class="mb-0" for="deptSelect" style="margin-left:12px">Select Department</label>
+    <label class="mb-0" for="deptSelect" style="margin-left:12px"><?php echo get_string('ui_passfail_report_select_department', 'local_admindashboard'); ?></label>
     <select id="deptSelect" name="department" class="form-select" style="max-width:320px">
         <option value="" <?php echo $department === '' ? 'selected' : ''; ?>>All Departments</option>
         <?php foreach ($meta['departments'] as $dept): ?>
@@ -56,7 +57,7 @@ $meta = local_admindashboard_get_meta($courseid);
         <?php endforeach; ?>
     </select>
 
-    <label class="mb-0" for="moduleSelect" style="margin-left:12px">Select Test/Quiz</label>
+    <label class="mb-0" for="moduleSelect" style="margin-left:12px"><?php echo get_string('ui_passfail_report_select_test_quiz', 'local_admindashboard'); ?></label>
     <select id="moduleSelect" name="moduleid" class="form-select" style="max-width:360px">
         <option value="0" <?php echo $moduleid === 0 ? 'selected' : ''; ?>>Final assessment (last module’s last quiz)</option>
         <?php
@@ -106,7 +107,7 @@ $meta = local_admindashboard_get_meta($courseid);
         ?>
     </select>
 
-    <label class="mb-0" for="statusSelect" style="margin-left:12px">Status</label>
+    <label class="mb-0" for="statusSelect" style="margin-left:12px"><?php echo get_string('ui_passfail_report_status', 'local_admindashboard'); ?></label>
     <select id="statusSelect" name="status" class="form-select" style="max-width:220px">
         <option value="" <?php echo $statusfilter === '' ? 'selected' : ''; ?>>All</option>
         <option value="passed" <?php echo $statusfilter === 'passed' ? 'selected' : ''; ?>>Passed</option>
@@ -114,10 +115,10 @@ $meta = local_admindashboard_get_meta($courseid);
         <option value="notattempted" <?php echo $statusfilter === 'notattempted' ? 'selected' : ''; ?>>Not Attempted</option>
     </select>
 
-    <label class="mb-0" for="qInput" style="margin-left:12px">Search</label>
+    <label class="mb-0" for="qInput" style="margin-left:12px"><?php echo get_string('ui_passfail_report_search', 'local_admindashboard'); ?></label>
     <input id="qInput" name="q" class="form-control" style="max-width:260px" value="<?php echo s($q); ?>" placeholder="Name or email…" />
 
-    <button type="submit" class="btn btn-primary" style="margin-left:auto">Apply</button>
+    <button type="submit" class="btn btn-primary" style="margin-left:auto"><?php echo get_string('ui_passfail_report_apply', 'local_admindashboard'); ?></button>
 </form>
 
 <script>
@@ -172,7 +173,8 @@ $meta = local_admindashboard_get_meta($courseid);
         setLoading();
 
         try {
-            const url = `${wwwroot}/local/admindashboard/data.php?mode=meta&courseid=${encodeURIComponent(courseid)}`;
+            const sesskey = <?php echo json_encode($sesskey); ?>;
+            const url = `${wwwroot}/local/admindashboard/data.php?mode=meta&sesskey=${encodeURIComponent(sesskey)}&courseid=${encodeURIComponent(courseid)}`;
             const res = await fetch(url, { credentials: 'same-origin' });
             if (!res.ok) {
                 throw new Error(`HTTP ${res.status}`);
