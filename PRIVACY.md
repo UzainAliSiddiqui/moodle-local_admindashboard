@@ -180,7 +180,8 @@ site's administrator or privacy contact.
 
 Questions about the plugin's privacy implementation can be sent to:
 
-Uzain Ali Siddiqui  
+Uzain Ali Siddiqui
+
 uzainali95@gmail.com
 
 Repository:
